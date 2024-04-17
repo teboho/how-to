@@ -58,15 +58,15 @@ The web application should have a clear distinction between the different roles 
 
 ## Use Cases
 
-![Use Cases](assets/usecases.svg)
+![Use Cases](assets/use-cases.svg)
 
 ## Domain Model
 
 ![Domain Model](assets/howto-domain.svg)
 
-## User Stories / User Flows as Activity Diagrams
+## User Flows
 
-
+![User Flows](assets/user-flows.svg)
 
 ## Technology Stack
 
