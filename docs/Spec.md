@@ -56,6 +56,10 @@ Some users may not want to follow the guide themselves, so they can hire someone
 
 The web application should have a clear distinction between the different roles that a user can have. So that a user can easily switch between the different roles that they have. The main dinstinct user types are Writer[W], Writer Probation [WP], Reader[R], and the Support[S] users. The assumption that we will make is that the Writer can write the guide and execute tasks, but they can also act as a Reader, The Reader cannot write reviews, or execute tasks. Reader can only read the guides and execute their own tasks. The Writer user can do all that a Reader can do and also write reviews, execute tasks, and write guides. The Support user can do all that can be done in the system, but they are only people who work for the company that owns the web application. Readers can upgrdade to Writers based on the amount of guides that they have read, they can be put on probation by allowing them to write guides that will be reviewed by the Support users. The Support users can also downgrade the Writers to Readers if they are not writing good guides.
 
+## Use Cases
+
+![Use Cases](assets/usecases.svg)
+
 ## Technology Stack
 
 1. Frontend: Next.js
@@ -69,3 +73,4 @@ The web application should have a clear distinction between the different roles 
 9. Email: Azure Communication Services
 10. Authentication: Azure Active Directory ??
 11. Version Control: GitHub
+
