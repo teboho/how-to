@@ -2,6 +2,8 @@
 
 How to do anything in the world. 
 
+![HowTo](assets/logo.svg)
+
 ## Problem
 
 People often have to wing their way through life, not knowing how to do things. This means that either, they don't do things, or they do them badly which can lead to a lot of frustration and wasted time and resources.
