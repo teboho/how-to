@@ -43,6 +43,19 @@ Some users may not want to follow the guide themselves, so they can hire someone
 4. The web application should be reliable, and this will be measured by the number of times the web application goes down.
 5. The web application should be scalable, and this will be measured by the number of users who are able to use the web application at the same time.
 
+## Users
+
+1. Guide Writers: Users who have done something before and want to write a guide on how to do the thing.
+2. Guide Readers: Users who need help with doing something and want to read a guide on how to do the thing.
+3. Guide Requesters: Users who need help with doing something and want to request a guide on how to do the thing.
+4. Guide Raters: Users who want to rate a guide on how helpful it was.
+5. Guide Payers: Users who want to pay the guide writers for their work.
+6. Thing Doers: Users who want to hire someone to do something for them.
+7. Thing Doer Writers: Users who have been hired to do something and want to write a guide on how they did the thing.
+8. Thing Doer Reviewers: Users who want to review the person who was hired to do something for them.
+
+The web application should have a clear distinction between the different roles that a user can have. So that a user can easily switch between the different roles that they have. The main dinstinct user types are Writer[W], Writer Probation [WP], Reader[R], and the Support[S] users. The assumption that we will make is that the Writer can write the guide and execute tasks, but they can also act as a Reader, The Reader cannot write reviews, or execute tasks. Reader can only read the guides and execute their own tasks. The Writer user can do all that a Reader can do and also write reviews, execute tasks, and write guides. The Support user can do all that can be done in the system, but they are only people who work for the company that owns the web application. Readers can upgrdade to Writers based on the amount of guides that they have read, they can be put on probation by allowing them to write guides that will be reviewed by the Support users. The Support users can also downgrade the Writers to Readers if they are not writing good guides.
+
 ## Technology Stack
 
 1. Frontend: Next.js
