@@ -21,7 +21,9 @@ And lastly, users will be able to pay the guide writers for their work if they s
 1. Users should be able to create an account on the web application.
 2. Users should be able to write a guide on how to do something.  
 2.1. The guide should be structured in a way that is easy to follow.  
-2.2. The guide should have pictures and videos where necessary.
+2.2. The guide should have pictures and videos where necessary.  
+2.3. The guide should be tagged with the thing that it is about.  
+2.4. The guide should have steps that represent an action that the user should take at each point in the guide.  
 3. Users should be able to search for a guide on how to do something.
 4. Users should be able to request a guide on how to do something.
 5. Users should be able to rate a guide on how helpful it was.
