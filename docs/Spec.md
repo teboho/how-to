@@ -16,6 +16,8 @@ The web application will also have a rating system where users can rate the guid
 
 And lastly, users will be able to pay the guide writers for their work if they so wish. This will encourage more people to write guides on how to do things.
 
+Some users may not want to follow the guide themselves, so they can hire someone to do the thing for them. This is where the web application will come in. The web application will have a marketplace where users can hire people to do things for them. The people who are hired will then write a guide on how they did the thing, and this guide will be available to other users who want to do the thing. Obviously, the person who was hired will be paid for their work. Users will then review the person who was hired, and this will help other users to know who to hire.
+
 ## Functional Requirements
 
 1. Users should be able to create an account on the web application.
@@ -28,4 +30,29 @@ And lastly, users will be able to pay the guide writers for their work if they s
 4. Users should be able to request a guide on how to do something.
 5. Users should be able to rate a guide on how helpful it was.
 6. Users should be able to pay the guide writers for their work.
+7. Users should be able to hire someone to do something for them.
+8. Users should be able to write a guide on how they did something for someone else.
+9. Users should be able to review the person who was hired to do something for them.
+10. The web application should have a marketplace where users can hire people to do things for them. 
 
+## Non-Functional Requirements
+
+1. The web application should be easy to use, and this will be measured by the number of users who are able to write a guide on how to do something.
+2. The web application should be fast, and this will be measured by the time it takes for a user to search for a guide on how to do something.
+3. The web application should be secure, and this will be measured by the number of security breaches that occur.
+4. The web application should be reliable, and this will be measured by the number of times the web application goes down.
+5. The web application should be scalable, and this will be measured by the number of users who are able to use the web application at the same time.
+
+## Technology Stack
+
+1. Frontend: Next.js
+2. Backend: ABP Framework
+3. Database: Microsoft SQL Server
+4. Hosting: Azure + Vercel
+5. Payment Gateway: Payfast
+6. Video Hosting: Azure Blob Storage
+7. Image Hosting: Azure Blob Storage
+8. Search: Azure Cognitive Search ?? 
+9. Email: Azure Communication Services
+10. Authentication: Azure Active Directory ??
+11. Version Control: GitHub
