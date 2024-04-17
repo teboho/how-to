@@ -64,6 +64,10 @@ The web application should have a clear distinction between the different roles 
 
 ![Domain Model](assets/howto-domain.svg)
 
+## User Stories / User Flows as Activity Diagrams
+
+
+
 ## Technology Stack
 
 1. Frontend: Next.js
