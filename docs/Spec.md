@@ -60,12 +60,16 @@ The web application should have a clear distinction between the different roles 
 
 ![Use Cases](assets/usecases.svg)
 
+## Domain Model
+
+![Domain Model](assets/howto-domain.svg)
+
 ## Technology Stack
 
 1. Frontend: Next.js
 2. Backend: ABP Framework
 3. Database: Microsoft SQL Server
-4. Hosting: Azure + Vercel
+4. Hosting: Azure App Service (Backend) + Vercel (Frontend)
 5. Payment Gateway: Payfast
 6. Video Hosting: Azure Blob Storage
 7. Image Hosting: Azure Blob Storage
