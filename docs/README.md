@@ -16,7 +16,7 @@ In a situation where the said thing is not available, the user can request for a
 
 The web application will also have a rating system where users can rate the guides on how helpful they were. This will help other users to know which guides are the best to use.
 
-And lastly, users will be able to pay the guide writers for their work if they so wish. This will encourage more people to write guides on how to do things.
+And lastly, users will be able to pay the guide executors for their work if they so wish. This will encourage more people to write guides on how to do things.
 
 Some users may not want to follow the guide themselves, so they can hire someone to do the thing for them. This is where the web application will come in. The web application will have a marketplace where users can hire people to do things for them. The people who are hired will then write a guide on how they did the thing, and this guide will be available to other users who want to do the thing. Obviously, the person who was hired will be paid for their work. Users will then review the person who was hired, and this will help other users to know who to hire.
 
@@ -52,7 +52,7 @@ We will generate a spreadsheet that will follow the standard bank bulk payment f
 3. Users should be able to search for a guide on how to do something.
 4. Users should be able to request a guide on how to do something.
 5. Users should be able to rate a guide on how helpful it was.
-6. Users should be able to pay the guide writers for their work.
+6. Users should be able to pay the guide executors for their work.
 7. Users should be able to hire someone to do something for them.
 8. Users should be able to write a guide on how they did something for someone else.
 9. Users should be able to review the person who was hired to do something for them.
@@ -68,16 +68,16 @@ We will generate a spreadsheet that will follow the standard bank bulk payment f
 
 ## Users
 
-1. Guide Writers: Users who have done something before and want to write a guide on how to do the thing.
-2. Guide Readers: Users who need help with doing something and want to read a guide on how to do the thing.
+1. Guide Executors: Users who have done something before and want to write a guide on how to do the thing.
+2. Guide Clients: Users who need help with doing something and want to read a guide on how to do the thing.
 3. Guide Requesters: Users who need help with doing something and want to request a guide on how to do the thing.
 4. Guide Raters: Users who want to rate a guide on how helpful it was.
-5. Guide Payers: Users who want to pay the guide writers for their work.
+5. Guide Payers: Users who want to pay the guide executors for their work.
 6. Thing Doers: Users who want to hire someone to do something for them.
-7. Thing Doer Writers: Users who have been hired to do something and want to write a guide on how they did the thing.
+7. Thing Doer Executors: Users who have been hired to do something and want to write a guide on how they did the thing.
 8. Thing Doer Reviewers: Users who want to review the person who was hired to do something for them.
 
-The web application should have a clear distinction between the different roles that a user can have. So that a user can easily switch between the different roles that they have. The main dinstinct user types are Writer[W], Writer Probation [WP], Reader[R], and the Support[S] users. The assumption that we will make is that the Writer can write the guide and execute tasks, but they can also act as a Reader, The Reader cannot write reviews, or execute tasks. Reader can only read the guides and execute their own tasks. The Writer user can do all that a Reader can do and also write reviews, execute tasks, and write guides. The Support user can do all that can be done in the system, but they are only people who work for the company that owns the web application. Readers can upgrdade to Writers based on the amount of guides that they have read, they can be put on probation by allowing them to write guides that will be reviewed by the Support users. The Support users can also downgrade the Writers to Readers if they are not writing good guides.
+The web application should have a clear distinction between the different roles that a user can have. So that a user can easily switch between the different roles that they have. The main dinstinct user types are Executor[E],Client[C], and the Support[S] users. The assumption that we will make is that the Executor can write the guide and execute tasks, but they can also act as a Client, The Client cannot write reviews, or execute tasks. Client can only read the guides and execute their own tasks. The Executor user can do all that a Client can do and also write reviews, execute tasks, and write guides. The Support user can do all that can be done in the system, but they are only people who work for the company that owns the web application. Clients can upgrade to Executors based on the amount of guides that they have read, they can be put on probation by allowing them to write guides that will be reviewed by the Support users. The Support users can also downgrade the Executors to Clients if they are not writing good guides.
 
 ## Use Cases
 
