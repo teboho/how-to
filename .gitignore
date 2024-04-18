@@ -1,1 +1,2 @@
-backend/src/Boxfusion.HowTo.Web.Host/App_Data/Logs/
+backend/src/Boxfusion.HowTo.Web.Host/App_Data/Logs/*
+backend/src/Boxfusion.HowTo.Web.Host/App_Data/Logs/Logs.txt
