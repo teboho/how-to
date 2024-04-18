@@ -8,7 +8,7 @@
 *.sln.docstates
 
 # logs
-src/Boxfusion.HowTo.Web.Host/App_Data/Logs
+src/Boxfusion.HowTo.Web.Host/App_Data/Logs/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
