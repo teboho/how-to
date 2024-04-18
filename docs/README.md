@@ -20,6 +20,27 @@ And lastly, users will be able to pay the guide writers for their work if they s
 
 Some users may not want to follow the guide themselves, so they can hire someone to do the thing for them. This is where the web application will come in. The web application will have a marketplace where users can hire people to do things for them. The people who are hired will then write a guide on how they did the thing, and this guide will be available to other users who want to do the thing. Obviously, the person who was hired will be paid for their work. Users will then review the person who was hired, and this will help other users to know who to hire.
 
+### The release of funds for tasks and guides
+
+The money for tasks should be releasable in bulk or individually. Support will be able to filter the tasks that have been completed and then release the funds for those tasks. e.g. mark all the tasks that have been completed and then release the funds for all the tasks that have been completed. 
+
+The release of funds will include generation of table of account numbers and amounts that need to be paid out. The support will then be able to download the table and then process the payments from the bank account of the company that owns the web application. Then support will use that payment schedule when they access the bank account that receives task fees to make the payments, marking the payment as processed, and the users will be able to download the proof of payment. The support will also be able to mark the payments as completed, and the users will be able to see that the payments have been completed. This would've been better if the payments were done automatically, but we will have to do it manually for now because banks are not yet ready to provide APIs for making payments of this nature (bulk and from escrow to the executor).
+
+We will generate a spreadsheet that will follow the standard bank bulk payment format. The spreadsheet will have the following columns: `Account Number`, `Account Holder`, `Amount`, `Reference`, `Bank`, `Branch`, `Branch Code`, `Account Type`. 
+- The `Reference` will be the `Task ID` or `Guide ID` that the payment is for.  
+- The `Bank` will be the bank name of the account holder.  
+- The `Branch` will be the branch name of the account holder.  
+- The `Branch Code` will be the branch code of the account holder.  
+- The `Account Type` will be the type of account that the account holder has.  
+- The `Account Holder` will be the name of the account holder.  
+- The `Account Number` will be the account number of the account holder.  
+- The `Amount` will be the amount that needs to be paid to the account holder.  
+- The `Task ID` or `Guide ID` will be the unique identifier of the task or guide that the payment is for.  
+- The `Bank` will be the bank name of the account holder.  
+- The `Branch` will be the branch name of the account holder.  
+- The `Branch Code` will be the branch code of the account holder.  
+- The `Account Type` will be the type of account that the account holder has.
+
 ## Functional Requirements
 
 1. Users should be able to create an account on the web application.
