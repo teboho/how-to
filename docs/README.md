@@ -16,17 +16,18 @@ In a situation where the said thing is not available, the user can request for a
 
 The web application will also have a rating system where users can rate the guides on how helpful they were. This will help other users to know which guides are the best to use.
 
-And lastly, users will be able to pay the guide executors for their work if they so wish. This will encourage more people to write guides on how to do things.
+And lastly, users will be able to pay the guide writers for their work if they so wish. This will encourage more people to write guides on how to do things.
 
-Some users may not want to follow the guide themselves, so they can hire someone to do the thing for them. This is where the web application will come in. The web application will have a marketplace where users can hire people to do things for them. The people who are hired will then write a guide on how they did the thing, and this guide will be available to other users who want to do the thing. Obviously, the person who was hired will be paid for their work. Users will then review the person who was hired, and this will help other users to know who to hire.
+Some users may not want to follow the guide themselves, so they can hire someone to do the thing for them. This is where paying for a task will come in. The web application will have a marketplace where users can hire people to do things for them. The people who are hired will then write a guide on how they did the thing, and this guide will be available to other users who want to do the thing. Obviously, the person who was hired will be paid for their work. Users will then review the person who was hired and the task that they did, and this will help other users to know who to hire as it will affect their rating and overall profile.
 
 ### The release of funds for tasks and guides
 
 The money for tasks should be releasable in bulk or individually. Support will be able to filter the tasks that have been completed and then release the funds for those tasks. e.g. mark all the tasks that have been completed and then release the funds for all the tasks that have been completed. 
 
-The release of funds will include generation of table of account numbers and amounts that need to be paid out. The support will then be able to download the table and then process the payments from the bank account of the company that owns the web application. Then support will use that payment schedule when they access the bank account that receives task fees to make the payments, marking the payment as processed, and the users will be able to download the proof of payment. The support will also be able to mark the payments as completed, and the users will be able to see that the payments have been completed. This would've been better if the payments were done automatically, but we will have to do it manually for now because banks are not yet ready to provide APIs for making payments of this nature (bulk and from escrow to the executor).
+The release of funds will include generation of table of transaction details. The support team will then be able to download the table and then process the payments from the bank account of the company that owns the web application. Then support will use that payment schedule when they access the bank account that receives task fees to make the payments, marking the payment as processed, and the users will be able to download the proof of payment. The support team will also be able to mark the payments as completed, and the users will be able to see that the payments have been completed.  
+> This would've been better if the payments were done automatically, but we will have to do it manually (making the table of payables and the using that) for now because banks are not yet ready to provide APIs for making payments of this nature (bulk and from escrow account to the executors or anybody who should be paid e.g. refunds).
 
-We will generate a spreadsheet that will follow the standard bank bulk payment format. The spreadsheet will have the following columns: `Account Number`, `Account Holder`, `Amount`, `Reference`, `Bank`, `Branch`, `Branch Code`, `Account Type`. 
+We will generate a spreadsheet that will follow the standard bank bulk payment format since we use that for the escrow. The spreadsheet will have the following columns: `Account Number`, `Account Holder`, `Amount`, `Reference`, `Bank`, `Branch`, `Branch Code`, `Account Type`. 
 - The `Reference` will be the `Task ID` or `Guide ID` that the payment is for.  
 - The `Bank` will be the bank name of the account holder.  
 - The `Branch` will be the branch name of the account holder.  
@@ -40,6 +41,10 @@ We will generate a spreadsheet that will follow the standard bank bulk payment f
 - The `Branch` will be the branch name of the account holder.  
 - The `Branch Code` will be the branch code of the account holder.  
 - The `Account Type` will be the type of account that the account holder has.
+
+### Refunds
+
+There should be an open window for a client to make a dispute about the task execution and potential refund. The support team will then investigate the dispute and then make a decision on whether the client should be refunded or not. The support team will then mark the task as refunded and then release the funds to the client. The support team will then be able to download the proof of payment and then process the payment from the bank account of the company that owns the web application. The support team will then mark the payment as completed, and the client will be able to see that the payment has been completed.
 
 ## Functional Requirements
 
@@ -77,7 +82,7 @@ We will generate a spreadsheet that will follow the standard bank bulk payment f
 7. Thing Doer Executors: Users who have been hired to do something and want to write a guide on how they did the thing.
 8. Thing Doer Reviewers: Users who want to review the person who was hired to do something for them.
 
-The web application should have a clear distinction between the different roles that a user can have. So that a user can easily switch between the different roles that they have. The main dinstinct user types are Executor[E],Client[C], and the Support[S] users. The assumption that we will make is that the Executor can write the guide and execute tasks, but they can also act as a Client, The Client cannot write reviews, or execute tasks. Client can only read the guides and execute their own tasks. The Executor user can do all that a Client can do and also write reviews, execute tasks, and write guides. The Support user can do all that can be done in the system, but they are only people who work for the company that owns the web application. Clients can upgrade to Executors based on the amount of guides that they have read, they can be put on probation by allowing them to write guides that will be reviewed by the Support users. The Support users can also downgrade the Executors to Clients if they are not writing good guides.
+The web application should have a clear distinction between the different roles that a user can have. So that a user can easily switch between the different roles that they have. The main dinstinct user types are Executor[E],Client[C], and the support team[S] users. The assumption that we will make is that the Executor can write the guide and execute tasks, but they can also act as a Client, The Client cannot write reviews, or execute tasks. Client can only read the guides and execute their own tasks. The Executor user can do all that a Client can do and also write reviews, execute tasks, and write guides. The support team user can do all that can be done in the system, but they are only people who work for the company that owns the web application. Clients can upgrade to Executors based on the amount of guides that they have read, they can be put on probation by allowing them to write guides that will be reviewed by the support team users. The support team users can also downgrade the Executors to Clients if they are not writing good guides.
 
 ## Use Cases
 
