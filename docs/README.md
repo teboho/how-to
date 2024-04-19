@@ -102,7 +102,7 @@ The web application should have a clear distinction between the different roles 
 2. Backend: ABP Framework
 3. Database: Microsoft SQL Server
 4. Hosting: Azure App Service (Backend) + Vercel (Frontend)
-5. Payment Gateway: Payfast
+5. Payment Gateway: Payfast & Paystack
 6. Video Hosting: Azure Blob Storage
 7. Image Hosting: Azure Blob Storage
 8. Search: Azure Cognitive Search ?? 
