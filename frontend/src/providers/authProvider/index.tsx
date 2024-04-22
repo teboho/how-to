@@ -1,10 +1,12 @@
 "use client";
 
-import { useContext, useEffect, useReducer } from "react";
+import { useContext, useEffect, useMemo, useReducer } from "react";
 import { AuthActionsContext, AuthStateContext, AuthStateContextInitial } from "./contexts";
 import authReducer from "./reducer";
 import { ILoginRequest, IRegisterRequest } from "./types";
 import * as authActions from './actions';
+import { getAxiosInstace } from "@/utils";
+import { logger } from "../../../logger";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(authReducer, AuthStateContextInitial);
@@ -21,9 +23,29 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
     }, []);
+
+    const instance = useMemo(() => {
+        const accessToken = state.loginObj?.accessToken;
+        if (accessToken) {
+            return getAxiosInstace(accessToken)
+        } else {
+            return getAxiosInstace("");
+        }        
+    }, [state]);
     
     const login = (loginRequest: ILoginRequest) => {
+        dispatch(authActions.loginRequestAction());
+        const endpoint = "api/TokenAuth/Authenticate"
+        instance.get(endpoint)
+                .then(response => {
+                    if (response.status > 199 && response.status < 300) {
+                        logger.info("LoggedIn");
+                        console.log(response);
+                        
+                    } else {
 
+                    }
+                })
     };
     const register = (registerRequest: IRegisterRequest) => {
 
