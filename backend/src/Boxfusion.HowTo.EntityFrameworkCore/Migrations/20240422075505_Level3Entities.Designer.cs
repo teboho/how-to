@@ -4,6 +4,7 @@ using Boxfusion.HowTo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Boxfusion.HowTo.Migrations
 {
     [DbContext(typeof(HowToDbContext))]
-    partial class HowToDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240422075505_Level3Entities")]
+    partial class Level3Entities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1625,49 +1628,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.ToTable("BankDetails");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Dispute", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("Disputes");
-                });
-
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Guide", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1760,49 +1720,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.ToTable("GuideSteps");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Media", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("GuideStepId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GuideStepId");
-
-                    b.ToTable("Medias");
-                });
-
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Message", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1828,52 +1745,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.HasIndex("TaskId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Payable", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("BankDetailId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Reference")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BankDetailId");
-
-                    b.ToTable("Payables");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Payment", b =>
@@ -2000,48 +1871,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.HasIndex("PhotoId");
 
                     b.ToTable("Profiles");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Refund", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<float>("Amount")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("DisputeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DisputeId");
-
-                    b.ToTable("Refunds");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Review", b =>
@@ -2469,17 +2298,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Dispute", b =>
-                {
-                    b.HasOne("Boxfusion.HowTo.Domain.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-                });
-
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Guide", b =>
                 {
                     b.HasOne("Boxfusion.HowTo.Authorization.Users.User", "Writer")
@@ -2502,17 +2320,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.Navigation("Guide");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Media", b =>
-                {
-                    b.HasOne("Boxfusion.HowTo.Domain.GuideStep", "GuideStep")
-                        .WithMany()
-                        .HasForeignKey("GuideStepId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GuideStep");
-                });
-
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Message", b =>
                 {
                     b.HasOne("Boxfusion.HowTo.Authorization.Users.User", "Receiver")
@@ -2530,17 +2337,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.Navigation("Receiver");
 
                     b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Payable", b =>
-                {
-                    b.HasOne("Boxfusion.HowTo.Domain.BankDetail", "BankDetail")
-                        .WithMany()
-                        .HasForeignKey("BankDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BankDetail");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Payment", b =>
@@ -2571,17 +2367,6 @@ namespace Boxfusion.HowTo.Migrations
                         .IsRequired();
 
                     b.Navigation("Photo");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Refund", b =>
-                {
-                    b.HasOne("Boxfusion.HowTo.Domain.Dispute", "Dispute")
-                        .WithMany()
-                        .HasForeignKey("DisputeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dispute");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Review", b =>
