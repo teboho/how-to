@@ -2004,11 +2004,9 @@ namespace Boxfusion.HowTo.Migrations
 
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Refund", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<float>("Amount")
                         .HasColumnType("real");

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Domain
 {
-    public class Refund : FullAuditedEntity
+    public class Refund : FullAuditedEntity<Guid>
     {
         public float Amount { get; set; }
         public Guid DisputeId { get; set; }
