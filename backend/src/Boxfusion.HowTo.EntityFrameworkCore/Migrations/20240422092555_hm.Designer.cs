@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Boxfusion.HowTo.Migrations
 {
     [DbContext(typeof(HowToDbContext))]
-    [Migration("20240422083110_Level4Entitiesv1")]
-    partial class Level4Entitiesv1
+    [Migration("20240422092555_hm")]
+    partial class hm
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2007,11 +2007,9 @@ namespace Boxfusion.HowTo.Migrations
 
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Refund", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<float>("Amount")
                         .HasColumnType("real");
