@@ -11,3 +11,4 @@ describe('Page', () => {
         expect(heading).toBeInTheDocument();
     })
 });
+

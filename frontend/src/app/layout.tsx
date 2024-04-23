@@ -14,7 +14,11 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
   return (
     <html lang="en">
       <body>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <div className="container">
+            {children}
+          </div>
+        </AntdRegistry>
       </body>
     </html>
   );
