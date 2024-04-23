@@ -20,6 +20,7 @@ using Boxfusion.HowTo.Authorization.Roles;
 using Boxfusion.HowTo.Authorization.Users;
 using Boxfusion.HowTo.Roles.Dto;
 using Boxfusion.HowTo.Users.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,6 +54,7 @@ namespace Boxfusion.HowTo.Users
             _logInManager = logInManager;
         }
 
+        [AbpAllowAnonymous]
         public override async Task<UserDto> CreateAsync(CreateUserDto input)
         {
             CheckCreatePermission();

@@ -3,15 +3,16 @@
 import { useContext, useEffect, useMemo, useReducer } from "react";
 import { AuthActionsContext, AuthStateContext, AuthStateContextInitial } from "./contexts";
 import authReducer from "./reducer";
-import { ILoginRequest, IRegisterRequest } from "./types";
+import type { ILoginRequest, IRegisterRequest } from "./types";
 import * as authActions from './actions';
-import { getAxiosInstace } from "@/utils";
-import { logger } from "../../../logger";
+import { AbpTokenProperies, type IDecodedToken, decodeToken, getAxiosInstace } from "@/utils";
+import { useRouter } from "next/navigation";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(authReducer, AuthStateContextInitial);
+    const { push } = useRouter();
 
-    useEffect(() => {
+    useEffect(() => {   
         if (typeof window !== "undefined") {
             try {
                 const accessToken = localStorage.getItem("accessToken");
@@ -32,24 +33,55 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return getAxiosInstace("");
         }        
     }, [state]);
+    useEffect(() => {
+        const accessToken = state.loginObj?.accessToken;
+        const encryptedAccessToken = state.loginObj?.encryptedAccessToken;
+        if (accessToken && encryptedAccessToken) {
+            if (typeof window !== "undefined") {
+                localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("encryptedAccessToken", encryptedAccessToken);
+            }
+        }      
+    }, [state]);
     
     const login = (loginRequest: ILoginRequest) => {
         dispatch(authActions.loginRequestAction());
         const endpoint = "api/TokenAuth/Authenticate"
-        instance.get(endpoint)
+        instance.post(endpoint, loginRequest)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        logger.info("LoggedIn");
-                        console.log(response);
-                        
+                        dispatch(authActions.loginSuccessAction(response.data.result))
+                        const decodedToken: IDecodedToken = decodeToken(response.data.result.accessToken);
+                        const _role = (decodedToken[AbpTokenProperies.role]);
+                        console.log("role", _role);
+                        push(_role.toLocaleLowerCase())
                     } else {
-
+                        dispatch(authActions.loginErrorAction())
                     }
                 })
+                .catch(err => 
+                    dispatch(authActions.loginErrorAction())
+                );
     };
-    const register = (registerRequest: IRegisterRequest) => {
 
+    const register = (registerRequest: IRegisterRequest) => {
+        console.log(registerRequest)
+        dispatch(authActions.registerRequestAction());
+        const endpoint = "api/services/app/User/Create"
+        instance.post(endpoint, registerRequest)
+                .then(response => {
+                    if (response.status > 199 && response.status < 300) {
+                        dispatch(authActions.registerSuccessAction(response.data.result))
+                        push('login')
+                    } else {
+                        dispatch(authActions.registerErrorAction())
+                    }
+                })
+                .catch(err => 
+                    dispatch(authActions.registerErrorAction())
+                );
     };
+    
     const getUser = () => {
 
     };

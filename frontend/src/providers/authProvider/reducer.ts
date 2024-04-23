@@ -25,6 +25,10 @@ const authReducer = handleActions<IAuthStateContext, any>(
                 encryptedAccessToken: action.payload.encryptedAccessToken,  
                 expireInSeconds: action.payload.expireInSeconds,  
             } 
+        }),
+        [AuthActionEnums.SaveDecodedToken]: (state, action) => ({ 
+            ...state, 
+            ...action.payload
         })
     },
     AuthStateContextInitial

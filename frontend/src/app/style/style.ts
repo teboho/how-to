@@ -16,6 +16,7 @@ const useStyles = createStyles(({css, token}) => {
         button: css`
             width: fit-content;
             font-weight: bold;
+            background: #E5E3D2;
         `
     }
 });

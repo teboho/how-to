@@ -1,6 +1,7 @@
 "use client";
 import { createContext } from "react";
 import { ILoginRequest, ILoginResponse, IRegisterRequest, IRegisterResponse, IUser } from "./types";
+import { IDecodedToken } from "@/utils";
 
 export interface IAuthStateContext {
     isPending: boolean;
@@ -9,6 +10,7 @@ export interface IAuthStateContext {
     loginObj?: ILoginResponse;
     registerObj?: IRegisterResponse;
     userObj?: IUser;
+    decodedToken?: IDecodedToken
 }
 
 export interface IAuthActionsContext {
@@ -24,12 +26,13 @@ export const AuthStateContextInitial: IAuthStateContext = {
     isError: false,
     loginObj: undefined,
     registerObj: undefined,
-    userObj: undefined
+    userObj: undefined,
+    decodedToken: undefined
 }
 
 export const AuthActionsContextInitial: IAuthActionsContext = {
-    login: () => {},
-    register: () => {},
+    login: (loginReqest: ILoginRequest) => {},
+    register: (registerRequest: IRegisterRequest) => {},
     getUser: () => {},
     logout: () => {}
 }

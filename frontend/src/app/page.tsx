@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import stylesheet from "./page.module.css";
 import useStyles from "./style/style";
-
 import { Button, Flex, Typography } from "antd";
 import LeftSide from "@/components/leftSide";
 import Link from "next/link";

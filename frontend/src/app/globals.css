@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     margin: 0;
+    background: #E5E3D2;
 }
 .container {
     height: 100%;
@@ -20,8 +21,8 @@ html, body {
     text-align: center;
 }
 .right {
-background: #B64326;
-display: flex;
-align-items: center;
-justify-items: center;
+    background: #B64326;
+    display: flex;
+    align-items: center;
+    justify-items: center;
 }

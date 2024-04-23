@@ -14,7 +14,7 @@ export interface IRegisterResponse {
     fullName: string,
     lastLoginTime: string,
     creationTime: string,
-    roleNames: string[],
+    roleNames?: string[],
     id: number
 }
 
@@ -31,16 +31,16 @@ export interface IUser {
 export interface ILoginRequest {
     userNameOrEmailAddress: string;
     password: string;
-    rememberClient: boolean;
+    rememberClient?: boolean;
 }
 
 export interface IRegisterRequest {
-    userName: string,
+    userName?: string,
     name: string,
     surname: string,
-    emailAddress: string,
-    isActive: boolean,
-    roleNames: string[],
+    emailAddress?: string,
+    isActive?: boolean,
+    roleNames?: string[],
     password: string
 }
 

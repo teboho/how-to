@@ -1,6 +1,7 @@
 import { createAction } from "redux-actions";
 import { IAuthStateContext } from "./contexts";
 import { ILoginResponse, IRegisterResponse, IUser } from "./types";
+import { IDecodedToken } from "@/utils";
 
 export const AuthActionEnums = {
     LoginRequest: "LOGIN_REQUEST",
@@ -16,7 +17,8 @@ export const AuthActionEnums = {
     GetUserError: "GET_USER_ERROR",
 
     Logout: "LOGOUT",
-    SaveTokens: "SAVE_TOKENS"
+    SaveTokens: "SAVE_TOKENS",
+    SaveDecodedToken: "SAVE_DECODE_TOKEN"
 }
 
 export const loginRequestAction = createAction<IAuthStateContext>(
@@ -68,4 +70,12 @@ export const logoutAction = createAction<IAuthStateContext>(
 export const saveTokensAction = createAction(
     AuthActionEnums.SaveTokens,
     (accessToken: string, encryptedAccessToken: string, expireInSeconds: number) => ({ accessToken, encryptedAccessToken, expireInSeconds })
+)
+
+/**
+ * To save tokens that come from localStorage if any
+ */
+export const saveDecodedTokenAction = createAction(
+    AuthActionEnums.SaveDecodedToken,
+    (decodedToken: IDecodedToken) => ({ decodedToken })
 )
