@@ -1,8 +1,10 @@
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import AuthProvider from "@/providers/authProvider";
+import { ConfigProvider, Layout } from "antd";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,11 +18,20 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     <html lang="en">
       <body>
         <AntdRegistry>
-          <div className="container">
-            <AuthProvider>
-              {children}
-            </AuthProvider>
-          </div>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgContainer: "#E5E3D2",
+                colorPrimaryActive: "#B64326"
+              }
+            }}
+          >
+            <div className="container">
+              <AuthProvider>
+                {children}
+              </AuthProvider>
+            </div>
+          </ConfigProvider>
         </AntdRegistry>
       </body>
     </html>

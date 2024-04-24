@@ -3,7 +3,7 @@
 import { useContext, useEffect, useMemo, useReducer } from "react";
 import { AuthActionsContext, AuthStateContext, AuthStateContextInitial } from "./contexts";
 import authReducer from "./reducer";
-import type { ILoginRequest, IRegisterRequest } from "./types";
+import type { ILoginRequest, ILoginResponse, IRegisterRequest } from "./types";
 import * as authActions from './actions';
 import { AbpTokenProperies, type IDecodedToken, decodeToken, getAxiosInstace } from "@/utils";
 import { useRouter } from "next/navigation";
@@ -12,13 +12,25 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(authReducer, AuthStateContextInitial);
     const { push } = useRouter();
 
-    useEffect(() => {   
+    useEffect(() => {
         if (typeof window !== "undefined") {
             try {
                 const accessToken = localStorage.getItem("accessToken");
                 const encryptedAccessToken = localStorage.getItem("encryptedAccessToken");
                 const expireInSeconds_str = localStorage.getItem("expireInSeconds");
+                const userId_str = localStorage.getItem("userId");
                 let expireInSeconds = expireInSeconds_str === null ? 0 : Number.parseInt(expireInSeconds_str);
+                let userId = userId_str === null ? 0 : Number.parseInt(userId_str);
+                
+                if (accessToken && encryptedAccessToken && expireInSeconds && userId) {
+                    const loginObj: ILoginResponse = {
+                        accessToken,
+                        encryptedAccessToken,
+                        userId,
+                        expireInSeconds
+                    };
+                    dispatch(authActions.loginSuccessAction(loginObj));
+                }
             } catch (error) {
                 console.error("Error accessing localStorage: ", error);
             }
@@ -33,13 +45,19 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return getAxiosInstace("");
         }        
     }, [state]);
+
     useEffect(() => {
         const accessToken = state.loginObj?.accessToken;
         const encryptedAccessToken = state.loginObj?.encryptedAccessToken;
-        if (accessToken && encryptedAccessToken) {
+        const expireInSeconds = state.loginObj?.expireInSeconds;
+        const userId = state.loginObj?.userId;
+
+        if (accessToken && encryptedAccessToken && expireInSeconds && userId) {
             if (typeof window !== "undefined") {
                 localStorage.setItem("accessToken", accessToken);
                 localStorage.setItem("encryptedAccessToken", encryptedAccessToken);
+                localStorage.setItem("expireInSeconds", expireInSeconds + "");
+                localStorage.setItem("userId", userId + "");
             }
         }      
     }, [state]);
@@ -54,7 +72,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         const decodedToken: IDecodedToken = decodeToken(response.data.result.accessToken);
                         const _role = (decodedToken[AbpTokenProperies.role]);
                         console.log("role", _role);
-                        push(_role.toLocaleLowerCase())
+                        push("home/" + _role.toLocaleLowerCase())
                     } else {
                         dispatch(authActions.loginErrorAction())
                     }

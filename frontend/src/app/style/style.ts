@@ -17,7 +17,10 @@ const useStyles = createStyles(({css, token}) => {
             width: fit-content;
             font-weight: bold;
             background: #E5E3D2;
-        `
+        `,
+        flex: css`
+            height: 100%;
+        `,
     }
 });
 
