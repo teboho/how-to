@@ -57,6 +57,8 @@ namespace Boxfusion.HowTo.Controllers
             };
         }
 
+        //[HttpPost] async Task
+
         private string GetTenancyNameOrNull()
         {
             if (!AbpSession.TenantId.HasValue)

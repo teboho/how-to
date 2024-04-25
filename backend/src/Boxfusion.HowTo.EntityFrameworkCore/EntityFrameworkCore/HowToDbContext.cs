@@ -33,6 +33,7 @@ namespace Boxfusion.HowTo.EntityFrameworkCore
         // level5
         public DbSet<Category> Categories { get; set; }
         public DbSet<TaskCategory> TaskCategories { get; set; }
+        public DbSet<Offer> Offers { get; set; }
         public HowToDbContext(DbContextOptions<HowToDbContext> options)
             : base(options)
         {
