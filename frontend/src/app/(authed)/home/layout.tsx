@@ -16,7 +16,7 @@ import {
   LogoutOutlined
 } from '@ant-design/icons';
 import useStyles from "./style/style";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuthState } from "@/providers/authProvider";
 import { AbpTokenProperies, decodeToken } from "@/utils";
@@ -24,24 +24,26 @@ import { AbpTokenProperies, decodeToken } from "@/utils";
 const { Sider, Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
-const clientMenu: MenuProps["items"] = [
+const clientMenu = (currentPath: string): MenuProps["items"] => [
     {
         key: 'client_expenditure',
         icon: <ShoppingCartOutlined />,
-        label: 'Expenditure',
+        label: <Link href={`${currentPath}/expenditure`}>Expenditure</Link>,
+        onClick: () => {}
     },
-    {
-        key: 'client_tasks',
-        icon: <ScheduleOutlined />,
-        label: 'My Tasks',
-    },
+    // {
+    //     key: 'client_tasks',
+    //     icon: <ScheduleOutlined />,
+    // label: <Link href={`${currentPath}/my-tasks`}>My Tasks</Link>,
+    // },
     {
         key: 'client_new_task',
         icon: <PlusCircleOutlined />,
-        label: 'New Task',
+        label: <Link href={`${currentPath}/new-task`}>New Task</Link>,
+        onClick: () => {}
     }
 ];
-const executorMenu: MenuProps["items"] = [
+const executorMenu = (currentPath: string): MenuProps["items"] => [
     {
         key: 'exec_revenue',
         icon: <MoneyCollectOutlined />,
@@ -63,7 +65,7 @@ const executorMenu: MenuProps["items"] = [
         label: 'Tasks'
     },
 ];
-const supportMenu: MenuProps["items"] = [
+const supportMenu = (currentPath: string): MenuProps["items"] => [
     {
         key: 'support_revenue',
         icon: <MoneyCollectOutlined />,
@@ -86,11 +88,6 @@ const supportMenu: MenuProps["items"] = [
     },
 ];
 
-const menu = {
-    "client": clientMenu,
-    "executor": executorMenu,
-    "support": supportMenu,
-}
 
 const HomeLayout = ({ 
     children 
@@ -101,6 +98,7 @@ const HomeLayout = ({
     const { loginObj } = useAuthState();
     const { styles, cx, theme } = useStyles();
     const { push } = useRouter();
+    const pathname = usePathname();
 
     let role: string = useMemo(() => {
         if (loginObj) {
@@ -114,13 +112,13 @@ const HomeLayout = ({
     
     switch(role) {
         case "client":
-            _menu = clientMenu;
+            _menu = clientMenu(pathname);
         case "executor":
-            _menu = executorMenu;
+            _menu = executorMenu(pathname);
         case "support":
-            _menu = supportMenu;
+            _menu = supportMenu(pathname);
         default:
-            _menu = clientMenu;
+            _menu = clientMenu(pathname);
     }
     return (
         <Layout className={cx(styles.layout)}>
@@ -139,6 +137,7 @@ const HomeLayout = ({
             <Layout className={cx(styles.layout)}>
                 <Header className={cx(styles.header)}>
                     <Title level={1}>{role} Dashboard</Title>
+                    {pathname}
                 </Header>
                 <Content>
                     {children}

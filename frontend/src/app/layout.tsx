@@ -5,6 +5,7 @@ import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import AuthProvider from "@/providers/authProvider";
 import { ConfigProvider, Layout } from "antd";
+import TaskProvider from "@/providers/taskProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
           >
             <div className="container">
               <AuthProvider>
-                {children}
+                <TaskProvider>
+                  {children}  
+                </TaskProvider>
               </AuthProvider>
             </div>
           </ConfigProvider>

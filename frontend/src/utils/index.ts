@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
@@ -49,4 +49,13 @@ export interface IDecodedToken {
 
 export const decodeToken = (accessToken: string): IDecodedToken => {
     return jwtDecode(accessToken);
+}
+
+export const getRole = (loginObj: any): string => {
+    if (loginObj) {
+        const decoded = decodeToken(loginObj.accessToken);
+        return `${decoded[AbpTokenProperies.role]}`.toLocaleLowerCase();
+    } 
+    
+    return "client";
 }

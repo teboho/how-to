@@ -12,6 +12,8 @@ namespace Boxfusion.HowTo.Authorization
             context.CreatePermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
             context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
+            context.CreatePermission(PermissionNames.Pages_Tasks, L("Tasks"));
+            context.CreatePermission(PermissionNames.Pages_Tasks_Create, L("TasksCreate"));
         }
 
         private static ILocalizableString L(string name)

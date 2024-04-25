@@ -23,7 +23,6 @@ const useStyles = createStyles(({css, token}) => {
             text-align: center;
         `,
         button: css`
-            width: fit-content;
             font-weight: bold;
             background: #B64326;
             color: white;

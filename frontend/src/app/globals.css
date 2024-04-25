@@ -2,6 +2,7 @@ html, body {
     height: 100%;
     margin: 0;
     background: #E5E3D2;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 .container {
     height: 100%;

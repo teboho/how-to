@@ -1,9 +1,14 @@
 import { createStyles } from 'antd-style';
+import { RenderRowProps } from 'react-data-grid';
+import { Row } from 'react-table';
 
 const useStyles = createStyles(({css, token}) => {
     return {
-        border: css`
-            border: 1px solid red;
+        box: css`
+            border: 1px solid #B64326;
+            border-radius: 20px;
+            height: fit-content;
+            padding: 10px;
         `,
         flex: css`
             height: 100%;
@@ -11,7 +16,6 @@ const useStyles = createStyles(({css, token}) => {
         header: css`
             background: ${token.colorBgContainer};
             padding: 0;
-
         `,
         toggle: css`
             font-size: 16px;
@@ -27,6 +31,16 @@ const useStyles = createStyles(({css, token}) => {
         logout: css`
             display: float;
             bottom: 0;
+        `,
+        'total-money': css`
+            font-size: 40px;
+        `, 
+        light: css`
+            background: #E5E3D2;
+        `, 
+        row: css`
+            background: #E5E3D2;
+            color: #000000;
         `
     }
 });

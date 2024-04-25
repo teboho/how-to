@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useAuthActions } from "@/providers/authProvider";
 import { ILoginRequest } from "@/providers/authProvider/types";
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 // Each time, a new form item will be one of the following properties
 type FieldType = {
