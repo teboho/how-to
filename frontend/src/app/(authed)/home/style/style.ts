@@ -16,27 +16,22 @@ const useStyles = createStyles(({css, token}) => {
         `,
         menu: css`
             border: 1px solid #B64326;
+            background: #E5E3D2;
         `,
         content: css`
             height: 100%;
-            background: #E5E3D2;
-            border-top: 1px solid #B64326;
+            margin: 24px 16px;
+            padding: 20px;
+            min-height: 280px;
         `,
         header: css`
             background: ${token.colorBgContainer};
-            padding: 0;
-
+            padding: 20px;
         `,
         toggle: css`
             font-size: 16px;
             width: 64px;
             height: 64px;
-        `,
-        content: css`
-            margin: 24px 16px;
-            padding: 24px;
-            min-height: 280px;
-            background: ${token.colorBgContainer}
         `,
         logout: css`
             display: float;

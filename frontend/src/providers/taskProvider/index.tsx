@@ -95,6 +95,7 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                     dispatch(taskActions.getTasksErrorAction())
                 );
     }
+
     const getMyTasks = () => {
         dispatch(taskActions.getTasksRequestAction());
         const endpoint = "api/services/app/Task/GetMyTasks";

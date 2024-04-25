@@ -18,8 +18,9 @@ import {
 import useStyles from "./style/style";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { useAuthState } from "@/providers/authProvider";
+import { useAuthActions, useAuthState } from "@/providers/authProvider";
 import { AbpTokenProperies, decodeToken } from "@/utils";
+import { log } from "console";
 
 const { Sider, Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -96,8 +97,8 @@ const HomeLayout = ({
 }) => {
     const [collapsed, setCollapsed] = useState(false);
     const { loginObj } = useAuthState();
+    const { logout: auth_logout } = useAuthActions();
     const { styles, cx, theme } = useStyles();
-    const { push } = useRouter();
     const pathname = usePathname();
 
     let role: string = useMemo(() => {
@@ -107,9 +108,9 @@ const HomeLayout = ({
         } 
         
         return "client";
-    }, []);    
-    let _menu;
-    
+    }, []);   
+
+    let _menu;    
     switch(role) {
         case "client":
             _menu = clientMenu(pathname);
@@ -120,11 +121,12 @@ const HomeLayout = ({
         default:
             _menu = clientMenu(pathname);
     }
+
     return (
         <Layout className={cx(styles.layout)}>
             <Sider className={cx(styles.sider)} theme="light" collapsible collapsed={collapsed} onCollapse={()=> setCollapsed(!collapsed)}>
                 <div className="logo-vertical">
-                    <Link href={""}><img src="/logo.svg" alt="logo" width={"100%"} /></Link>
+                    <Link href={"/"}><img src="/logo.svg" alt="logo" width={"100%"} /></Link>
                 </div>
                 <Menu 
                     theme="light"
@@ -133,13 +135,33 @@ const HomeLayout = ({
                     items={_menu}
                     className={cx(styles.menu)}
                 />
+                {/* Profile menu */}
+                <Menu 
+                    theme="light"
+                    mode="inline"
+                    onClick={() => {}}
+                    items={[
+                        {
+                            key: 'profile',
+                            icon: <UsergroupAddOutlined />,
+                            label: 'Profile',
+                            onClick: () => {}
+                        },
+                        {
+                            key: 'logout',
+                            icon: <LogoutOutlined />,
+                            label: 'Logout',
+                            onClick: () => auth_logout()
+                        }
+                    ]}
+                    className={cx(styles.menu)}
+                />
             </Sider>
             <Layout className={cx(styles.layout)}>
                 <Header className={cx(styles.header)}>
                     <Title level={1}>{role} Dashboard</Title>
-                    {pathname}
                 </Header>
-                <Content>
+                <Content className={cx(styles.content)}>
                     {children}
                 </Content>
             </Layout>

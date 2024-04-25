@@ -9,6 +9,7 @@ const useStyles = createStyles(({css, token}) => {
             border-radius: 20px;
             height: fit-content;
             padding: 10px;
+            margin: 10px;
         `,
         flex: css`
             height: 100%;
@@ -41,7 +42,10 @@ const useStyles = createStyles(({css, token}) => {
         row: css`
             background: #E5E3D2;
             color: #000000;
-        `
+        `,
+        segmented: css`
+            background: #E5E3D2;
+        `,
     }
 });
 

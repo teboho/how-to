@@ -61,7 +61,8 @@ export const getUserErrorAction = createAction<IAuthStateContext>(
 );
 
 export const logoutAction = createAction<IAuthStateContext>(
-    AuthActionEnums.Logout
+    AuthActionEnums.Logout,
+    () => ({ isPending: false, isSuccess: false, isError: false, loginObj: undefined, registerObj: undefined, userObj: undefined })
 );
 
 /**

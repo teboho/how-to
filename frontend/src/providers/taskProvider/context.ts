@@ -12,13 +12,21 @@ export interface ITask {
     deletionTime?: string;
     title: string;
     description: string;
-    ownerId: number;
     amount: number;
     views?: number;
     timeFrame: number;
-    status: number;
+    status: TaskStatus;
 }
 
+enum TaskStatus {
+    NEW,
+    ASSIGNED,
+    DONE
+}
+
+/**
+ * This is a type that represents the state of the task context
+ */
 export interface ITaskStateContext {
     isPending: boolean;
     isError: boolean;

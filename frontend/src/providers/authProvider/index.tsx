@@ -52,14 +52,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const expireInSeconds = state.loginObj?.expireInSeconds;
         const userId = state.loginObj?.userId;
 
-        if (accessToken && encryptedAccessToken && expireInSeconds && userId) {
-            if (typeof window !== "undefined") {
+        if (typeof window !== "undefined") {
+            if (accessToken && encryptedAccessToken && expireInSeconds && userId) {
                 localStorage.setItem("accessToken", accessToken);
                 localStorage.setItem("encryptedAccessToken", encryptedAccessToken);
                 localStorage.setItem("expireInSeconds", expireInSeconds + "");
                 localStorage.setItem("userId", userId + "");
-            }
-        }      
+            }   else {
+                localStorage.clear();
+            }  
+        } 
     }, [state]);
     
     const login = (loginRequest: ILoginRequest) => {
@@ -103,8 +105,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const getUser = () => {
 
     };
-    const logout = () => {
 
+    const logout = () => {
+        dispatch(authActions.logoutAction());
+        push('/login');
     };
 
     return (
