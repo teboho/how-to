@@ -30,6 +30,9 @@ namespace Boxfusion.HowTo.EntityFrameworkCore
         public DbSet<Payable> Payables { get; set; }
         public DbSet<Refund> Refunds { get; set; }
 
+        // level5
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<TaskCategory> TaskCategories { get; set; }
         public HowToDbContext(DbContextOptions<HowToDbContext> options)
             : base(options)
         {

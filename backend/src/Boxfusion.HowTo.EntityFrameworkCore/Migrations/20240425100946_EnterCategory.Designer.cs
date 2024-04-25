@@ -4,6 +4,7 @@ using Boxfusion.HowTo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Boxfusion.HowTo.Migrations
 {
     [DbContext(typeof(HowToDbContext))]
-    partial class HowToDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240425100946_EnterCategory")]
+    partial class EnterCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2146,27 +2149,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.TaskCategory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("TaskCategories");
-                });
-
             modelBuilder.Entity("Boxfusion.HowTo.Domain.UpVote", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2619,25 +2601,6 @@ namespace Boxfusion.HowTo.Migrations
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.TaskCategory", b =>
-                {
-                    b.HasOne("Boxfusion.HowTo.Domain.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Boxfusion.HowTo.Domain.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("Task");
                 });
