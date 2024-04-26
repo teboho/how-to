@@ -139,11 +139,9 @@ const Page = () => {
                     <InputNumber prefix="R"  />
                 </Form.Item>
                 <Form.Item>
-                    <ConfigProvider
-                        theme={theme}
-                    >
+
                         <Button type="primary" htmlType="submit">Submit Offer</Button>
-                    </ConfigProvider>
+
                 </Form.Item>
             </Form>
         </section>

@@ -3,10 +3,11 @@
 import { useAuthState } from "@/providers/authProvider";
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
-import { Typography, Table, Segmented } from "antd";
+import { Typography, Table, Segmented, Space } from "antd";
+import { EyeOutlined } from '@ant-design/icons';
 import { useEffect } from "react";
 import useStyles from "./style";
-import { columns } from "../client/page";
+import Link from "next/link";
 
 const { Title, Paragraph } = Typography;
 
@@ -21,6 +22,54 @@ const Page = (): React.ReactNode => {
             getTasks();
         }
     }, []);
+
+    
+    const columns = [
+        {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        { 
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'key'
+        },
+        {
+            title: 'Views',
+            dataIndex: 'views',
+            key: 'views'
+        },
+        {
+            title: 'Time Frame',
+            dataIndex: 'timeFrame',
+            key: 'timeFrame'
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status'
+        },
+        {
+            title: "Action",
+            key: "action",
+            dataIndex: "action",
+            render: (text: any, record: ITask) => (
+                <Space size="middle">
+                    <Link href={`view-task?id=${record.id}`}>
+                        <EyeOutlined />
+                        View
+                    </Link>
+                    {/* <a>Decline</a> */}
+                </Space>
+            )
+        }
+    ];
     
     const rows = tasks?.map((task: ITask) => {
         return {

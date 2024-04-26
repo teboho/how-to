@@ -12,55 +12,6 @@ import useStyles from './style';
 
 const { Title, Paragraph } = Typography;
 
-/**
- * Columns for the tasks table
- */
-export const columns = [
-    {
-        title: 'Title',
-        dataIndex: 'title',
-        key: 'title',
-    },
-    {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-    },
-    { 
-        title: 'Amount',
-        dataIndex: 'amount',
-        key: 'key'
-    },
-    {
-        title: 'Views',
-        dataIndex: 'views',
-        key: 'views'
-    },
-    {
-        title: 'Time Frame',
-        dataIndex: 'timeFrame',
-        key: 'timeFrame'
-    },
-    {
-        title: 'Status',
-        dataIndex: 'status',
-        key: 'status'
-    },
-    {
-        title: "Action",
-        key: "action",
-        render: (text: any, record: ITask) => (
-            <Space size="middle">
-                <Link href={`view-task?id=${record.id}`}>
-                    <EyeOutlined />
-                    View
-                </Link>
-                {/* <a>Decline</a> */}
-            </Space>
-        )
-    }
-];
-
 const Page = (): React.ReactNode => {
     const { styles, cx, theme } = useStyles();
     const { loginObj } = useAuthState();
@@ -72,6 +23,54 @@ const Page = (): React.ReactNode => {
             getMyTasks();
         }
     }, []);
+
+    
+    const columns = [
+        {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        { 
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'key'
+        },
+        {
+            title: 'Views',
+            dataIndex: 'views',
+            key: 'views'
+        },
+        {
+            title: 'Time Frame',
+            dataIndex: 'timeFrame',
+            key: 'timeFrame'
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status'
+        },
+        {
+            title: "Action",
+            key: "action",
+            dataIndex: "action",
+            render: (text: any, record: ITask) => (
+                <Space size="middle">
+                    <Link href={`view-task?id=${record.id}`}>
+                        <EyeOutlined />
+                        View
+                    </Link>
+                    {/* <a>Decline</a> */}
+                </Space>
+            )
+        }
+    ];
 
     const rows = tasks?.map((task: ITask) => {
         return {
