@@ -6,6 +6,8 @@ import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Typography
 import useStyles from "./style";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { useAuthState } from "@/providers/authProvider";
+import { AbpTokenProperies } from "@/utils";
 
 const { Title } = Typography;
 
@@ -14,6 +16,7 @@ type FieldType = ITask;
 const Page = () => {
     const { getTask } = useTaskActions();
     const { task } = useTaskState();
+    const { decodedToken } = useAuthState();
     const { styles, cx, theme } = useStyles();
     const params = new URLSearchParams(useSearchParams());
 
@@ -33,8 +36,13 @@ const Page = () => {
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     }
+
+    const onExecutorFinish: FormProps<FieldType>['onFinish'] = (values) => {
+        console.log('Success:', values);
+        alert(JSON.stringify(values));
+    }
     
-    return (
+    const clientViewTask = () => (
         <>
             <Title level={2}>View Task</Title>
             <Form
@@ -98,6 +106,71 @@ const Page = () => {
             {/* cards for each offer */}
         </>
     );
+
+    // executor wont be able to edit the task, except they will have a small form to submit their offer below the task details
+    const executorViewTask = () => (
+        <section className={cx(styles.border)}>
+            <article className={cx(styles.border)}>
+                <Title level={2}>View Task</Title>
+                <Title level={3}>Description</Title>
+                <p>{task?.description}</p>
+                <Title level={3}>Amount</Title>
+                <p>{task?.amount}</p>
+                <Title level={3}>Time Frame</Title>
+                <p>{task?.timeFrame}</p>
+            </article>
+            <hr />
+            <Title level={3}>Alternative Offer</Title>
+            <Form
+                name="new-offer"
+                onFinish={onExecutorFinish}
+                onFinishFailed={onFinishFailed}
+                layout="vertical"
+                initialValues={{
+                    amount: task?.amount
+                }}
+                className={cx(styles.form)}
+            >
+                <Form.Item<FieldType>
+                    label="Offer Amount"
+                    name="amount"
+                    rules={[{ required: true, message: 'Please input the offer amount!' }]}
+                >
+                    <InputNumber prefix="R"  />
+                </Form.Item>
+                <Form.Item>
+                    <ConfigProvider
+                        theme={theme}
+                    >
+                        <Button type="primary" htmlType="submit">Submit Offer</Button>
+                    </ConfigProvider>
+                </Form.Item>
+            </Form>
+        </section>
+    );
+    const supportViewTask = () => (
+        <>
+            <Title level={2}>View Task</Title>
+            <Title level={3}>Description</Title>
+            <p>{task?.description}</p>
+            <Title level={3}>Amount</Title>
+            <p>{task?.amount}</p>
+            <Title level={3}>Time Frame</Title>
+            <p>{task?.timeFrame}</p>
+        </>
+    );
+
+    const roleKey = AbpTokenProperies.role;
+    const role = decodedToken ? `${decodedToken[roleKey]}` : "";
+    switch (role.toLocaleLowerCase()) {
+        case "support":
+            return supportViewTask();
+        case "executor":
+            return executorViewTask();
+        case "client":
+        default:
+            return clientViewTask();
+    }
 }
 
 export default Page;

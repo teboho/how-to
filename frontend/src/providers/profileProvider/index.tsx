@@ -119,8 +119,7 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
                 postProfile,
                 putProfile,
                 deleteProfile,
-                getProfiles,
-                getMyProfiles
+                getProfiles
             }}>
                 {children}
             </ProfileActionsContext.Provider>

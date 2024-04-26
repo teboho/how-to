@@ -13,6 +13,11 @@ const useStyles = createStyles(({ css, token }) => {
             height: 100vh;
             width: 75%;
         `,
+        border: css`
+            border: 1px solid #B64326;
+            border-radius: 20px;
+            padding: 20px;
+        `,
     }
 });
 

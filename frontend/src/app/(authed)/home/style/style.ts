@@ -27,6 +27,7 @@ const useStyles = createStyles(({css, token}) => {
         header: css`
             background: ${token.colorBgContainer};
             padding: 20px;
+            margin: 0 16px;
         `,
         toggle: css`
             font-size: 16px;

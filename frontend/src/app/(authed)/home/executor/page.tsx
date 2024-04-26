@@ -1,67 +1,57 @@
 "use client";
 
+import { useAuthState } from "@/providers/authProvider";
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
-import { Typography, List, Card, Flex, Button, Form, Input } from "antd";
+import { ITask } from "@/providers/taskProvider/context";
+import { Typography, Table, Segmented } from "antd";
 import { useEffect } from "react";
+import useStyles from "./style";
+import { columns } from "../client/page";
 
 const { Title, Paragraph } = Typography;
 
 const Page = (): React.ReactNode => {
+    const { loginObj } = useAuthState();
     const { tasks } = useTaskState();
     const { getTasks } = useTaskActions();
+    const { styles, cx } = useStyles();
 
     useEffect(() => {
-        getTasks();
+        if (loginObj) {
+            getTasks();
+        }
     }, []);
     
+    const rows = tasks?.map((task: ITask) => {
+        return {
+            key: `task_${task.id}`,
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            amount: `R ${task.amount}`,
+            views: task.views,
+            timeFrame: task.timeFrame,
+            status: task.status
+        }
+    });
+    
     return (
-        <>
-            <Title level={2}>New Tasks</Title>
-            <Flex>
-                <div></div>
-                <img width={300} src="/unDraw/undraw_undraw_undraw_undraw_undraw_undraw_undraw_users_per_minute_1e4q_t22j_-1-_0ngf_-1-_27dv_30ul_legv_-1-_0f3m.svg" alt="No tasks" />
-            </Flex>
-            <hr />
-            <List
-                dataSource={tasks?.filter(t => t.status === 0) || []}
-                renderItem={(item) => (
-                <List.Item
-                    key={item.id}
-                >
-                    <List.Item.Meta
-                        title={item.title}
-                        description={<>
-                            <Paragraph>
-                                Description: {item.description}
-                            </Paragraph>
-                            <Paragraph>
-                                Amount: R {item.amount}
-                            </Paragraph>
-                            <Paragraph>
-                                Duration: {item.timeFrame} hours
-                            </Paragraph>
-                            <Button type="primary">Accept</Button>
-                            <Form>
-                                <Form.Item>
-                                    {/* Counter price */}
-                                    <Form.Item
-                                        name="price"
-                                        label="Price"
-                                        rules={[{ required: true, message: 'Please input the price!' }]}
-                                    >
-                                        <Input type="number" />
-                                    </Form.Item>
-                                    {/* Counter duration */}
-                                    <Button type="primary" htmlType="submit">Counter</Button>
-                                </Form.Item>
-                            </Form>
-                        </>}
-                    >
-                    </List.Item.Meta>
-                </List.Item>
-                )}
-            />
-        </>
+        <section>
+            <section className={cx(styles.box)}>
+                <Title level={3}>Money genereated so far</Title>
+                <Paragraph className={cx(styles["total-money"])}>R7 564.07</Paragraph>
+            </section>
+            <section className={cx(styles.box)}>                
+                <Segmented
+                    className={cx(styles.segmented)}
+                    defaultValue="Tasks"
+                    style={{ marginBottom: 8 }}
+                    onChange={(value) => {value}}
+                    options={['Tasks', 'Transactions']}
+                />
+                <Table columns={columns} dataSource={rows || []} />
+            </section>
+        </section>
     );
 }
 

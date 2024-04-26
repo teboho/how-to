@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import useStyles from "./style/style";
+import useStyles from "./style";
 import { Button, Flex, Typography } from "antd";
 import LeftSide from "@/components/leftSide";
 import Link from "next/link";

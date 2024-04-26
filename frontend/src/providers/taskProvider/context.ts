@@ -1,8 +1,7 @@
 import { createContext } from "react";
-import { Guid } from "typescript-guid";
 
 export interface ITask {
-    id?: Guid;
+    id?: string;
     creationTime?: string;
     creatorUserId?: number;
     lastModificationTime?: string;
@@ -12,7 +11,7 @@ export interface ITask {
     deletionTime?: string;
     title: string;
     description: string;
-    amount: number;
+    amount: number | string;
     views?: number;
     timeFrame: number;
     status: TaskStatus;
@@ -60,6 +59,5 @@ const TaskStateContext = createContext<ITaskStateContext>(TaskStateContext_Defau
 const TaskActionsContext = createContext<ITaskActionsContext>(TaskActionsContext_Default);
 
 export {
-    TaskStateContext,
-    TaskActionsContext
-}
+    TaskActionsContext, TaskStateContext
+};

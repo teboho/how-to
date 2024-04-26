@@ -1,9 +1,7 @@
 import { createContext } from "react";
-import { Guid } from "typescript-guid";
-
 
 export interface IProfile {
-    id?: Guid;
+    id?: string;
     creationTime?: string;
     creatorUserId?: number;
     lastModificationTime?: string;
@@ -12,8 +10,8 @@ export interface IProfile {
     deleterUserId?: number;
     deletionTime?: string;
     identityNo: string;
-    isVerified: boolean;
-    photoId?: Guid;
+    isVerified?: boolean;
+    photoId?: string;
 }
 
 export interface IProfileStateContext {
@@ -50,6 +48,5 @@ const ProfileStateContext = createContext<IProfileStateContext>(ProfileStateCont
 const ProfileActionsContext = createContext<IProfileActionsContext>(ProfileActionsContext_Default);
 
 export {
-    ProfileStateContext,
-    ProfileActionsContext
-}
+    ProfileActionsContext, ProfileStateContext
+};

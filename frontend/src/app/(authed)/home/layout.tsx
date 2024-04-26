@@ -15,11 +15,11 @@ import {
 import { Layout, Menu, MenuProps, Typography } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import useStyles from "./style/style";
 
 const { Sider, Header, Content } = Layout;
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 const HomeLayout = ({ 
     children 
@@ -27,32 +27,13 @@ const HomeLayout = ({
     children: React.ReactNode
 }) => {
     const [collapsed, setCollapsed] = useState(false);
+    const [menu, setMenu] = useState<MenuProps["items"]>([]);
     const { loginObj } = useAuthState();
     const { logout: auth_logout } = useAuthActions();
     const { styles, cx, theme } = useStyles();
     const pathname = usePathname();
     const { push } = useRouter();
-
-    let role: string = useMemo(() => {
-        if (loginObj) {
-            const decoded = decodeToken(loginObj.accessToken);
-            return `${decoded[AbpTokenProperies.role]}`.toLocaleLowerCase();
-        } else {
-            return "client";
-        }
-    }, []);  
-    
-    role = useMemo(() => {
-        if (loginObj) {
-            const decoded = decodeToken(loginObj.accessToken);
-            
-            return `${decoded[AbpTokenProperies.role]}`.toLocaleLowerCase();
-        } else {
-            return "client";
-        }
-    }, [loginObj]);
-
-    
+        
     const clientMenu = (currentPath: string): MenuProps["items"] => [
         {
             key: 'client_expenditure',
@@ -71,64 +52,80 @@ const HomeLayout = ({
         {
             key: 'exec_revenue',
             icon: <MoneyCollectOutlined />,
-            label: 'Revenue'
+            label: <Link href={`${currentPath}/revenue`}>Revenue</Link>,
+            onClick: () => {}
         },
         {
             key: 'exec_tasks',
             icon: <ScheduleOutlined />,
-            label: 'Tasks'
+            label: <Link href={`${currentPath}/tasks`}>Tasks</Link>,
+            onClick: () => {}
         },
         {
             key: 'exec_guides',
             icon: <ReadOutlined />,
-            label: 'Guides'
+            label: <Link href={`${currentPath}/guides`}>Guides</Link>,
+            onClick: () => {}
         },
         {
             key: 'exec_new_guide',
             icon: <PlusCircleOutlined />,
-            label: 'New Guide'
+            label: <Link href={`${currentPath}/new-guide`}>New Guide</Link>,
+            onClick: () => {}
         },
     ];
     const supportMenu = (currentPath: string): MenuProps["items"] => [
         {
             key: 'support_revenue',
             icon: <MoneyCollectOutlined />,
-            label: 'Revenue'
+            label: <Link href={`${currentPath}/revenue`}>Revenue</Link>,
+            onClick: () => {}
         },
         {
             key: 'support_tasks',
             icon: <ScheduleOutlined />,
-            label: 'Tasks'
+            label: <Link href={`${currentPath}/tasks`}>Tasks</Link>,
+            onClick: () => {}
         },
         {
             key: 'support_disputes',
             icon: <ExclamationCircleOutlined />,
-            label: 'Disputes'
+            label: <Link href={`${currentPath}/disputes`}>Disputes</Link>,
+            onClick: () => {}
         },
         {
             key: 'support_users',
             icon: <UsergroupAddOutlined />,
-            label: 'Users'
+            label: <Link href={`${currentPath}/users`}>Manager Users</Link>,
+            onClick: () => {}
         },
     ];
 
-    let _menu;    
-    useEffect(() => {
-        switch (role.toLocaleLowerCase()) {
-            case "client":
-                _menu = clientMenu(pathname);
-                break;
-            case "executor":
-                _menu = executorMenu(pathname);
-                break;
-            case "support":
-                _menu = supportMenu(pathname);
-                break;
-            default:
-                _menu = [];
-                break;
+    let role: string = useMemo(() => {
+        if (loginObj) {
+            const decoded = decodeToken(loginObj.accessToken);
+            const _role = `${decoded[AbpTokenProperies.role]}`.toLocaleLowerCase();
+
+            switch (_role.toLocaleLowerCase()) {
+                case "client":
+                    setMenu(clientMenu(pathname));
+                    break;
+                case "executor":
+                    setMenu(executorMenu(pathname));
+                    break;
+                case "support":
+                    setMenu(supportMenu(pathname));
+                    break;
+                default:
+                    setMenu([]);
+                    break;
+            }
+            
+            return _role;
+        } else {
+            return "client";
         }
-    }, [role, pathname]);
+    }, []);  
 
     return (
         <Layout className={cx(styles.layout)}>
@@ -140,7 +137,7 @@ const HomeLayout = ({
                     theme="light"
                     mode="inline"
                     onClick={() => {}}
-                    items={_menu}
+                    items={menu}
                     className={cx(styles.menu)}
                 />
                 {/* Profile menu */}

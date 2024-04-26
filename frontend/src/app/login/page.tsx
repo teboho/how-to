@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import useStyles from "./style/style";
+import useStyles from "./style";
 import type {FormProps} from "antd";
 import { Button, Flex, Typography, Form, Input, Space } from "antd";
 import LeftSide from "@/components/leftSide";

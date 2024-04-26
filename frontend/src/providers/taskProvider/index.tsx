@@ -21,7 +21,7 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         }        
     }, [loginObj]);
 
-    const getTask = (id: Guid) => {
+    const getTask = (id: string) => {
         const task = state.tasks?.find(t => t.id === id);
         if (task) {
             dispatch(taskActions.getTaskSuccessAction(task));
