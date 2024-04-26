@@ -38,6 +38,8 @@ export default function Login() {
       <LeftSide />
       <div className={cx("half-box", "right")}>
         <Flex vertical className={cx(styles["right-inner-flex"])}  align="center" justify="center">
+          <img height={250} src="/unDraw/undraw_join_re_w1lh.svg" alt="No tasks" />
+
           <Paragraph className={cx(styles.para)}>Please enter your details to login.</Paragraph>
 
           <Form
@@ -68,13 +70,16 @@ export default function Login() {
             </Form.Item>
 
             <Form.Item>          
-              <Flex align="center" justify="space-between">
+              <Flex align="center" justify="space-between" vertical>
                 <Button className={cx(styles.button)} htmlType="submit" size="large">
                   Login
                 </Button>      
-                <Link className={cx(styles["float-right"])} href={"/register"}>
-                  <Button size="large">Register</Button>
-                </Link>
+                <Paragraph>
+                  Don't yet have an account?{" "}
+                  <Link href={"/register"}>
+                    Register
+                  </Link>
+                </Paragraph>
               </Flex>
             </Form.Item>  
           </Form>

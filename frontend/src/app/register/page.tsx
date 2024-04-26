@@ -53,11 +53,14 @@ export default function Register() {
       <LeftSide />
       <div className={cx("half-box", "right")}>
         <Flex vertical className={cx(styles["right-inner-flex"])}  align="center" justify="center">
+          <img height={50} src="/unDraw/undraw_join_re_w1lh.svg" alt="No tasks" />
+          
           <Paragraph className={cx(styles.para)}>Please enter your details to Register.</Paragraph>
 
           <Form
             name="login form"
-            labelCol={{ span: 4 }}
+            layout="vertical"
+            labelCol={{ span: 6 }}
             wrapperCol={{ span: 24 }}
             className={cx(styles.form)}
             initialValues={{}}
@@ -97,7 +100,7 @@ export default function Register() {
             </Form.Item>
 
             <Form.Item<FieldType>
-              label="Confirm"
+              label="Confirm Password"
               name="confirm"
               rules={[{ required: true, message: "Please confirm your password!" }]}
               className={cx(styles['form-item'])}
@@ -128,13 +131,16 @@ export default function Register() {
             </Form.Item>
 
             <Form.Item>          
-              <Flex align="center" justify="space-between">
+              <Flex align="center" justify="space-between" vertical>
                 <Button className={cx(styles.button)} htmlType="submit" size="large">
                   Register
                 </Button>
-                <Link href={"/login"}>
-                  <Button size="large">Login</Button>
-                </Link>
+                <Paragraph>
+                  Already have an account?{" "}
+                  <Link href={"/login"}>
+                    Login
+                  </Link>
+                </Paragraph>
               </Flex>
             </Form.Item>
           </Form>

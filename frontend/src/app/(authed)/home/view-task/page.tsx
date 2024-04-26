@@ -1,22 +1,33 @@
 "use client";
 
-import { useTaskActions } from "@/providers/taskProvider";
+import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
 import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Typography } from "antd";
 import useStyles from "./style";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const { Title } = Typography;
 
 type FieldType = ITask;
 
 const Page = () => {
-    const { postTask } = useTaskActions();
+    const { getTask } = useTaskActions();
+    const { task } = useTaskState();
     const { styles, cx, theme } = useStyles();
+    const params = new URLSearchParams(useSearchParams());
+
+    const id = params.get("id");
+
+    useEffect(() => {
+        if (typeof id === "string") {
+            getTask(id);
+        }
+    }, []);
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
         console.log('Success:', values);
         values.status = 0;
-        postTask(values);
     }
 
     const onFinishFailed = (errorInfo: any) => {
@@ -25,13 +36,18 @@ const Page = () => {
     
     return (
         <>
-            <Title level={2}>New Task</Title>
+            <Title level={2}>View Task</Title>
             <Form
                 name="new-task"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 layout="vertical"
-                initialValues={{}}
+                initialValues={{
+                    title: task?.title,
+                    description: task?.description,
+                    amount: task?.amount,
+                    timeFrame: task?.timeFrame
+                }}
                 className={cx(styles.form)}
             >
                 <Form.Item<FieldType>
@@ -74,10 +90,12 @@ const Page = () => {
                             }        
                         }}
                     >
-                        <Button type="primary" htmlType="submit">Submit</Button>
+                        <Button type="primary" htmlType="submit">Update</Button>
                     </ConfigProvider>
                 </Form.Item>                
             </Form>
+            <Title level={3}>Task Offers</Title>
+            {/* cards for each offer */}
         </>
     );
 }

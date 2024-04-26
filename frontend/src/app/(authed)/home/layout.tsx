@@ -1,94 +1,25 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Button, Layout, Menu, MenuProps, Typography  } from "antd";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  ReadOutlined,
-  UsergroupAddOutlined,
-  MoneyCollectOutlined,
-  ScheduleOutlined,
-  ExclamationCircleOutlined,
-  ShoppingCartOutlined,
-  PlusCircleOutlined, 
-  LogoutOutlined
-} from '@ant-design/icons';
-import useStyles from "./style/style";
-import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
 import { useAuthActions, useAuthState } from "@/providers/authProvider";
 import { AbpTokenProperies, decodeToken } from "@/utils";
-import { log } from "console";
+import {
+    ExclamationCircleOutlined,
+    LogoutOutlined,
+    MoneyCollectOutlined,
+    PlusCircleOutlined,
+    ReadOutlined,
+    ScheduleOutlined,
+    ShoppingCartOutlined,
+    UsergroupAddOutlined
+} from '@ant-design/icons';
+import { Layout, Menu, MenuProps, Typography } from "antd";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import useStyles from "./style/style";
 
 const { Sider, Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
-
-const clientMenu = (currentPath: string): MenuProps["items"] => [
-    {
-        key: 'client_expenditure',
-        icon: <ShoppingCartOutlined />,
-        label: <Link href={`${currentPath}/expenditure`}>Expenditure</Link>,
-        onClick: () => {}
-    },
-    // {
-    //     key: 'client_tasks',
-    //     icon: <ScheduleOutlined />,
-    // label: <Link href={`${currentPath}/my-tasks`}>My Tasks</Link>,
-    // },
-    {
-        key: 'client_new_task',
-        icon: <PlusCircleOutlined />,
-        label: <Link href={`${currentPath}/new-task`}>New Task</Link>,
-        onClick: () => {}
-    }
-];
-const executorMenu = (currentPath: string): MenuProps["items"] => [
-    {
-        key: 'exec_revenue',
-        icon: <MoneyCollectOutlined />,
-        label: 'Revenue'
-    },
-    {
-        key: 'exec_tasks',
-        icon: <ScheduleOutlined />,
-        label: 'Tasks'
-    },
-    {
-        key: 'exec_guides',
-        icon: <ReadOutlined />,
-        label: 'Tasks'
-    },
-    {
-        key: 'exec_new_guide',
-        icon: <PlusCircleOutlined />,
-        label: 'Tasks'
-    },
-];
-const supportMenu = (currentPath: string): MenuProps["items"] => [
-    {
-        key: 'support_revenue',
-        icon: <MoneyCollectOutlined />,
-        label: 'Revenue'
-    },
-    {
-        key: 'support_tasks',
-        icon: <ScheduleOutlined />,
-        label: 'Tasks'
-    },
-    {
-        key: 'support_disputes',
-        icon: <ExclamationCircleOutlined />,
-        label: 'Disputes'
-    },
-    {
-        key: 'support_users',
-        icon: <UsergroupAddOutlined />,
-        label: 'Users'
-    },
-];
-
 
 const HomeLayout = ({ 
     children 
@@ -100,27 +31,104 @@ const HomeLayout = ({
     const { logout: auth_logout } = useAuthActions();
     const { styles, cx, theme } = useStyles();
     const pathname = usePathname();
+    const { push } = useRouter();
 
     let role: string = useMemo(() => {
         if (loginObj) {
             const decoded = decodeToken(loginObj.accessToken);
-            return decoded[AbpTokenProperies.role];
-        } 
-        
-        return "client";
-    }, []);   
+            return `${decoded[AbpTokenProperies.role]}`.toLocaleLowerCase();
+        } else {
+            return "client";
+        }
+    }, []);  
+    
+    role = useMemo(() => {
+        if (loginObj) {
+            const decoded = decodeToken(loginObj.accessToken);
+            
+            return `${decoded[AbpTokenProperies.role]}`.toLocaleLowerCase();
+        } else {
+            return "client";
+        }
+    }, [loginObj]);
+
+    
+    const clientMenu = (currentPath: string): MenuProps["items"] => [
+        {
+            key: 'client_expenditure',
+            icon: <ShoppingCartOutlined />,
+            label: <Link href={`${currentPath}/expenditure`}>Expenditure</Link>,
+            onClick: () => {}
+        },
+        {
+            key: 'client_new_task',
+            icon: <PlusCircleOutlined />,
+            label: <Link href={`${currentPath}/new-task`}>New Task</Link>,
+            onClick: () => {}
+        }
+    ];
+    const executorMenu = (currentPath: string): MenuProps["items"] => [
+        {
+            key: 'exec_revenue',
+            icon: <MoneyCollectOutlined />,
+            label: 'Revenue'
+        },
+        {
+            key: 'exec_tasks',
+            icon: <ScheduleOutlined />,
+            label: 'Tasks'
+        },
+        {
+            key: 'exec_guides',
+            icon: <ReadOutlined />,
+            label: 'Guides'
+        },
+        {
+            key: 'exec_new_guide',
+            icon: <PlusCircleOutlined />,
+            label: 'New Guide'
+        },
+    ];
+    const supportMenu = (currentPath: string): MenuProps["items"] => [
+        {
+            key: 'support_revenue',
+            icon: <MoneyCollectOutlined />,
+            label: 'Revenue'
+        },
+        {
+            key: 'support_tasks',
+            icon: <ScheduleOutlined />,
+            label: 'Tasks'
+        },
+        {
+            key: 'support_disputes',
+            icon: <ExclamationCircleOutlined />,
+            label: 'Disputes'
+        },
+        {
+            key: 'support_users',
+            icon: <UsergroupAddOutlined />,
+            label: 'Users'
+        },
+    ];
 
     let _menu;    
-    switch(role) {
-        case "client":
-            _menu = clientMenu(pathname);
-        case "executor":
-            _menu = executorMenu(pathname);
-        case "support":
-            _menu = supportMenu(pathname);
-        default:
-            _menu = clientMenu(pathname);
-    }
+    useEffect(() => {
+        switch (role.toLocaleLowerCase()) {
+            case "client":
+                _menu = clientMenu(pathname);
+                break;
+            case "executor":
+                _menu = executorMenu(pathname);
+                break;
+            case "support":
+                _menu = supportMenu(pathname);
+                break;
+            default:
+                _menu = [];
+                break;
+        }
+    }, [role, pathname]);
 
     return (
         <Layout className={cx(styles.layout)}>
@@ -145,7 +153,7 @@ const HomeLayout = ({
                             key: 'profile',
                             icon: <UsergroupAddOutlined />,
                             label: 'Profile',
-                            onClick: () => {}
+                            onClick: () => push('profile')
                         },
                         {
                             key: 'logout',

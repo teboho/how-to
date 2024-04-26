@@ -9,6 +9,7 @@ import { useAuthState } from '@/providers/authProvider';
  */
 const withAuth = (WrappedComponent: (({children}: {children: React.ReactNode}) => React.ReactNode) | React.FC): React.FC | ((props: {children: React.ReactNode}) => React.ReactNode) => {
     const WithAuth = (props: {children: React.ReactNode}): React.ReactNode => {
+        // TODO: verify if the token is valid
         const { loginObj } = useAuthState();
         const router = useRouter();
         let token = useMemo(() => loginObj?.accessToken, []);

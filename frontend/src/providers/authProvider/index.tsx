@@ -74,7 +74,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         const decodedToken: IDecodedToken = decodeToken(response.data.result.accessToken);
                         const _role = (decodedToken[AbpTokenProperies.role]);
                         console.log("role", _role);
-                        push("home/" + _role.toLocaleLowerCase())
+                        push("home/" + _role.toLocaleLowerCase());
                     } else {
                         dispatch(authActions.loginErrorAction())
                     }
@@ -103,7 +103,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
     
     const getUser = () => {
-
+        if (state.loginObj) {
+            const decoded = decodeToken(state.loginObj.accessToken);
+            dispatch(authActions.saveDecodedTokenAction(decoded))
+        }
     };
 
     const logout = () => {

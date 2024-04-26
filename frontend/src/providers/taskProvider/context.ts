@@ -24,9 +24,6 @@ enum TaskStatus {
     DONE
 }
 
-/**
- * This is a type that represents the state of the task context
- */
 export interface ITaskStateContext {
     isPending: boolean;
     isError: boolean;
@@ -43,7 +40,7 @@ export const TaskStateContext_Default: ITaskStateContext = {
 }
 
 export interface ITaskActionsContext {
-    getTask: () => void;
+    getTask: (id: string) => void;
     postTask: (task: ITask) => void;
     putTask: (task: ITask) => void;
     deleteTask: (task: ITask) => void;

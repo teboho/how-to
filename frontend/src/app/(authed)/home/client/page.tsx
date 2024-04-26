@@ -4,13 +4,16 @@ import React from 'react';
 import { useAuthState } from '@/providers/authProvider';
 import { useTaskActions, useTaskState } from '@/providers/taskProvider';
 import { getRole } from '@/utils';
-import { Typography, Table, Segmented } from 'antd';
+import { Typography, Table, Segmented, Space } from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
 import { useEffect, useMemo, useState } from 'react';
 import DataGrid, { RenderRowProps, Row } from 'react-data-grid';
 import 'react-data-grid/lib/styles.css';
 import useStyles from './style/style';
 import { ITask } from '@/providers/taskProvider/context';
 import { title } from 'process';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const { Title, Paragraph } = Typography;
 
@@ -19,6 +22,7 @@ const Page = (): React.ReactNode => {
     const { loginObj } = useAuthState();
     const { getMyTasks } = useTaskActions();
     const { tasks, isPending, isSuccess } = useTaskState();
+    const path = usePathname();
 
     useEffect(() => {
         if (loginObj) {
@@ -47,11 +51,11 @@ const Page = (): React.ReactNode => {
     //   }
 
     const columns = [
-        {
-            title: 'Creator',
-            dataIndex: 'creatorUserId',
-            key: 'creatorUserId'
-        },
+        // {
+        //     title: 'Creator',
+        //     dataIndex: 'creatorUserId',
+        //     key: 'creatorUserId'
+        // },
         {
             title: 'Title',
             dataIndex: 'title',
@@ -81,6 +85,19 @@ const Page = (): React.ReactNode => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status'
+        },
+        {
+            title: "Action",
+            key: "action",
+            render: (text: any, record: ITask) => (
+                <Space size="middle">
+                    <Link href={`view-task?id=${record.id}`}>
+                        <EyeOutlined />
+                        View
+                    </Link>
+                    {/* <a>Decline</a> */}
+                </Space>
+            )
         }
     ];
       
@@ -95,7 +112,7 @@ const Page = (): React.ReactNode => {
             timeFrame: task.timeFrame,
             status: task.status,
             // creationTime: task.creationTime,
-            creatorUserId: task.creatorUserId,
+            // creatorUserId: task.creatorUserId,
             // lastModificationTime: task.lastModificationTime,
             // lastModifierUserId: task.lastModifierUserId,
             // isDeleted: task.isDeleted,

@@ -28,7 +28,7 @@ const authReducer = handleActions<IAuthStateContext, any>(
         }),
         [AuthActionEnums.SaveDecodedToken]: (state, action) => ({ 
             ...state, 
-            ...action.payload
+            decodedToken: action.payload.decodedToken
         })
     },
     AuthStateContextInitial

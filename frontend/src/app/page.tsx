@@ -6,7 +6,7 @@ import { Button, Flex, Typography } from "antd";
 import LeftSide from "@/components/leftSide";
 import Link from "next/link";
 import { useRouter } from "next/navigation"
-import { useAuthState } from "@/providers/authProvider";
+import { useAuthActions, useAuthState } from "@/providers/authProvider";
 import { getRole } from "@/utils";
 
 const { Title, Paragraph } = Typography;
@@ -14,6 +14,7 @@ const { Title, Paragraph } = Typography;
 export default function Home() {
   const { cx, styles } = useStyles();
   const { push } = useRouter();
+  const { getUser } = useAuthActions();
 
   useEffect(() => {
 
@@ -21,6 +22,8 @@ export default function Home() {
       const accessToken = localStorage.getItem("accessToken");
       if (accessToken) {
         const role = getRole({accessToken});
+        
+        getUser();
         push(`/home/${role}`);
       }
     }

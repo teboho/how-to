@@ -6,6 +6,7 @@ import { useAuthState } from "../authProvider";
 import * as taskActions from "./actions";
 import taskReducer from "./reducer";
 import { ITask, TaskActionsContext, TaskStateContext, TaskStateContext_Default } from "./context";
+import { Guid } from "typescript-guid";
 
 const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const { loginObj } = useAuthState();
@@ -20,20 +21,13 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         }        
     }, [loginObj]);
 
-    const getTask = () => {
-        dispatch(taskActions.getTaskRequestAction());
-        const endpoint = "api/services/app/Task/Get";
-        instance.get(endpoint)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(taskActions.getTaskSuccessAction(response.data.result))
-                    } else {
-                        dispatch(taskActions.getTaskErrorAction())
-                    }
-                })
-                .catch(err => 
-                    dispatch(taskActions.getTaskErrorAction())
-                );
+    const getTask = (id: Guid) => {
+        const task = state.tasks?.find(t => t.id === id);
+        if (task) {
+            dispatch(taskActions.getTaskSuccessAction(task));
+        } else {
+            dispatch(taskActions.getTaskErrorAction());
+        }
     }
     const postTask = (task: ITask) => {
         dispatch(taskActions.postTaskRequestAction());
@@ -56,7 +50,7 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         instance.put(endpoint, task)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(taskActions.putTaskSuccessAction(response.data.result))
+                        dispatch(taskActions.putTaskSuccessAction(response.data.result));
                     } else {
                         dispatch(taskActions.putTaskErrorAction())
                     }
@@ -85,8 +79,9 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         const endpoint = "api/services/app/Task/GetAll";
         instance.get(endpoint)
                 .then(response => {
+                    console.log(response);
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(taskActions.getTasksSuccessAction(response.data.result))
+                        dispatch(taskActions.getTasksSuccessAction(response.data.result.items))
                     } else {
                         dispatch(taskActions.getTasksErrorAction())
                     }
@@ -95,7 +90,6 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                     dispatch(taskActions.getTasksErrorAction())
                 );
     }
-
     const getMyTasks = () => {
         dispatch(taskActions.getTasksRequestAction());
         const endpoint = "api/services/app/Task/GetMyTasks";
