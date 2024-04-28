@@ -8,6 +8,7 @@ import { EyeOutlined } from '@ant-design/icons';
 import { useEffect } from "react";
 import useStyles from "./style";
 import Link from "next/link";
+import { render } from "@testing-library/react";
 
 const { Title, Paragraph } = Typography;
 
@@ -38,7 +39,10 @@ const Page = (): React.ReactNode => {
         { 
             title: 'Amount',
             dataIndex: 'amount',
-            key: 'key'
+            key: 'key',
+            render: (text: any) => {
+                return `R ${text}`;
+            }
         },
         {
             title: 'Views',
@@ -53,7 +57,17 @@ const Page = (): React.ReactNode => {
         {
             title: 'Status',
             dataIndex: 'status',
-            key: 'status'
+            key: 'status',
+            render: (text: number) => {
+                switch (text) {
+                    case 0:
+                        return "New";
+                    case 1:
+                        return "Assigned";
+                    case 2:
+                        return "Done";
+                }
+            }
         },
         {
             title: "Action",
@@ -77,10 +91,10 @@ const Page = (): React.ReactNode => {
             id: task.id,
             title: task.title,
             description: task.description,
-            amount: `R ${task.amount}`,
+            amount: task.amount,
             views: task.views,
             timeFrame: task.timeFrame,
-            status: task.status === 0 ? "New" : task.status === 1 ? "Assigned" : "Done",
+            status: task.status,
         }
     });
     

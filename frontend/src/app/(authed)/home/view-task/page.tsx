@@ -86,13 +86,13 @@ const Page = () => {
             title: 'Amount',
             dataIndex: 'counterAmount',
             key: 'counterAmount',
-            render: (text: string) => <span>R {text}</span>
+            render: (_amount: number) => <span>R {_amount}</span>
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (text: string) => <span>{text === 0 ? OfferStatus.NEW : OfferStatus.Accepted}</span>
+            render: (_status: number) => <span>{_status === 0 ? OfferStatus.NEW : OfferStatus.Accepted}</span>
         },
         {
             title: 'Action',
@@ -120,7 +120,7 @@ const Page = () => {
                         </Form.Item>
                     }
                     {
-                        record.status === 1 && task?.status < 2 &&
+                        record.status === 1 && task && task.status < 2 &&
                         <Form.Item>
                             <Button type="primary" htmlType="submit">Confirm Completion</Button>
                         </Form.Item>
@@ -145,7 +145,7 @@ const Page = () => {
                     timeFrame: task?.timeFrame
                 }}
                 className={cx(styles.form)}
-                disabled={task?.status > 1}
+                disabled={task && task?.status > 1}
             >
                 <Form.Item<FieldType>
                     label="Title"

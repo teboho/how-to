@@ -39,7 +39,10 @@ const Page = (): React.ReactNode => {
         { 
             title: 'Amount',
             dataIndex: 'amount',
-            key: 'key'
+            key: 'key',
+            render: (text: any) => {
+                return `R ${text}`;
+            }
         },
         {
             title: 'Views',
@@ -81,7 +84,7 @@ const Page = (): React.ReactNode => {
             id: task.id,
             title: task.title,
             description: task.description,
-            amount: `R ${task.amount}`,
+            amount: task.amount,
             views: task.views,
             timeFrame: task.timeFrame,
             status: task.status
