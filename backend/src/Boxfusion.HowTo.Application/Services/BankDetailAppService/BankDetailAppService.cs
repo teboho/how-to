@@ -1,8 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
-using Boxfusion.HowTo.Services.BankDetail;
-using Boxfusion.HowTo.Services.BankDetail.Dtos;
+using Boxfusion.HowTo.Services.BankDetailAppService.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

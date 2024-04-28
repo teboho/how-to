@@ -2,7 +2,7 @@
 using Abp.AutoMapper;
 using System;
 
-namespace Boxfusion.HowTo.Services.BankDetail.Dtos
+namespace Boxfusion.HowTo.Services.BankDetailAppService.Dtos
 {
     [AutoMap(typeof(Domain.BankDetail))]
     public class BankDetailDto : FullAuditedEntityDto<Guid>

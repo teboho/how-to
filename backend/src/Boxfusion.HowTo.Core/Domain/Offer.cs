@@ -17,9 +17,15 @@ namespace Boxfusion.HowTo.Domain
         public OfferStatus Status { get; set; }
     }
 
+    /// <summary>
+    /// 0 - Created  
+    /// <br />
+    /// 1 - Accepted
+    /// </summary>
     public enum OfferStatus
     {
         CREATED,
-        ACCEPTED
+        ACCEPTED,
+        REJECTED
     }
 }

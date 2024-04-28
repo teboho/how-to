@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Boxfusion.HowTo.Domain;
-using Boxfusion.HowTo.Services.BankDetail.Dtos;
+using Boxfusion.HowTo.Services.BankDetailAppService.Dtos;
 
 
-namespace Boxfusion.HowTo.Services.BankDetail
+namespace Boxfusion.HowTo.Services.BankDetailAppService
 {
     public interface IBankDetailAppService : IAsyncCrudAppService<BankDetailDto, Guid>
     {

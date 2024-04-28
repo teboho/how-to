@@ -13,8 +13,8 @@ namespace Boxfusion.HowTo.Domain
         public string  IdentityNo { get; set; }
         public bool IsVerified { get; set; }
         public Guid PhotoId { get; set; }
-        [ForeignKey("PhotoId")]
-        public Photo Photo { get; set; }
+        //[ForeignKey("PhotoId")]
+        //public Photo Photo { get; set; }
     }
 
     public enum ProfileType
