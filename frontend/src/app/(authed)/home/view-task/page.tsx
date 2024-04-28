@@ -2,29 +2,39 @@
 
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
-import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Typography } from "antd";
+import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Typography, Table } from "antd";
 import useStyles from "./style";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useAuthState } from "@/providers/authProvider";
 import { AbpTokenProperies } from "@/utils";
+import { IOffer, OfferStatus } from "@/providers/offerProvider/context";
+import { useOfferActions, useOfferState } from "@/providers/offerProvider";
+import { render } from "@testing-library/react";
 
 const { Title } = Typography;
 
 type FieldType = ITask;
 
 const Page = () => {
-    const { getTask } = useTaskActions();
+    const { getTask, completeTask, upViews } = useTaskActions();
     const { task } = useTaskState();
     const { decodedToken } = useAuthState();
-    const { styles, cx, theme } = useStyles();
+    const { postOffer, getMyOffer, getTaskOffers, acceptOffer } = useOfferActions();
+    const { offer, offers } = useOfferState();
+    const { styles, cx } = useStyles();
     const params = new URLSearchParams(useSearchParams());
-
+        
     const id = params.get("id");
 
     useEffect(() => {
         if (typeof id === "string") {
             getTask(id);
+            getMyOffer(id);
+            getTaskOffers(id);
+        }
+        if (role === "executor") {
+            id && upViews(id);
         }
     }, []);
 
@@ -37,15 +47,93 @@ const Page = () => {
         console.log('Failed:', errorInfo);
     }
 
-    const onExecutorFinish: FormProps<FieldType>['onFinish'] = (values) => {
+    const onExecutorFinish: FormProps<IOffer>['onFinish'] = (values) => {
         console.log('Success:', values);
-        alert(JSON.stringify(values));
+        if (id) {
+            values.taskId = id;
+            values.status = 0;
+            postOffer(values);
+        }
     }
+
+    const acceptFinish: FormProps<IOffer>['onFinish'] = (values) => {
+        console.log('Accept Success:', values);
+        if (task?.status === 0) {
+            values.status = 1;
+            if (values.id) {
+                acceptOffer(values.id);
+            }
+        }
+        else if (task?.status === 1) {
+            console.log('Completing:', task);
+            if (task.id) {
+                completeTask(task.id);
+            }
+        }
+    }
+
+    const acceptFinishFailed = (errorInfo: any) => {
+        console.log('Failed:', errorInfo);
+    }
+
+    const columns = [
+        {
+            title: 'Executor',
+            dataIndex: 'creatorUserId',
+            key: 'creatorUserId',
+        },
+        {
+            title: 'Amount',
+            dataIndex: 'counterAmount',
+            key: 'counterAmount',
+            render: (text: string) => <span>R {text}</span>
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text: string) => <span>{text === 0 ? OfferStatus.NEW : OfferStatus.Accepted}</span>
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text: string, record: IOffer) => (
+                <Form preserve={true}
+                    name="accept-offer"
+                    onFinish={acceptFinish}
+                    onFinishFailed={acceptFinishFailed}
+                    layout="vertical"
+                    initialValues={{
+                        counterAmount: record.counterAmount
+                    }}
+                >
+                    <Form.Item
+                        name="id"
+                        hidden
+                        initialValue={record.id}
+                    >
+                        <Input />
+                    </Form.Item>
+                    {   record.status === 0 &&                     
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">Accept</Button>
+                        </Form.Item>
+                    }
+                    {
+                        record.status === 1 && task?.status < 2 &&
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">Confirm Completion</Button>
+                        </Form.Item>
+                    }
+                </Form>
+            )
+        }
+    ];
     
     const clientViewTask = () => (
         <>
             <Title level={2}>View Task</Title>
-            <Form
+            <Form preserve={true}
                 name="new-task"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
@@ -57,9 +145,10 @@ const Page = () => {
                     timeFrame: task?.timeFrame
                 }}
                 className={cx(styles.form)}
+                disabled={task?.status > 1}
             >
                 <Form.Item<FieldType>
-                    label="Ttitle"
+                    label="Title"
                     name="title"
                     rules={[{ required: true, message: 'Please input the task title!' }]}
                 >
@@ -87,7 +176,6 @@ const Page = () => {
                 >
                     <InputNumber />
                 </Form.Item>
-
                 <Form.Item>
                     <ConfigProvider
                         theme={{
@@ -103,11 +191,10 @@ const Page = () => {
                 </Form.Item>                
             </Form>
             <Title level={3}>Task Offers</Title>
-            {/* cards for each offer */}
+            <Table dataSource={offers} columns={columns} />
         </>
     );
 
-    // executor wont be able to edit the task, except they will have a small form to submit their offer below the task details
     const executorViewTask = () => (
         <section className={cx(styles.border)}>
             <article className={cx(styles.border)}>
@@ -121,29 +208,33 @@ const Page = () => {
             </article>
             <hr />
             <Title level={3}>Alternative Offer</Title>
-            <Form
+            {(!offer) && <Form
+                preserve={true}
                 name="new-offer"
                 onFinish={onExecutorFinish}
                 onFinishFailed={onFinishFailed}
                 layout="vertical"
                 initialValues={{
-                    amount: task?.amount
+                    counterAmount: task?.amount
                 }}
                 className={cx(styles.form)}
             >
-                <Form.Item<FieldType>
+                <Form.Item<IOffer>
                     label="Offer Amount"
-                    name="amount"
+                    name="counterAmount"
                     rules={[{ required: true, message: 'Please input the offer amount!' }]}
                 >
                     <InputNumber prefix="R"  />
                 </Form.Item>
                 <Form.Item>
-
-                        <Button type="primary" htmlType="submit">Submit Offer</Button>
-
+                    <Button type="primary" htmlType="submit">Submit Offer</Button>
                 </Form.Item>
-            </Form>
+            </Form>}
+            {(offer) && (<>
+                <Title level={3}>Your Offer</Title>
+                <p>R {offer.counterAmount}</p>
+                <p>Status: {offer.status === 0 ? OfferStatus.NEW : OfferStatus.Accepted}</p>
+            </>)}
         </section>
     );
     const supportViewTask = () => (

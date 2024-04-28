@@ -24,7 +24,7 @@ const Page = () => {
     }
     
     return (
-        <>
+        <section>
             <Title level={2}>New Task</Title>
             <Form
                 name="new-task"
@@ -78,7 +78,7 @@ const Page = () => {
                     </ConfigProvider>
                 </Form.Item>                
             </Form>
-        </>
+        </section>
     );
 }
 

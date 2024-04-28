@@ -46,7 +46,7 @@ const Page = (): React.ReactNode => {
             key: 'views'
         },
         {
-            title: 'Time Frame',
+            title: 'Time Frame (hours)',
             dataIndex: 'timeFrame',
             key: 'timeFrame'
         },
@@ -80,7 +80,7 @@ const Page = (): React.ReactNode => {
             amount: `R ${task.amount}`,
             views: task.views,
             timeFrame: task.timeFrame,
-            status: task.status
+            status: task.status === 0 ? "New" : task.status === 1 ? "Assigned" : "Done",
         }
     });
     

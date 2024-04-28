@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"
 import { useAuthActions, useAuthState } from "@/providers/authProvider";
 import { getRole } from "@/utils";
+import { useProfileActions } from "@/providers/profileProvider";
 
 const { Title, Paragraph } = Typography;
 
@@ -15,6 +16,7 @@ export default function Home() {
   const { cx, styles } = useStyles();
   const { push } = useRouter();
   const { getUser } = useAuthActions();
+  const { getMyProfile } = useProfileActions();
 
   useEffect(() => {
 
@@ -24,6 +26,8 @@ export default function Home() {
         const role = getRole({accessToken});
         
         getUser();
+        getMyProfile();
+
         push(`/home/${role}`);
       }
     }

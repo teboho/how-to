@@ -11,7 +11,7 @@ export interface ITask {
     deletionTime?: string;
     title: string;
     description: string;
-    amount: number | string;
+    amount: number;
     views?: number;
     timeFrame: number;
     status: TaskStatus;
@@ -45,6 +45,9 @@ export interface ITaskActionsContext {
     deleteTask: (task: ITask) => void;
     getTasks: () => void;
     getMyTasks: () => void;
+    completeTask: (taskId: string) => void;
+    upViews: (taskId: string) => void;
+    updateStateTask: (task: ITask) => void;
 }
 export const TaskActionsContext_Default: ITaskActionsContext = {
     getTask: () => {},
@@ -53,6 +56,9 @@ export const TaskActionsContext_Default: ITaskActionsContext = {
     deleteTask: () => {},
     getTasks: () => {},
     getMyTasks: () => {},
+    completeTask: () => {},
+    upViews: () => {},
+    updateStateTask: () => {}
 }
 
 const TaskStateContext = createContext<ITaskStateContext>(TaskStateContext_Default);

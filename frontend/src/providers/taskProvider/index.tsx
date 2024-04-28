@@ -6,7 +6,6 @@ import { useAuthState } from "../authProvider";
 import * as taskActions from "./actions";
 import taskReducer from "./reducer";
 import { ITask, TaskActionsContext, TaskStateContext, TaskStateContext_Default } from "./context";
-import { Guid } from "typescript-guid";
 
 const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const { loginObj } = useAuthState();
@@ -22,12 +21,19 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     }, [loginObj]);
 
     const getTask = (id: string) => {
-        const task = state.tasks?.find(t => t.id === id);
-        if (task) {
-            dispatch(taskActions.getTaskSuccessAction(task));
-        } else {
-            dispatch(taskActions.getTaskErrorAction());
-        }
+        dispatch(taskActions.getTaskRequestAction());
+        const endpoint = "api/services/app/Task/Get?id=" + id;
+        instance.get(endpoint)
+                .then(response => {
+                    if (response.status > 199 && response.status < 300) {
+                        dispatch(taskActions.getTaskSuccessAction(response.data.result))
+                    } else {
+                        dispatch(taskActions.getTaskErrorAction())
+                    }
+                })
+                .catch(err => 
+                    dispatch(taskActions.getTaskErrorAction())
+                );
     }
     const postTask = (task: ITask) => {
         dispatch(taskActions.postTaskRequestAction());
@@ -35,7 +41,8 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
         instance.post(endpoint, task)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(taskActions.postTaskSuccessAction(response.data.result))
+                        dispatch(taskActions.postTaskSuccessAction(response.data.result));
+                        appendStateTask(response.data.result);
                     } else {
                         dispatch(taskActions.postTaskErrorAction())
                     }
@@ -51,6 +58,7 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
                         dispatch(taskActions.putTaskSuccessAction(response.data.result));
+                        updateStateTask(response.data.result); 
                     } else {
                         dispatch(taskActions.putTaskErrorAction())
                     }
@@ -104,6 +112,58 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                 .catch(err => 
                     dispatch(taskActions.getTasksErrorAction())
                 );
+    }    
+    const completeTask = (taskId: string) => {
+        dispatch(taskActions.putTaskRequestAction());
+        const endpoint = "api/services/app/Task/Complete?taskId=" + taskId;
+        instance.put(endpoint)
+                .then(response => {
+                    if (response.status > 199 && response.status < 300) {
+                        dispatch(taskActions.putTaskSuccessAction(response.data.result));
+                        updateStateTask(response.data.result);
+                    } else {
+                        dispatch(taskActions.putTaskErrorAction())
+                    }
+                })
+                .catch(err => 
+                    dispatch(taskActions.putTaskErrorAction())
+                );
+    }    
+    const upViews = (taskId: string) => {
+        dispatch(taskActions.putTaskRequestAction());
+        const endpoint = "api/services/app/Task/UpViews?taskId=" + taskId;
+        instance.put(endpoint)
+                .then(response => {
+                    if (response.status > 199 && response.status < 300) {
+                        dispatch(taskActions.putTaskSuccessAction(response.data.result));
+                        updateStateTask(response.data.result);
+                    } else {
+                        dispatch(taskActions.putTaskErrorAction())
+                    }
+                })
+                .catch(err => 
+                    dispatch(taskActions.putTaskErrorAction())
+                );
+    }
+    const updateStateTask = (task: ITask) => {
+        const tasks = state.tasks;
+        if (tasks) {
+            const index = tasks.findIndex(t => t.id === task.id);
+            if (index > -1) {
+                tasks[index] = task;
+                dispatch(taskActions.getTasksSuccessAction(tasks));
+            }
+        }
+        if (state.task?.id === task.id) {
+            dispatch(taskActions.getTaskSuccessAction(task));
+        }
+    }
+    const appendStateTask = (task: ITask) => {
+        const tasks = state.tasks;
+        if (tasks) {
+            tasks.push(task);
+            dispatch(taskActions.getTasksSuccessAction(tasks));
+        }
     }
 
     return (
@@ -114,7 +174,10 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                 putTask,
                 deleteTask,
                 getTasks,
-                getMyTasks
+                getMyTasks,
+                completeTask,
+                upViews,
+                updateStateTask
             }}>
                 {children}
             </TaskActionsContext.Provider>

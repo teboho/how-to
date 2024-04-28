@@ -96,19 +96,19 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
                     dispatch(profileActions.getProfilesErrorAction())
                 );
     }
-    const getMyProfiles = () => {
-        dispatch(profileActions.getProfilesRequestAction());
-        const endpoint = "api/services/app/Profile/GetMyProfiles";
+    const getMyProfile = () => {
+        dispatch(profileActions.getProfileRequestAction());
+        const endpoint = `api/services/app/Profile/GetMyProfile?userId=${loginObj?.userId}`;
         instance.get(endpoint)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.getProfilesSuccessAction(response.data.result))
+                        dispatch(profileActions.getProfileSuccessAction(response.data.result))
                     } else {
-                        dispatch(profileActions.getProfilesErrorAction())
+                        dispatch(profileActions.getProfileErrorAction())
                     }
                 })
                 .catch(err => 
-                    dispatch(profileActions.getProfilesErrorAction())
+                    dispatch(profileActions.getProfileErrorAction())
                 );
     }
 
@@ -116,10 +116,11 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
         <ProfileStateContext.Provider value={{ ...state }}>
             <ProfileActionsContext.Provider value={{
                 getProfile,
+                getMyProfile,
                 postProfile,
                 putProfile,
                 deleteProfile,
-                getProfiles
+                getProfiles,
             }}>
                 {children}
             </ProfileActionsContext.Provider>

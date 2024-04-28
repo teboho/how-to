@@ -9,6 +9,7 @@ import Link from 'next/link';
 import React, { useEffect } from 'react';
 import 'react-data-grid/lib/styles.css';
 import useStyles from './style';
+import { render } from '@testing-library/react';
 
 const { Title, Paragraph } = Typography;
 
@@ -23,7 +24,6 @@ const Page = (): React.ReactNode => {
             getMyTasks();
         }
     }, []);
-
     
     const columns = [
         {
@@ -47,14 +47,17 @@ const Page = (): React.ReactNode => {
             key: 'views'
         },
         {
-            title: 'Time Frame',
+            title: 'Time Frame (hours)',
             dataIndex: 'timeFrame',
             key: 'timeFrame'
         },
         {
             title: 'Status',
             dataIndex: 'status',
-            key: 'status'
+            key: 'status',
+            render: (text: any) => {
+                return text === 0 ? "New" : text === 1 ? "Assigned" : "Done";
+            }
         },
         {
             title: "Action",

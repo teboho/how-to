@@ -31,6 +31,7 @@ export const ProfileStateContext_Default: IProfileStateContext = {
 
 export interface IProfileActionsContext {
     getProfile: () => void;
+    getMyProfile: () => void;
     postProfile: (profile: IProfile) => void;
     putProfile: (profile: IProfile) => void;
     deleteProfile: (profile: IProfile) => void;
@@ -38,6 +39,7 @@ export interface IProfileActionsContext {
 }
 export const ProfileActionsContext_Default: IProfileActionsContext = {
     getProfile: () => {},
+    getMyProfile: () => {},
     postProfile: () => {},
     putProfile: () => {},
     deleteProfile: () => {},
