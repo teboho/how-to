@@ -1,7 +1,7 @@
 "use client";
 
 import { getAxiosInstace } from "@/utils";
-import React, { useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
 import * as taskActions from "./actions";
 import taskReducer from "./reducer";
@@ -12,6 +12,18 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const [messageApi, contextHolder] = message.useMessage();
     const { loginObj } = useAuthState();
     const [state, dispatch] = useReducer(taskReducer, TaskStateContext_Default);
+
+    useEffect(() => {
+        if (loginObj) {
+            getTasks();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (loginObj) {
+            getTasks();
+        }
+    }, [loginObj]);
 
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
