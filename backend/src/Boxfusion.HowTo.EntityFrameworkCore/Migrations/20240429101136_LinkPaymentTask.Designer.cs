@@ -4,6 +4,7 @@ using Boxfusion.HowTo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Boxfusion.HowTo.Migrations
 {
     [DbContext(typeof(HowToDbContext))]
-    partial class HowToDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240429101136_LinkPaymentTask")]
+    partial class LinkPaymentTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1969,6 +1972,9 @@ namespace Boxfusion.HowTo.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("PayerId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
@@ -1981,6 +1987,8 @@ namespace Boxfusion.HowTo.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BeneficiaryId");
+
+                    b.HasIndex("PayerId");
 
                     b.HasIndex("TaskId");
 
@@ -2637,6 +2645,12 @@ namespace Boxfusion.HowTo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Boxfusion.HowTo.Authorization.Users.User", "Payer")
+                        .WithMany()
+                        .HasForeignKey("PayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Boxfusion.HowTo.Domain.Task", "Task")
                         .WithMany()
                         .HasForeignKey("TaskId")
@@ -2644,6 +2658,8 @@ namespace Boxfusion.HowTo.Migrations
                         .IsRequired();
 
                     b.Navigation("Beneficiary");
+
+                    b.Navigation("Payer");
 
                     b.Navigation("Task");
                 });

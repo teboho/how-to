@@ -10,5 +10,10 @@ namespace Boxfusion.HowTo.Services.PaymentAppService
 {
     public interface IPaymentAppService : IAsyncCrudAppService<PaymentDto, Guid>
     {
+        /// <summary>
+        /// Only those payments made by the current user
+        /// </summary>
+        /// <returns></returns>
+        protected Task<List<PaymentDto>> GetMyPayments();
     }
 }
