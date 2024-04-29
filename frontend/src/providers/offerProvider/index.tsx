@@ -6,10 +6,12 @@ import { useAuthState } from "../authProvider";
 import * as offerActions from "./actions";
 import offerReducer from "./reducer";
 import { IOffer, OfferActionsContext, OfferStateContext, OfferStateContext_Default } from "./context";
+import { message } from "antd";
 
 const OfferProvider = ({ children }: { children: React.ReactNode }) => {
     const { loginObj } = useAuthState();
     const [state, dispatch] = useReducer(offerReducer, OfferStateContext_Default);
+    const [messageApi, contextHolder] = message.useMessage();
 
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
@@ -41,7 +43,8 @@ const OfferProvider = ({ children }: { children: React.ReactNode }) => {
         instance.post(endpoint, offer)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(offerActions.postOfferSuccessAction(response.data.result))
+                        dispatch(offerActions.postOfferSuccessAction(response.data.result));
+                        messageApi.success("Offer created successfully");
                     } else {
                         dispatch(offerActions.postOfferErrorAction())
                     }
@@ -56,7 +59,8 @@ const OfferProvider = ({ children }: { children: React.ReactNode }) => {
         instance.put(endpoint, offer)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(offerActions.putOfferSuccessAction(response.data.result))
+                        dispatch(offerActions.putOfferSuccessAction(response.data.result));
+                        messageApi.success("Offer updated successfully");
                     } else {
                         dispatch(offerActions.putOfferErrorAction())
                     }
@@ -71,9 +75,10 @@ const OfferProvider = ({ children }: { children: React.ReactNode }) => {
         instance.put(endpoint)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(offerActions.putOfferSuccessAction(response.data.result))
+                        dispatch(offerActions.putOfferSuccessAction(response.data.result));
+                        messageApi.success("Offer accepted successfully");
                     } else {
-                        dispatch(offerActions.putOfferErrorAction())
+                        dispatch(offerActions.putOfferErrorAction());
                     }
                 })
                 .catch(err => 
@@ -155,6 +160,7 @@ const OfferProvider = ({ children }: { children: React.ReactNode }) => {
                 getTaskOffers,
                 acceptOffer
             }}>
+                {contextHolder}
                 {children}
             </OfferActionsContext.Provider>
         </OfferStateContext.Provider>

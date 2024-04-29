@@ -6,8 +6,10 @@ import { useAuthState } from "../authProvider";
 import * as taskActions from "./actions";
 import taskReducer from "./reducer";
 import { ITask, TaskActionsContext, TaskStateContext, TaskStateContext_Default } from "./context";
+import { message } from "antd";
 
 const TaskProvider = ({ children }: { children: React.ReactNode }) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const { loginObj } = useAuthState();
     const [state, dispatch] = useReducer(taskReducer, TaskStateContext_Default);
 
@@ -43,6 +45,7 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                     if (response.status > 199 && response.status < 300) {
                         dispatch(taskActions.postTaskSuccessAction(response.data.result));
                         appendStateTask(response.data.result);
+                        messageApi.success("Task created successfully");
                     } else {
                         dispatch(taskActions.postTaskErrorAction())
                     }
@@ -165,6 +168,13 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
             dispatch(taskActions.getTasksSuccessAction(tasks));
         }
     }
+    const getLocalTask = (id: string) => {
+        const tasks = state.tasks;
+        if (tasks) {
+            return tasks.find(t => t.id === id);
+        }
+        return undefined;
+    }
 
     return (
         <TaskStateContext.Provider value={{ ...state }}>
@@ -177,8 +187,10 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                 getMyTasks,
                 completeTask,
                 upViews,
-                updateStateTask
+                updateStateTask,
+                getLocalTask
             }}>
+                {contextHolder}
                 {children}
             </TaskActionsContext.Provider>
         </TaskStateContext.Provider>

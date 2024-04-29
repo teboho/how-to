@@ -9,12 +9,13 @@ import { useEffect } from "react";
 import useStyles from "./style";
 import Link from "next/link";
 import { render } from "@testing-library/react";
+import Loading from "./loading";
 
 const { Title, Paragraph } = Typography;
 
 const Page = (): React.ReactNode => {
     const { loginObj } = useAuthState();
-    const { tasks } = useTaskState();
+    const { tasks, isPending } = useTaskState();
     const { getTasks } = useTaskActions();
     const { styles, cx } = useStyles();
 
@@ -35,9 +36,13 @@ const Page = (): React.ReactNode => {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
+            // render a partial description
+            render: (text: any) => {
+                return text.length > 100 ? text.slice(0, 100) + "..." : text;
+            }
         },
         { 
-            title: 'Amount',
+            title: 'Amount (ZAR per hour)',
             dataIndex: 'amount',
             key: 'key',
             render: (text: any) => {
@@ -112,7 +117,8 @@ const Page = (): React.ReactNode => {
                     onChange={(value) => {value}}
                     options={['Tasks', 'Transactions']}
                 />
-                <Table columns={columns} dataSource={rows || []} />
+                {rows && <Table columns={columns} dataSource={rows} />}
+                {isPending ? <Loading /> : null }
             </section>
         </section>
     );

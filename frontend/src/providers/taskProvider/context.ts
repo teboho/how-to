@@ -48,6 +48,7 @@ export interface ITaskActionsContext {
     completeTask: (taskId: string) => void;
     upViews: (taskId: string) => void;
     updateStateTask: (task: ITask) => void;
+    getLocalTask: (id: string) => ITask | undefined;
 }
 export const TaskActionsContext_Default: ITaskActionsContext = {
     getTask: () => {},
@@ -58,7 +59,8 @@ export const TaskActionsContext_Default: ITaskActionsContext = {
     getMyTasks: () => {},
     completeTask: () => {},
     upViews: () => {},
-    updateStateTask: () => {}
+    updateStateTask: () => {},
+    getLocalTask: () => undefined
 }
 
 const TaskStateContext = createContext<ITaskStateContext>(TaskStateContext_Default);

@@ -70,7 +70,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         instance.post(endpoint, loginRequest)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(authActions.loginSuccessAction(response.data.result))
+                        dispatch(authActions.loginSuccessAction(response.data.result));
                         const decodedToken: IDecodedToken = decodeToken(response.data.result.accessToken);
                         const _role = (decodedToken[AbpTokenProperies.role]);
                         console.log("role", _role);

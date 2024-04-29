@@ -1,16 +1,18 @@
 "use client";
 
+import { useAuthState } from "@/providers/authProvider";
+import { useOfferActions, useOfferState } from "@/providers/offerProvider";
+import { IOffer, OfferStatus } from "@/providers/offerProvider/context";
+import { usePaymentActions, usePaymentState } from "@/providers/paymentProvider";
+import { IPayfastResponse } from "@/providers/paymentProvider/context";
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
-import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Typography, Table } from "antd";
-import useStyles from "./style";
-import { useSearchParams } from "next/navigation";
-import React, { useEffect, useMemo } from "react";
-import { useAuthState } from "@/providers/authProvider";
 import { AbpTokenProperies } from "@/utils";
-import { IOffer, OfferStatus } from "@/providers/offerProvider/context";
-import { useOfferActions, useOfferState } from "@/providers/offerProvider";
-import { render } from "@testing-library/react";
+import PaystackPop from '@paystack/inline-js';
+import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Table, Typography } from "antd";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import useStyles from "./style";
 
 const { Title } = Typography;
 
@@ -22,21 +24,57 @@ const Page = () => {
     const { decodedToken } = useAuthState();
     const { postOffer, getMyOffer, getTaskOffers, acceptOffer } = useOfferActions();
     const { offer, offers } = useOfferState();
+    const { postPayment } = usePaymentActions();
+    const { payment } = usePaymentState();
     const { styles, cx } = useStyles();
     const params = new URLSearchParams(useSearchParams());
         
-    const id = params.get("id");
+    const _taskId = params.get("id");
+
+    const roleKey = AbpTokenProperies.role;
+    const role = decodedToken ? `${decodedToken[roleKey]}` : "";
 
     useEffect(() => {
-        if (typeof id === "string") {
-            getTask(id);
-            getMyOffer(id);
-            getTaskOffers(id);
+        if (typeof _taskId === "string") {
+            getTask(_taskId);
+            getMyOffer(_taskId);
+            getTaskOffers(_taskId);
+
+            if (role.toLocaleLowerCase() === "executor") {
+                upViews(_taskId);
+            }
         }
-        if (role === "executor") {
-            id && upViews(id);
-        }
-    }, []);
+    }, []);   
+
+    /**
+     * 
+     * @param offerId the offer id
+     * @param execId person who made the offer
+     */
+    const goPay = (offerId: string, execId: number) => {
+        const paystack = new PaystackPop();
+        paystack.newTransaction({
+            key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+            email: "teboho.dev@gmail.com",
+            amount: 500,
+            onSuccess: (response: IPayfastResponse) => {
+                console.log(response);
+                acceptOffer(offerId);
+                postPayment({
+                    beneficiaryId: execId,
+                    amount: 500,
+                    reference: response.reference,
+                    bank: response.bank,
+                    transaction: response.transaction,
+                    taskId: _taskId as string
+                });
+            },
+            onClose: () => {
+                console.log("closed");
+            }
+        });
+    
+    };
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
         console.log('Success:', values);
@@ -49,8 +87,8 @@ const Page = () => {
 
     const onExecutorFinish: FormProps<IOffer>['onFinish'] = (values) => {
         console.log('Success:', values);
-        if (id) {
-            values.taskId = id;
+        if (_taskId) {
+            values.taskId = _taskId;
             values.status = 0;
             postOffer(values);
         }
@@ -60,8 +98,8 @@ const Page = () => {
         console.log('Accept Success:', values);
         if (task?.status === 0) {
             values.status = 1;
-            if (values.id) {
-                acceptOffer(values.id);
+            if (values.id && values.creatorUserId && _taskId) {
+                goPay(values.id, values.creatorUserId);
             }
         }
         else if (task?.status === 1) {
@@ -111,6 +149,13 @@ const Page = () => {
                         name="id"
                         hidden
                         initialValue={record.id}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="creatorUserId"
+                        hidden
+                        initialValue={record.creatorUserId}
                     >
                         <Input />
                     </Form.Item>
@@ -249,8 +294,6 @@ const Page = () => {
         </>
     );
 
-    const roleKey = AbpTokenProperies.role;
-    const role = decodedToken ? `${decodedToken[roleKey]}` : "";
     switch (role.toLocaleLowerCase()) {
         case "support":
             return supportViewTask();

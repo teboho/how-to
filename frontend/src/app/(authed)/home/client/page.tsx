@@ -9,6 +9,8 @@ import Link from 'next/link';
 import React, { useEffect } from 'react';
 import 'react-data-grid/lib/styles.css';
 import useStyles from './style';
+import Loading from './loading';
+import { usePaymentActions, usePaymentState } from '@/providers/paymentProvider';
 import { render } from '@testing-library/react';
 
 const { Title, Paragraph } = Typography;
@@ -16,16 +18,20 @@ const { Title, Paragraph } = Typography;
 const Page = (): React.ReactNode => {
     const { styles, cx, theme } = useStyles();
     const { loginObj } = useAuthState();
-    const { getMyTasks } = useTaskActions();
-    const { tasks, isPending, isSuccess } = useTaskState();
+    const { getMyTasks, getLocalTask } = useTaskActions();
+    const { tasks, isPending, isSuccess: tasksSuccess } = useTaskState();
+    const { getPayments } = usePaymentActions();
+    const { payments, isSuccess: paymentsSuccess } = usePaymentState();
+    const [table, setTable] = React.useState<string>('Tasks');
 
     useEffect(() => {
         if (loginObj) {
             getMyTasks();
+            getPayments();
         }
     }, []);
     
-    const columns = [
+    const task_columns = [
         {
             title: 'Title',
             dataIndex: 'title',
@@ -34,7 +40,11 @@ const Page = (): React.ReactNode => {
         {
             title: 'Description',
             dataIndex: 'description',
-            key: 'description',
+            key: 'description', 
+            // render a partial description
+            render: (text: any) => {
+                return text.length > 100 ? text.slice(0, 100) + "..." : text;
+            }
         },
         { 
             title: 'Amount',
@@ -78,7 +88,7 @@ const Page = (): React.ReactNode => {
         }
     ];
 
-    const rows = tasks?.map((task: ITask) => {
+    const task_rows = tasks?.map((task: ITask) => {
         return {
             key: `task_${task.id}`,
             id: task.id,
@@ -88,6 +98,56 @@ const Page = (): React.ReactNode => {
             views: task.views,
             timeFrame: task.timeFrame,
             status: task.status
+        }
+    });
+
+    const payment_columns = [
+        {
+            title: 'Reference',
+            dataIndex: 'reference',
+            key: 'reference',
+        },
+        {
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'amount', 
+            render: (text: any) => {
+                return `R ${text}`;
+            }
+        },
+        { 
+            title: 'Transaction',
+            dataIndex: 'transaction',
+            key: 'transaction'
+        },
+        {
+            title: 'Bank',
+            dataIndex: 'bank',
+            key: 'bank'
+        },
+        {
+            title: 'Task ID',
+            dataIndex: 'taskId',
+            key: 'taskId',
+            render: (text: any) => {
+                return <Link href={`
+                    view-task?id=${text}
+                `}>
+                    {getLocalTask(text)?.title}
+                </Link>
+            }
+        }
+    ];
+
+    const payment_rows = payments?.map((payment: any) => {
+        return {
+            key: `payment_${payment.id}`,
+            id: payment.id,
+            reference: payment.reference,
+            amount: payment.amount,
+            transaction: payment.transaction,
+            bank: payment.bank,
+            taskId: payment.taskId
         }
     });
 
@@ -102,10 +162,11 @@ const Page = (): React.ReactNode => {
                     className={cx(styles.segmented)}
                     defaultValue="Tasks"
                     style={{ marginBottom: 8 }}
-                    onChange={(value) => {value}}
-                    options={['Tasks', 'Transactions']}
+                    onChange={(value) => setTable(value)}
+                    options={['Tasks', 'Payments']}
                 />
-                <Table columns={columns} dataSource={rows || []} />
+                {tasksSuccess && paymentsSuccess && <Table columns={table === "Tasks" ? task_columns : payment_columns} dataSource={table === "Tasks" ? task_rows : payment_rows} />}
+                {isPending ? <Loading /> : null }
             </section>
         </section>
     );

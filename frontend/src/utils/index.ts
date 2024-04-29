@@ -18,7 +18,7 @@ export enum AbpTokenProperies {
     securitystamp = "AspNet.Identity.SecurityStamp",
     role = `http://schemas.microsoft.com/ws/2008/06/identity/claims/role`
 }
-
+    
 export const getApiUrl = () => {
     return process.env.NEXT_PUBLIC_API_URL;
 }

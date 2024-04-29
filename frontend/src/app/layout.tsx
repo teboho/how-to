@@ -8,6 +8,7 @@ import { ConfigProvider, Input, Layout } from "antd";
 import TaskProvider from "@/providers/taskProvider";
 import ProfileProvider from "@/providers/profileProvider";
 import OfferProvider from "@/providers/offerProvider";
+import PaymentProvider from "@/providers/paymentProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,7 +46,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                 <TaskProvider>
                   <ProfileProvider>
                     <OfferProvider>
-                      {children}  
+                      <PaymentProvider>
+                        {children}  
+                      </PaymentProvider>
                     </OfferProvider>
                   </ProfileProvider>
                 </TaskProvider>
