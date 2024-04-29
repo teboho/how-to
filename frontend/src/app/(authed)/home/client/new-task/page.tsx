@@ -1,27 +1,62 @@
 "use client";
 
-import { useTaskActions } from "@/providers/taskProvider";
+import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
-import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Typography } from "antd";
+import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Select, Tag, Typography } from "antd";
 import useStyles from "./style";
+import { useCategoriestate as useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
+import type { SelectProps } from 'antd';
+
+type TagRender = SelectProps['tagRender'];
+
+const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
+
+const tagRender: TagRender = (props) => {
+  const { label, value, closable, onClose } = props;
+  const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  return (
+    <Tag
+      color={value}
+      onMouseDown={onPreventMouseDown}
+      closable={closable}
+      onClose={onClose}
+      style={{ marginInlineEnd: 4, background: '#B64326' }}
+    >
+      {label}
+    </Tag>
+  );
+};
 
 const { Title } = Typography;
 
 type FieldType = ITask;
 
-const Page = () => {
+const Page = (): React.ReactNode => {
+    const { task } = useTaskState();
     const { postTask } = useTaskActions();
+    const { categories } = useCategoriesState();
+    const { postTaskCategory } = useCategoryActions();
     const { styles, cx, theme } = useStyles();
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
         console.log('Success:', values);
         values.status = 0;
-        postTask(values);
+        if (values?.categories?.length > 0) {
+            postTask(values, values?.categories);
+            if (task !== undefined) {
+                values.categories.forEach((categoryId: string) => postTaskCategory(categoryId, `${task.id}`));
+            }
+        }
     }
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     }
+
+    const options = categories?.map(category => ({ label: category.title, value: category.id, color: colors[Math.floor(Math.random() * colors.length)]}));
     
     return (
         <section>
@@ -64,18 +99,23 @@ const Page = () => {
                     <InputNumber />
                 </Form.Item>
 
+                {/* Select for categories */}
+                <Form.Item
+                    label="Category"
+                    name="categories"
+                    rules={[{ required: true, message: 'Please select a category!' }]}
+                >
+                    <Select 
+                        mode="multiple"
+                        tagRender={tagRender}
+                        defaultValue={[]}
+                        style={{ width: '100%', backgroundColor: '#B64326' }}
+                        options={options}
+                        maxCount={3}
+                    />
+                </Form.Item>
                 <Form.Item>
-                    <ConfigProvider
-                        theme={{
-                            token: {
-                                colorBgContainer: "#fff",
-                                colorPrimaryActive: "#B64326",
-                                colorBgTextActive: "#B64326"
-                            }        
-                        }}
-                    >
-                        <Button type="primary" htmlType="submit">Submit</Button>
-                    </ConfigProvider>
+                <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>                
             </Form>
         </section>

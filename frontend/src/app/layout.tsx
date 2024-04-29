@@ -9,6 +9,7 @@ import TaskProvider from "@/providers/taskProvider";
 import ProfileProvider from "@/providers/profileProvider";
 import OfferProvider from "@/providers/offerProvider";
 import PaymentProvider from "@/providers/paymentProvider";
+import CategoryProvider from "@/providers/categoryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,7 +48,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                   <ProfileProvider>
                     <OfferProvider>
                       <PaymentProvider>
-                        {children}  
+                        <CategoryProvider>
+                          {children}  
+                        </CategoryProvider>
                       </PaymentProvider>
                     </OfferProvider>
                   </ProfileProvider>

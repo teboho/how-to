@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuthState } from '@/providers/authProvider';
+import { usePaymentActions, usePaymentState } from '@/providers/paymentProvider';
 import { useTaskActions, useTaskState } from '@/providers/taskProvider';
 import { ITask } from '@/providers/taskProvider/context';
 import { EyeOutlined } from '@ant-design/icons';
@@ -8,10 +9,8 @@ import { Segmented, Space, Table, Typography } from 'antd';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import 'react-data-grid/lib/styles.css';
-import useStyles from './style';
 import Loading from './loading';
-import { usePaymentActions, usePaymentState } from '@/providers/paymentProvider';
-import { render } from '@testing-library/react';
+import useStyles from './style';
 
 const { Title, Paragraph } = Typography;
 

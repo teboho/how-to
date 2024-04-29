@@ -1,6 +1,7 @@
 import { createContext } from "react";
 
 export interface ITask {
+    categories?: any;
     id?: string;
     creationTime?: string;
     creatorUserId?: number;
@@ -40,7 +41,7 @@ export const TaskStateContext_Default: ITaskStateContext = {
 
 export interface ITaskActionsContext {
     getTask: (id: string) => void;
-    postTask: (task: ITask) => void;
+    postTask: (task: ITask, categories: string[]) => void;
     putTask: (task: ITask) => void;
     deleteTask: (task: ITask) => void;
     getTasks: () => void;

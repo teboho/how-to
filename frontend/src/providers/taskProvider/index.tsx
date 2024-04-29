@@ -7,6 +7,7 @@ import * as taskActions from "./actions";
 import taskReducer from "./reducer";
 import { ITask, TaskActionsContext, TaskStateContext, TaskStateContext_Default } from "./context";
 import { message } from "antd";
+import { postTaskCategoryErrorAction, postTaskCategoryRequestAction, postTaskCategorySuccessAction } from "../categoryProvider/actions";
 
 const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -49,7 +50,7 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                     dispatch(taskActions.getTaskErrorAction())
                 );
     }
-    const postTask = (task: ITask) => {
+    const postTask = (task: ITask, categoreies: string[]) => {
         dispatch(taskActions.postTaskRequestAction());
         const endpoint = "api/services/app/Task/Create"
         instance.post(endpoint, task)
@@ -58,12 +59,28 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                         dispatch(taskActions.postTaskSuccessAction(response.data.result));
                         appendStateTask(response.data.result);
                         messageApi.success("Task created successfully");
+                        categoreies.forEach((categoryId: string) => postTaskCategory(categoryId, `${response.data.result.id}`));
                     } else {
                         dispatch(taskActions.postTaskErrorAction())
                     }
                 })
                 .catch(err => 
                     dispatch(taskActions.postTaskErrorAction())
+                );
+    }
+    const postTaskCategory = (categoryId: string, taskId: string) => {
+        dispatch(postTaskCategoryRequestAction());
+        const endpoint = "api/services/app/TaskCategory/Create"
+        instance.post(endpoint, { categoryId, taskId })
+                .then(response => {
+                    if (response.status > 199 && response.status < 300) {
+                        dispatch(postTaskCategorySuccessAction());
+                    } else {
+                        dispatch(postTaskCategoryErrorAction())
+                    }
+                })
+                .catch(err => 
+                    dispatch(postTaskCategoryErrorAction())
                 );
     }
     const putTask = (task: ITask) => {
