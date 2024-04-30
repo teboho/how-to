@@ -91,7 +91,7 @@ There should be an open window for a client to make a dispute about the task exe
 1. Executors should be able to post their availability on the web application.
 1. Executors should be able to attach their portfolio to their profile on the web application.
 1. Executors should be able to attach their going rate to their profile on the web application.
-1. Clients should should be able to rate the executors that they have hired on the web application.
+1. Clients should be able to rate the executors that they have hired on the web application.
 1. Clients should be able to review the executors that they have hired on the web application.
 1. Executors should be able to see the tasks that they have been rated for on the web application.
 1. Executors should be able to see the tasks that they have been reviewed for on the web application.
@@ -101,6 +101,7 @@ There should be an open window for a client to make a dispute about the task exe
 1. Support team users should be able to handle a dispute on the web application.
 1. Suppport team users should be able to refund a client on the web application.
 1. The website should have an FAQ page.
+1. The support should be able to create a new category on the web application.
 
 ## Non-Functional Requirements
 
@@ -115,6 +116,9 @@ There should be an open window for a client to make a dispute about the task exe
 1. Clients: Clients are people who are looking to hire someone to do a task for them. They are the people who are posting the tasks on the web application.
 1. Executors: Executors are people who are looking to do a task for someone. They are the people who are applying for the tasks on the web application.
 1. Support Team Users: Support team users are people who are working for the company that owns the web application. They are the people who are handling the disputes, and releasing the funds for the tasks that have been completed.
+
+
+> The following requires updating  
 
 ## Use Cases
 
@@ -141,3 +145,8 @@ There should be an open window for a client to make a dispute about the task exe
 9. Email: Azure Communication Services
 10. Authentication: Azure Active Directory ??
 11. Version Control: GitHub
+
+## Ambitious UI Goals
+
+1. Interactive product demo
+    1. Similar to Sonarqube's 
