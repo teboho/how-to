@@ -6,7 +6,7 @@ using Boxfusion.HowTo.Authorization;
 namespace Boxfusion.HowTo
 {
     [DependsOn(
-        typeof(HowToCoreModule), 
+        typeof(HowToCoreModule),
         typeof(AbpAutoMapperModule))]
     public class HowToApplicationModule : AbpModule
     {

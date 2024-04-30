@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using Boxfusion.HowTo.Authorization;
+﻿using Boxfusion.HowTo.Authorization;
 using Boxfusion.HowTo.Authorization.Roles;
 using Boxfusion.HowTo.Authorization.Users;
 using Boxfusion.HowTo.Editions;
 using Boxfusion.HowTo.MultiTenancy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Boxfusion.HowTo.Identity
 {

@@ -2011,7 +2011,7 @@ namespace Boxfusion.HowTo.Migrations
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Photo", b =>
+            modelBuilder.Entity("Boxfusion.HowTo.Domain.Portfolio", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -2029,7 +2029,7 @@ namespace Boxfusion.HowTo.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FileName")
+                    b.Property<string>("IdentityNo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -2041,9 +2041,12 @@ namespace Boxfusion.HowTo.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Links")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Photos");
+                    b.ToTable("Portfolios");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Profile", b =>
@@ -2070,16 +2073,13 @@ namespace Boxfusion.HowTo.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("PhotoId")
+                    b.Property<Guid>("StoredFileId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -2213,11 +2213,35 @@ namespace Boxfusion.HowTo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BasePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -2330,27 +2354,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.HasIndex("GuideId");
 
                     b.ToTable("UpVotes");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.UserFileStore", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FileId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserFileStore");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.MultiTenancy.Tenant", b =>
@@ -2830,25 +2833,6 @@ namespace Boxfusion.HowTo.Migrations
                         .IsRequired();
 
                     b.Navigation("Guide");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.UserFileStore", b =>
-                {
-                    b.HasOne("Boxfusion.HowTo.Domain.StoredFile", "StoredFileModel")
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Boxfusion.HowTo.Authorization.Users.User", "UserModel")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("StoredFileModel");
-
-                    b.Navigation("UserModel");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.MultiTenancy.Tenant", b =>

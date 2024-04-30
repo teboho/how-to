@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using Boxfusion.HowTo.Users;
+using Boxfusion.HowTo.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
-using Abp.Application.Services.Dto;
-using Boxfusion.HowTo.Users;
-using Boxfusion.HowTo.Users.Dto;
 
 namespace Boxfusion.HowTo.Tests.Users
 {
@@ -21,7 +20,7 @@ namespace Boxfusion.HowTo.Tests.Users
         public async Task GetUsers_Test()
         {
             // Act
-            var output = await _userAppService.GetAllAsync(new PagedUserResultRequestDto{MaxResultCount=20, SkipCount=0} );
+            var output = await _userAppService.GetAllAsync(new PagedUserResultRequestDto { MaxResultCount = 20, SkipCount = 0 });
 
             // Assert
             output.Items.Count.ShouldBeGreaterThan(0);

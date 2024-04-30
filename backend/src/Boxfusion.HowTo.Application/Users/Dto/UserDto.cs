@@ -1,9 +1,9 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using Abp.Application.Services.Dto;
 using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using Boxfusion.HowTo.Authorization.Users;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Boxfusion.HowTo.Users.Dto
 {

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Transactions;
-using Microsoft.EntityFrameworkCore;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Abp.Domain.Uow;
 using Abp.EntityFrameworkCore.Uow;
 using Abp.MultiTenancy;
 using Boxfusion.HowTo.EntityFrameworkCore.Seed.Host;
 using Boxfusion.HowTo.EntityFrameworkCore.Seed.Tenants;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Transactions;
 
 namespace Boxfusion.HowTo.EntityFrameworkCore.Seed
 {

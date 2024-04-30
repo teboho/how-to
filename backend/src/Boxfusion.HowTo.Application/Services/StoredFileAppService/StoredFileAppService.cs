@@ -1,4 +1,6 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Application.Services;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
 using Abp.UI;
 using AutoMapper;
 using Boxfusion.HowTo.Services.StoredFileAppService.Dtos;
@@ -11,98 +13,140 @@ using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Services.StoredFileAppService
 {
-    public class StoredFileAppService : ControllerBase, IStoredFileAppService
+    public class StoredFileAppService : AsyncCrudAppService<Domain.StoredFile, StoredFileDto, Guid>, IAsyncCrudAppService<StoredFileDto, Guid>, IStoredFileAppService
     {
         const string BASE_FILE_PATH = "App_Data/Images";
+        const string PROFILE_BASE_FILE_PATH = "App_Data/Profiles/Images";
 
         private readonly IRepository<Domain.StoredFile, Guid> _storedFileRepository;
+        private readonly IRepository<Domain.Profile, Guid> _profileRepository;
         private readonly IMapper _mapper;
 
-        public StoredFileAppService(IRepository<Domain.StoredFile, Guid> storedFileRepository, IMapper mapper)
+        public StoredFileAppService(IRepository<Domain.StoredFile, Guid> repository, IRepository<Domain.Profile, Guid> profileRepository, IMapper mapper) : base(repository)
         {
             _mapper = mapper;
-            _storedFileRepository = storedFileRepository;
-
+            _storedFileRepository = repository;
+            _profileRepository = profileRepository;
         }
 
         [HttpPost, Route("Upload")]
         [Consumes("multipart/form-data")]
-        //require an id of the image 
-
         public async Task<Domain.StoredFile> CreateStoredFile([FromForm] StoredFileDto input)
         {
-            //if (!Utils.IsImage(input.File))
-            //    throw new ArgumentException("The file is not a valid image.");
-
             var existingFile = await _storedFileRepository.FirstOrDefaultAsync(x => x.FileName == input.File.FileName);
 
             if (existingFile != null)
             {
-                // If a file with the same filename exists, return the existing file
                 return existingFile;
             }
             else
             {
-                var storedFile = _mapper.Map<Domain.StoredFile>(input);
-                storedFile.FileType = input.File.ContentType;
+                var mappedInput = _mapper.Map<Domain.StoredFile>(input);
+                mappedInput.FileType = input.File.ContentType;
 
-                var filePath = $"{BASE_FILE_PATH}/{input.File.FileName}"; //png if it's an image
+                var filePath = $"{BASE_FILE_PATH}/{input.File.FileName}";
 
                 using (var fileStream = input.File.OpenReadStream())
                 {
                     await SaveFile(filePath, fileStream);
                 }
 
-                storedFile.FileName = input.File.FileName;
-                storedFile.FileType = input.File.ContentType;
+                mappedInput.FileName = input.File.FileName;
+                mappedInput.FileType = input.File.ContentType;
+                mappedInput.BasePath = BASE_FILE_PATH;
 
-                return await _storedFileRepository.InsertAsync(storedFile);
+                return await _storedFileRepository.InsertAsync(mappedInput);
             }
         }
 
+        [HttpPost, Route("UploadProfilePicture")]
+        [Consumes("multipart/form-data")]
+        public async Task<Domain.StoredFile> CreateProfileStoredFile([FromForm] StoredFileDto input)
+        {
+            var existingFile = await _storedFileRepository.FirstOrDefaultAsync(x => x.FileName == input.File.FileName);
+
+            if (existingFile != null)
+            {
+                if (existingFile.BasePath.IsNullOrEmpty())
+                {
+                    existingFile.BasePath = PROFILE_BASE_FILE_PATH;
+                    await _storedFileRepository.UpdateAsync(existingFile);
+                    CurrentUnitOfWork.SaveChanges();
+                }
+                return existingFile;
+            }
+
+            var mappedInput = _mapper.Map<Domain.StoredFile>(input);
+            mappedInput.FileType = input.File.ContentType;
+
+            var filePath = $"{PROFILE_BASE_FILE_PATH}/{input.File.FileName}";
+
+            using (var fileStream = input.File.OpenReadStream())
+            {
+                await SaveFile(filePath, fileStream);
+            }
+
+            mappedInput.FileName = input.File.FileName;
+            mappedInput.FileType = input.File.ContentType;
+            mappedInput.BasePath = PROFILE_BASE_FILE_PATH;
+
+            var result = await _storedFileRepository.InsertAsync(mappedInput);
+
+            // connect the stored file to the profile on the side
+            await ConnectStoredFileToProfile(result);
+
+            return mappedInput;
+        }
+
+        // connect the stored file to the profile
+        async Task<Domain.Profile> ConnectStoredFileToProfile(Domain.StoredFile storedFile)
+        {
+            var profile = await _profileRepository.FirstOrDefaultAsync(x => x.CreatorUserId == AbpSession.UserId);
+
+            if (profile == null)
+            {
+                throw new UserFriendlyException("Profile not found");
+            }
+
+            profile.StoredFileId = storedFile.Id;
+
+            await _profileRepository.UpdateAsync(profile);
+            CurrentUnitOfWork.SaveChanges();
+
+            return profile;
+        }
 
         [Consumes("multipart/form-data")]
         [HttpPut("api/services/app/UpdateImage/{id}")]
-
         public async Task<IActionResult> UpdateStoredFile(Guid id, [FromForm] StoredFileDto input)
         {
-            // Retrieve the existing stored file from the database based on the provided GUID
             var existingStoredFile = await _storedFileRepository.FirstOrDefaultAsync(x => x.Id == id);
 
-            // Check if the file exists
             if (existingStoredFile == null)
             {
-                // Handle the case where the file with the provided GUID does not exist
-                return NotFound(); // Or return an appropriate error response
+                return new NotFoundResult();
             }
 
-            // Delete the old image file
             await DeleteOldFile(existingStoredFile);
 
-            // Process the new image and save it to the appropriate location
             var newFilePath = await SaveFileForUpdate(input.File);
 
-            // Update the properties of the existing stored file with the new information
             existingStoredFile.FileName = input.File.FileName;
             existingStoredFile.FileType = input.File.ContentType;
-            // Update any other relevant properties as needed
 
-            // Save the changes to the database
             await _storedFileRepository.UpdateAsync(existingStoredFile);
+            CurrentUnitOfWork.SaveChanges();
 
-            // Return a success response
-            return Ok(existingStoredFile); // Or return any other appropriate response
+            return new OkResult();
         }
 
         private async Task DeleteOldFile(Domain.StoredFile existingStoredFile)
         {
-            // Construct the file path of the old image
             var oldFilePath = Path.Combine(BASE_FILE_PATH, existingStoredFile.FileName);
 
-            // Delete the old image file if it exists
-            if (System.IO.File.Exists(oldFilePath)) // Fully qualify System.IO.File
+            if (System.IO.File.Exists(oldFilePath))
             {
-                System.IO.File.Delete(oldFilePath); // Fully qualify System.IO.File
+                System.IO.File.Delete(oldFilePath);
             }
         }
 
@@ -122,18 +166,16 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
             {
                 await fileStream.CopyToAsync(fs);
             }
-
             return filePath;
         }
 
-        private async Task SaveFile(string filePath, Stream stream)
+        private static async Task SaveFile(string filePath, Stream stream)
         {
             using (var fs = new FileStream(filePath, FileMode.Create))
             {
                 await stream.CopyToAsync(fs);
             }
         }
-
 
         [HttpGet]
         [Route("GetStoredFile/{id}")]
@@ -142,12 +184,15 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
 
             var storedFile = await _storedFileRepository.FirstOrDefaultAsync(x => x.Id == id);
             if (storedFile == null)
-                //return Content("filename not present");
+            {
                 throw new UserFriendlyException("File not found");
+            }
 
             var path = Path.Combine(
-                           Directory.GetCurrentDirectory(),
-                           BASE_FILE_PATH, storedFile.FileName);
+                Directory.GetCurrentDirectory(),
+                storedFile.BasePath.IsNullOrEmpty() ? storedFile.BasePath : PROFILE_BASE_FILE_PATH
+                , storedFile.FileName
+            );
 
             var memory = new MemoryStream();
             using (var stream = new FileStream(path, FileMode.Open))
@@ -155,16 +200,14 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, GetContentType(path), Path.GetFileName(path));
-
+            return new FileContentResult(memory.ToArray(), GetContentType(path));
         }
-
 
         public async Task<List<StoredFileDto>> GetAllFiles()
         {
             var contentResults = new List<FileStreamResult>();
             var response = new List<StoredFileDto>();
-            var files = _storedFileRepository.GetAllList();/*.Where(x=>x.OwnerId == ownerId.ToString());*/
+            var files = _storedFileRepository.GetAllList();
             if (files == null)
                 throw new UserFriendlyException("File not found");
 
@@ -174,7 +217,6 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
 
                 if (!System.IO.File.Exists(path))
                 {
-                    // Handle case where file doesn't exist
                     continue;
                 }
 
@@ -191,11 +233,10 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
                         fileName: file.FileName,
                         length: file.File.Length
                     )
-                }); ; 
+                }); ;
             }
             return response;
         }
-
 
         private string GetContentType(string path)
         {
@@ -204,21 +245,21 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
             return types[ext];
         }
 
-        private Dictionary<string, string> GetMimeTypes()
+        private static Dictionary<string, string> GetMimeTypes()
         {
             return new Dictionary<string, string>
-            {
-                {".txt", "text/plain"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".png", "image/png"},
-                {".jpg", "image/jpeg"},
-                {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".csv", "text/csv"}
-            };
+                {
+                    {".txt", "text/plain"},
+                    {".pdf", "application/pdf"},
+                    {".doc", "application/vnd.ms-word"},
+                    {".docx", "application/vnd.ms-word"},
+                    {".xls", "application/vnd.ms-excel"},
+                    {".png", "image/png"},
+                    {".jpg", "image/jpeg"},
+                    {".jpeg", "image/jpeg"},
+                    {".gif", "image/gif"},
+                    {".csv", "text/csv"}
+           };
         }
     }
 }

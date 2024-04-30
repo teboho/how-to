@@ -16,7 +16,8 @@ namespace Boxfusion.HowTo.Domain
         public GuideType Type { get; set; }
     }
 
-    public enum GuideType {
+    public enum GuideType
+    {
         PUBLIC = 1,
         PRIVATE = 2
     }

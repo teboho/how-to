@@ -5,7 +5,7 @@ using System;
 
 namespace Boxfusion.HowTo.Services.BankDetailAppService
 {
-    public class CategoryAppService : AsyncCrudAppService<Domain.Category, CategoryDto, Guid>, ICategoryAppService 
+    public class CategoryAppService : AsyncCrudAppService<Domain.Category, CategoryDto, Guid>, ICategoryAppService
     {
         IRepository<Domain.Category, Guid> _repository;
         public CategoryAppService(IRepository<Domain.Category, Guid> repository) : base(repository)

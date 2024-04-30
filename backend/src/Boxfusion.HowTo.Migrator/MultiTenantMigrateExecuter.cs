@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
 using Abp.Data;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
@@ -11,6 +8,9 @@ using Abp.Runtime.Security;
 using Boxfusion.HowTo.EntityFrameworkCore;
 using Boxfusion.HowTo.EntityFrameworkCore.Seed;
 using Boxfusion.HowTo.MultiTenancy;
+using System;
+using System.Collections.Generic;
+using System.Data.Common;
 
 namespace Boxfusion.HowTo.Migrator
 {

@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Boxfusion.HowTo.Configuration.Dto;
+﻿using Boxfusion.HowTo.Configuration.Dto;
+using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Configuration
 {

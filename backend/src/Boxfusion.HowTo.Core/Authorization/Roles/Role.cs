@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Abp.Authorization.Roles;
+﻿using Abp.Authorization.Roles;
 using Boxfusion.HowTo.Authorization.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace Boxfusion.HowTo.Authorization.Roles
 {
@@ -23,6 +23,6 @@ namespace Boxfusion.HowTo.Authorization.Roles
         }
 
         [StringLength(MaxDescriptionLength)]
-        public string Description {get; set;}
+        public string Description { get; set; }
     }
 }

@@ -1,12 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
-using Boxfusion.HowTo.Authorization.Users;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Domain
 {
@@ -23,7 +16,7 @@ namespace Boxfusion.HowTo.Domain
         public TaskStatus Status { get; set; }
     }
 
-    public enum  TaskStatus
+    public enum TaskStatus
     {
         NEW,
         ASSIGNED,

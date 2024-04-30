@@ -1,7 +1,6 @@
 using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
-using Abp.Linq;
 using Abp.Organizations;
 using Boxfusion.HowTo.Authorization.Roles;
 
@@ -20,7 +19,7 @@ namespace Boxfusion.HowTo.Authorization.Users
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
             IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository,
             IRepository<UserToken, long> userTokenRepository
-        ) 
+        )
             : base(unitOfWorkManager,
                   userRepository,
                   roleRepository,

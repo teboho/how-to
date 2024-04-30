@@ -1,8 +1,6 @@
-using System.Threading.Tasks;
 using Abp.Web.Security.AntiForgery;
-using Microsoft.AspNetCore.Antiforgery;
 using Boxfusion.HowTo.Controllers;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Antiforgery;
 
 namespace Boxfusion.HowTo.Web.Host.Controllers
 {

@@ -1,21 +1,26 @@
 ﻿using Abp.Application.Services;
 using Abp.Domain.Repositories;
-using Boxfusion.HowTo.Domain;
+using Abp.Extensions;
 using Boxfusion.HowTo.Services.ProfileAppService.Dtos;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Services.ProfileAppService
 {
     public class ProfileAppService : AsyncCrudAppService<Domain.Profile, ProfileDto, Guid>, IProfileAppService
     {
-        IRepository<Profile, Guid> _repository;
-        public ProfileAppService(IRepository<Profile, Guid> repository) : base(repository)
+        IRepository<Domain.Profile, Guid> _repository;
+        IRepository<Domain.StoredFile, Guid> _storedFileRepository;
+        private readonly string BASE_FILE_PATH = "App_Data/Images";
+        private readonly string PROFILE_BASE_FILE_PATH = "App_Data/Profiles/Images";
+
+
+        public ProfileAppService(IRepository<Domain.Profile, Guid> repository, IRepository<Domain.StoredFile, Guid> storedFileRepository) : base(repository)
         {
             _repository = repository;
+            _storedFileRepository = storedFileRepository;
         }
 
         /// <summary>
@@ -25,11 +30,10 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
         /// <returns>the latest profile</returns>
         public override async Task<ProfileDto> CreateAsync(ProfileDto input)
         {
-            // first we need to check if the profile already exists by comparing the creator user id that made the call to the one that might already be in the db
             var existingProfile = await _repository.FirstOrDefaultAsync(x => x.CreatorUserId == input.CreatorUserId);
-            if (existingProfile != null)
+            if (existingProfile != null && !input.IdentityNo.Trim().IsNullOrEmpty())
             {
-                // if the profile already exists, we will update the existing profile with the new data
+                existingProfile.IdentityNo = input.IdentityNo.Trim();
                 return await base.UpdateAsync(input);
             }
             return await base.CreateAsync(input);
@@ -38,8 +42,8 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
         /// <summary>
         /// Own profile can be retrieved by the user id
         /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <param name="userId">user id</param>
+        /// <returns>user profile</returns>
         public async Task<ProfileDto> GetMyProfile(long userId)
         {
             var profile = await _repository.FirstOrDefaultAsync(x => x.CreatorUserId == userId);
@@ -49,6 +53,77 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
             }
             var profileDto = ObjectMapper.Map<ProfileDto>(profile);
             return await base.GetAsync(profileDto);
+        }
+
+        /// <summary>
+        /// Upload a profile picture for a user
+        /// </summary>
+        /// <param name="input">Form data</param>
+        /// <returns>The latest profile</returns>
+        /// <exception cref="ArgumentException">If the input is not the appropriate form data</exception>
+        //[HttpPost, Route("UploadProfilePicture")]
+        //[Consumes("multipart/form-data")]
+        //public async Task<ProfileDto> UploadProfilePictureAsync(
+        //    [FromForm]
+        //    UploadProfilePictureDto input
+        //)
+        //{
+        //    var existingFile = await _storedFileRepository.FirstOrDefaultAsync(f => f.FileName == input.File.FileName);
+        //    string potentialNewFileName = $"{Guid.NewGuid()}-{input.File.Name}-{Path.GetExtension(input.File.FileName)}";
+
+        //    string filePath = existingFile != null ? Path.Combine(PROFILE_BASE_FILE_PATH, input.File.FileName) : Path.Combine(PROFILE_BASE_FILE_PATH, potentialNewFileName);
+
+        //    using (var fileReadStream = input.File.OpenReadStream())
+        //    using (var fileStreamCreate = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await fileReadStream.CopyToAsync(fileStreamCreate);
+        //    }
+
+        //    var file = new FileInfo(filePath);
+        //    if (!file.Exists)
+        //    {
+        //        throw new ArgumentException("The file is not written successfully.");
+        //    }
+
+        //    var storedFile = new Domain.StoredFile
+        //    {
+        //        FileName = filePath,
+        //        FileType = input.File.ContentType
+        //    };
+        //    var _storedFile = await _storedFileRepository.InsertAsync(storedFile);
+        //    CurrentUnitOfWork.SaveChanges();
+
+        //    var profile = await _repository.FirstOrDefaultAsync(x => x.CreatorUserId == AbpSession.UserId);
+        //    profile.PhotoId = _storedFile.Id;
+        //    await _repository.UpdateAsync(profile);
+        //    CurrentUnitOfWork.SaveChanges();
+
+        //    return await Task.FromResult(ObjectMapper.Map<ProfileDto>(profile));
+        //}
+
+        private async Task SaveFile(string filePath, Stream stream)
+        {
+            using (var fs = new FileStream(filePath, FileMode.Create))
+            {
+                await stream.CopyToAsync(fs);
+            }
+        }
+
+        public static Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+                {
+                    {".txt", "text/plain"},
+                    {".pdf", "application/pdf"},
+                    {".doc", "application/vnd.ms-word"},
+                    {".docx", "application/vnd.ms-word"},
+                    {".xls", "application/vnd.ms-excel"},
+                    {".png", "image/png"},
+                    {".jpg", "image/jpeg"},
+                    {".jpeg", "image/jpeg"},
+                    {".gif", "image/gif"},
+                    {".csv", "text/csv"}
+           };
         }
     }
 }

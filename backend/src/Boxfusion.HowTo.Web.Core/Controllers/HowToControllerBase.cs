@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Boxfusion.HowTo.Controllers
 {
-    public abstract class HowToControllerBase: AbpController
+    public abstract class HowToControllerBase : AbpController
     {
         protected HowToControllerBase()
         {

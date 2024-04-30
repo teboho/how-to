@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using Boxfusion.HowTo.Sessions;
 using Shouldly;
+using System.Threading.Tasks;
 using Xunit;
-using Boxfusion.HowTo.Sessions;
 
 namespace Boxfusion.HowTo.Tests.Sessions
 {

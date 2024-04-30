@@ -1,16 +1,16 @@
-using System;
-using Castle.MicroKernel.Registration;
-using NSubstitute;
 using Abp.AutoMapper;
+using Abp.Configuration.Startup;
 using Abp.Dependency;
 using Abp.Modules;
-using Abp.Configuration.Startup;
 using Abp.Net.Mail;
 using Abp.TestBase;
 using Abp.Zero.Configuration;
 using Abp.Zero.EntityFrameworkCore;
 using Boxfusion.HowTo.EntityFrameworkCore;
 using Boxfusion.HowTo.Tests.DependencyInjection;
+using Castle.MicroKernel.Registration;
+using NSubstitute;
+using System;
 
 namespace Boxfusion.HowTo.Tests
 {
