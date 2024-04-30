@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
-import { PaymentStateContext_Default } from './context';
 import { PaymentActionEnums } from './actions';
+import { PaymentStateContext_Default } from './context';
 
 const paymentReducer = handleActions(
     {

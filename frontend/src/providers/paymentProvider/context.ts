@@ -16,20 +16,7 @@ export interface IPayment {
     amount: number;
     taskId: string;
 }
-/**
- * 
- * {
-  "reference": "T315443039853370",
-  "trans": "3752300875",
-  "status": "success",
-  "message": "Approved",
-  "transaction": "3752300875",
-  "trxref": "T315443039853370",
-  "bank": "STANDARD BANK SOUTH AFRICA",
-  "return": "{\"redirecturl\":\"?trxref=T315443039853370&reference=T315443039853370\",\"trans\":\"3752300875\",\"trxref\":\"T315443039853370\",\"reference\":\"T315443039853370\",\"status\":\"success\",\"message\":\"Success\",\"response\":\"Approved\",\"bank\":\"STANDARD BANK SOUTH AFRICA\"}",
-  "redirecturl": "?trxref=T315443039853370&reference=T315443039853370"
-}
- */
+
 export interface IPayfastResponse {
     reference: string;
     trans: string;

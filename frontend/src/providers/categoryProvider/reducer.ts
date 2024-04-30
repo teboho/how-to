@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
-import { CategoriestateContext_Default } from './context';
 import { CategoryActionEnums } from './actions';
+import { CategoriestateContext_Default } from './context';
 
 const categoryReducer = handleActions(
     {

@@ -1,22 +1,23 @@
 import { createContext } from 'react';
 
+/** metadata thereof */
 export interface StoredFile {
     id: string;
     fileName: string;
     fileType: string;
-}
-
-// Bridge
-export interface UserFileStore {
-    id?: string,
-    userId: number,
-    fileId: string
+    file: File;
+    creationTime: string;
+    creatorUserId: number;  
+    isDeleted: boolean;
+    deleterUserId: number;
+    deletionTime: string;   
+    lastModificationTime: string;
+    lastModifierUserId: number;
 }
 
 export interface StoredFileStateContext_State {
     storedFiles?: StoredFile[];
     storedFile?: StoredFile;
-    userFile?: UserFileStore;
     isError: boolean;
     isPending: boolean;
     isSuccess: boolean;
@@ -25,7 +26,6 @@ export interface StoredFileStateContext_State {
 export const StoredFileStateContext_InitState: StoredFileStateContext_State = {
     storedFiles: [],
     storedFile: undefined,
-    userFile: undefined,
     isError: false,
     isPending: false,
     isSuccess: false
@@ -37,8 +37,8 @@ export interface StoredFileActionContext_Actions {
     putStoredFile: (file: StoredFile) => void;
     deleteStoredFile: (id: string) => void;
     postStoredFile: (file: StoredFile) => void;
-    postUserFile: (bridge: UserFileStore) => void;
-    getBridgeByUser: (userId: number) => void;
+    upload: (formData: FormData) => Promise<void>;
+    uploadProfilePicture: (formData: FormData) => Promise<void>;
 }
 
 export const StoredFileActionContext_DefaultActions: StoredFileActionContext_Actions = {
@@ -47,8 +47,8 @@ export const StoredFileActionContext_DefaultActions: StoredFileActionContext_Act
     putStoredFile: (file: StoredFile) => {},
     deleteStoredFile: (id: string) => {},
     postStoredFile: (file: StoredFile) => {},
-    postUserFile: (bridge: UserFileStore) => {},
-    getBridgeByUser: (userId: number) => {}
+    upload: async (formData) => {},
+    uploadProfilePicture: async (formData) => {}
 }
 
 export const StoredFileStateContext = createContext<StoredFileStateContext_State>(StoredFileStateContext_InitState);

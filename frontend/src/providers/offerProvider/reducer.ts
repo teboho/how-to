@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
-import { OfferStateContext_Default } from './context';
 import { OfferActionEnums } from './actions';
+import { OfferStateContext_Default } from './context';
 
 const offerReducer = handleActions(
     {

@@ -3,13 +3,12 @@
 import { useAuthState } from "@/providers/authProvider";
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
-import { Typography, Table, Segmented, Space } from "antd";
 import { EyeOutlined } from '@ant-design/icons';
-import { useEffect } from "react";
-import useStyles from "./style";
+import { Segmented, Space, Table, Typography } from "antd";
 import Link from "next/link";
-import { render } from "@testing-library/react";
+import { useEffect } from "react";
 import Loading from "./loading";
+import useStyles from "./style";
 
 const { Title, Paragraph } = Typography;
 

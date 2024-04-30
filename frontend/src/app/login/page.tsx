@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
-import useStyles from "./style";
-import type {FormProps} from "antd";
-import { Button, Flex, Typography, Form, Input, Space } from "antd";
 import LeftSide from "@/components/leftSide";
-import Link from "next/link";
 import { useAuthActions } from "@/providers/authProvider";
 import { ILoginRequest } from "@/providers/authProvider/types";
+import type { FormProps } from "antd";
+import { Button, Flex, Form, Input, Typography } from "antd";
+import Link from "next/link";
+import useStyles from "./style";
 
 const { Paragraph } = Typography;
 

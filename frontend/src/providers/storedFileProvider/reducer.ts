@@ -30,6 +30,19 @@ const storedFileReducer = handleActions(
             ...action.payload
         }),
 
+        [StoredFileActionEnums.PostStoredFileRequest]: (state, action) => ({
+            ...state,
+            ...action.payload
+        }),
+        [StoredFileActionEnums.PostStoredFileSuccess]: (state, action) => ({
+            ...state,
+            ...action.payload
+        }),
+        [StoredFileActionEnums.PostStoredFileError]: (state, action) => ({
+            ...state,
+            ...action.payload
+        }),
+
         [StoredFileActionEnums.GetStoredFilesRequest]: (state, action) => ({
             ...state,
             ...action.payload

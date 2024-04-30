@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { IProfileStateContext, IProfile } from "./context";
+import { IProfile, IProfileStateContext } from "./context";
 
 export const ProfileActionEnums = {
     GetProfileRequest: "GET_PROFILE_REQUEST",

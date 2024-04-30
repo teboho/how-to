@@ -11,7 +11,7 @@ export interface IProfile {
     deletionTime?: string;
     identityNo: string;
     isVerified?: boolean;
-    photoId?: string;
+    storedFileId?: string;
 }
 
 export interface IProfileStateContext {

@@ -1,7 +1,7 @@
 import { handleActions } from "redux-actions";
 
-import { AuthStateContextInitial, IAuthStateContext } from "./contexts";
 import { AuthActionEnums } from "./actions";
+import { AuthStateContextInitial, IAuthStateContext } from "./contexts";
 
 const authReducer = handleActions<IAuthStateContext, any>(
     {

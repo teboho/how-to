@@ -1,6 +1,4 @@
 import { createStyles } from 'antd-style';
-import { RenderRowProps } from 'react-data-grid';
-import { Row } from 'react-table';
 
 const useStyles = createStyles(({css, token}) => {
     return {

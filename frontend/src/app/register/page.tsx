@@ -1,15 +1,14 @@
 "use client";
 
-import React from "react";
-import useStyles from "./style/style";
-import type {FormProps} from "antd";
-import { Button, Flex, Typography, Form, Input, Select } from "antd";
 import LeftSide from "@/components/leftSide";
-import Link from "next/link";
 import { useAuthActions } from "@/providers/authProvider";
 import { IRegisterRequest } from "@/providers/authProvider/types";
+import type { FormProps } from "antd";
+import { Button, Flex, Form, Input, Select, Typography } from "antd";
+import Link from "next/link";
+import useStyles from "./style/style";
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 // Each time, a new form item will be one of the following properties
 enum Role {

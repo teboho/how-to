@@ -1,17 +1,16 @@
 
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
 import AuthProvider from "@/providers/authProvider";
-import { ConfigProvider, Input, Layout } from "antd";
-import TaskProvider from "@/providers/taskProvider";
-import ProfileProvider from "@/providers/profileProvider";
+import CategoryProvider from "@/providers/categoryProvider";
 import OfferProvider from "@/providers/offerProvider";
 import PaymentProvider from "@/providers/paymentProvider";
-import CategoryProvider from "@/providers/categoryProvider";
+import ProfileProvider from "@/providers/profileProvider";
+import StoredFileProvider from "@/providers/storedFileProvider";
+import TaskProvider from "@/providers/taskProvider";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
+import type { Metadata } from "next";
+import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "HOWTO",
@@ -44,17 +43,19 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
           >
             <div className="container">
               <AuthProvider>
-                <TaskProvider>
+                <StoredFileProvider>
                   <ProfileProvider>
-                    <OfferProvider>
-                      <PaymentProvider>
-                        <CategoryProvider>
-                          {children}  
-                        </CategoryProvider>
-                      </PaymentProvider>
-                    </OfferProvider>
+                    <TaskProvider>
+                      <OfferProvider>
+                        <PaymentProvider>
+                          <CategoryProvider>
+                            {children}  
+                          </CategoryProvider>
+                        </PaymentProvider>
+                      </OfferProvider>
+                    </TaskProvider>
                   </ProfileProvider>
-                </TaskProvider>
+                </StoredFileProvider>
               </AuthProvider>
             </div>
           </ConfigProvider>

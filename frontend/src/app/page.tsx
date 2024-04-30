@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
-import useStyles from "./style";
-import { Button, Flex, Typography } from "antd";
 import LeftSide from "@/components/leftSide";
-import Link from "next/link";
-import { useRouter } from "next/navigation"
-import { useAuthActions, useAuthState } from "@/providers/authProvider";
-import { getRole } from "@/utils";
+import { useAuthActions } from "@/providers/authProvider";
 import { useProfileActions } from "@/providers/profileProvider";
+import { getRole } from "@/utils";
+import { Button, Flex, Typography } from "antd";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import useStyles from "./style";
 
 const { Paragraph } = Typography;
 

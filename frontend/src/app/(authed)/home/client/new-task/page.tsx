@@ -1,11 +1,11 @@
 "use client";
 
+import { useCategoriestate as useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
-import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Select, Tag, Typography } from "antd";
-import useStyles from "./style";
-import { useCategoriestate as useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import type { SelectProps } from 'antd';
+import { Button, Form, FormProps, Input, InputNumber, Select, Tag, Typography } from "antd";
+import useStyles from "./style";
 
 type TagRender = SelectProps['tagRender'];
 

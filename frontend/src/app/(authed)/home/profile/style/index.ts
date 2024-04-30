@@ -1,6 +1,6 @@
 import { createStyles } from 'antd-style';
 
-const useStyles = createStyles(({css, token}) => {
+const useStyles = createStyles(({css}) => {
     return {
         'h-full': css`
             height: 100%;
@@ -37,6 +37,10 @@ const useStyles = createStyles(({css, token}) => {
         `,
         'form-item': css`
             font-size: 20px;
+        `,
+        'profile-pic': css`
+            width: 300px;
+            height: auto;
         `
     }
 });

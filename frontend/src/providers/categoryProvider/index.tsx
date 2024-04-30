@@ -1,12 +1,12 @@
 "use client";
 
 import { getAxiosInstace } from "@/utils";
+import { message } from "antd";
 import React, { useEffect, useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
 import * as categoryActions from "./actions";
+import { CategoriestateContext, CategoriestateContext_Default, CategoryActionsContext, ICategory, ITaskCategory } from "./context";
 import categoryReducer from "./reducer";
-import { ICategory, CategoryActionsContext, CategoriestateContext, CategoriestateContext_Default, ITaskCategory } from "./context";
-import { message } from "antd";
 
 const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
     const [messageApi, contextHolder] = message.useMessage();

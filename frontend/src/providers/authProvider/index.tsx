@@ -1,12 +1,12 @@
 "use client";
 
+import { AbpTokenProperies, type IDecodedToken, decodeToken, getAxiosInstace } from "@/utils";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useMemo, useReducer } from "react";
+import * as authActions from './actions';
 import { AuthActionsContext, AuthStateContext, AuthStateContextInitial } from "./contexts";
 import authReducer from "./reducer";
 import type { ILoginRequest, ILoginResponse, IRegisterRequest } from "./types";
-import * as authActions from './actions';
-import { AbpTokenProperies, type IDecodedToken, decodeToken, getAxiosInstace } from "@/utils";
-import { useRouter } from "next/navigation";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(authReducer, AuthStateContextInitial);

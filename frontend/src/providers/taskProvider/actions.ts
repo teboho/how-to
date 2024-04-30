@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { ITaskStateContext, ITask } from "./context";
+import { ITask, ITaskStateContext } from "./context";
 
 export const TaskActionEnums = {
     GetTaskRequest: "GET_TASK_REQUEST",

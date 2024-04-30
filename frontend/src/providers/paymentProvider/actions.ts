@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { IPaymentStateContext, IPayment } from "./context";
+import { IPayment, IPaymentStateContext } from "./context";
 
 export const PaymentActionEnums = {
     GetPaymentRequest: "GET_PAYMENT_REQUEST",

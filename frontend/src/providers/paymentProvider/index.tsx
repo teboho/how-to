@@ -1,12 +1,12 @@
 "use client";
 
 import { getAxiosInstace } from "@/utils";
+import { message } from "antd";
 import React, { useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
 import * as paymentActions from "./actions";
-import paymentReducer from "./reducer";
 import { IPayment, PaymentActionsContext, PaymentStateContext, PaymentStateContext_Default } from "./context";
-import { message } from "antd";
+import paymentReducer from "./reducer";
 
 const PaymentProvider = ({ children }: { children: React.ReactNode }) => {
     const [messageApi, contextHolder] = message.useMessage();
