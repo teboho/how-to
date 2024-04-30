@@ -4,6 +4,7 @@ using Boxfusion.HowTo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Boxfusion.HowTo.Migrations
 {
     [DbContext(typeof(HowToDbContext))]
-    partial class HowToDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240430071627_RatingEntity")]
+    partial class RatingEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2207,23 +2210,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.StoredFile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StoredFiles");
-                });
-
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Task", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2330,27 +2316,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.HasIndex("GuideId");
 
                     b.ToTable("UpVotes");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.UserFileStore", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FileId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserFileStore");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.MultiTenancy.Tenant", b =>
@@ -2830,25 +2795,6 @@ namespace Boxfusion.HowTo.Migrations
                         .IsRequired();
 
                     b.Navigation("Guide");
-                });
-
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.UserFileStore", b =>
-                {
-                    b.HasOne("Boxfusion.HowTo.Domain.StoredFile", "StoredFileModel")
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Boxfusion.HowTo.Authorization.Users.User", "UserModel")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("StoredFileModel");
-
-                    b.Navigation("UserModel");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.MultiTenancy.Tenant", b =>

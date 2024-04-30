@@ -36,6 +36,11 @@ namespace Boxfusion.HowTo.EntityFrameworkCore
         public DbSet<Offer> Offers { get; set; }
         // level6
         public DbSet<ExecutorCategory> ExecutorCategories { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
+
+        // level7
+        public DbSet<StoredFile> StoredFiles { get; set; }
+        public DbSet<UserFileStore> UserFileStore { get; set; }
         public HowToDbContext(DbContextOptions<HowToDbContext> options)
             : base(options)
         {

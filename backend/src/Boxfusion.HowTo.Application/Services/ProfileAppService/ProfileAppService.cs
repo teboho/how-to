@@ -36,7 +36,7 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
         }
 
         /// <summary>
-        /// 
+        /// Own profile can be retrieved by the user id
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
