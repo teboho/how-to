@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 
 /** metadata thereof */
-export interface StoredFile {
+export interface IStoredFile {
     id: string;
     fileName: string;
     fileType: string;
@@ -16,8 +16,8 @@ export interface StoredFile {
 }
 
 export interface StoredFileStateContext_State {
-    storedFiles?: StoredFile[];
-    storedFile?: StoredFile;
+    storedFiles?: IStoredFile[];
+    storedFile?: IStoredFile;
     isError: boolean;
     isPending: boolean;
     isSuccess: boolean;
@@ -34,9 +34,10 @@ export const StoredFileStateContext_InitState: StoredFileStateContext_State = {
 export interface StoredFileActionContext_Actions {
     getStoredFile: (id: string) => void;
     getStoredFiles: () => void;
-    putStoredFile: (file: StoredFile) => void;
+    getMyStoredFiles: () => void;
+    putStoredFile: (file: IStoredFile) => void;
     deleteStoredFile: (id: string) => void;
-    postStoredFile: (file: StoredFile) => void;
+    postStoredFile: (file: IStoredFile) => void;
     upload: (formData: FormData) => Promise<void>;
     uploadProfilePicture: (formData: FormData) => Promise<void>;
 }
@@ -44,9 +45,10 @@ export interface StoredFileActionContext_Actions {
 export const StoredFileActionContext_DefaultActions: StoredFileActionContext_Actions = {
     getStoredFile: (id: string) => {},
     getStoredFiles: () => {},
-    putStoredFile: (file: StoredFile) => {},
+    getMyStoredFiles: () => {},
+    putStoredFile: (file: IStoredFile) => {},
     deleteStoredFile: (id: string) => {},
-    postStoredFile: (file: StoredFile) => {},
+    postStoredFile: (file: IStoredFile) => {},
     upload: async (formData) => {},
     uploadProfilePicture: async (formData) => {}
 }

@@ -11,10 +11,10 @@ import {
     postStoredFileSuccessAction, putStoredFileErrorAction,
     putStoredFileRequestAction, putStoredFileSuccessAction
 } from './actions';
-import { StoredFile, StoredFileActionContext, StoredFileStateContext, StoredFileStateContext_InitState } from './context';
+import { IStoredFile, StoredFileActionContext, StoredFileStateContext, StoredFileStateContext_InitState } from './context';
 import storedFileReducer from './reducer';
 
-const StoredFileProvider = ({children}: {children: React.ReactNode}): React.ReactNode => {
+const StoredFileProvider = ({ children }: { children: React.ReactNode }): React.ReactNode => {
     const [state, dispatch] = useReducer(storedFileReducer, StoredFileStateContext_InitState);
     const { loginObj } = useAuthState();
 
@@ -29,9 +29,9 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
         if (accessToken) {
             console.log("found the accesss token", accessToken);
             instance = getAxiosInstace(accessToken);
-        } 
+        }
     }, []);
-    
+
     const getStoredFile = (id: string) => {
         const endpoint = 'api/services/app/StoredFile/Get';
         dispatch(getStoredFileRequestAction());
@@ -44,7 +44,7 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(getStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(getStoredFileErrorAction())
             );
     };
@@ -60,12 +60,28 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(getStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(getStoredFilesErrorAction())
             );
     };
-    const putStoredFile = (file: StoredFile) => {
-        const endpoint = 'api/services/app/StoredFile/Update';        
+    const getMyStoredFiles = () => {
+        const endpoint = 'api/services/app/StoredFile/GetMyStoredFiles';
+        dispatch(getStoredFilesRequestAction());
+        instance.get(endpoint)
+            .then(res => {
+                const data = res.data;
+                if (data.success) {
+                    dispatch(getStoredFilesSuccessAction(data.result.items));
+                } else {
+                    dispatch(getStoredFileErrorAction());
+                }
+            })
+            .catch(err =>
+                dispatch(getStoredFilesErrorAction())
+            );
+    };
+    const putStoredFile = (file: IStoredFile) => {
+        const endpoint = 'api/services/app/StoredFile/Update';
         dispatch(putStoredFileRequestAction());
         instance.get(endpoint)
             .then(res => {
@@ -76,7 +92,7 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(putStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(putStoredFileErrorAction())
             );
     };
@@ -92,11 +108,11 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(deleteStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(deleteStoredFileErrorAction())
             );
     };
-    const postStoredFile = (file: StoredFile) => {
+    const postStoredFile = (file: IStoredFile) => {
         const endpoint = 'api/services/app/StoredFile/Create';
         instance.post(endpoint, file)
             .then(res => {
@@ -107,7 +123,7 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(putStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(putStoredFileErrorAction())
             );
     }
@@ -123,7 +139,7 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(postStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(putStoredFileErrorAction())
             );
     }
@@ -139,7 +155,7 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(postStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(putStoredFileErrorAction())
             );
     }
@@ -147,10 +163,11 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
     return (
         <StoredFileStateContext.Provider value={state}>
             <StoredFileActionContext.Provider value={{
-                getStoredFile, 
-                getStoredFiles, 
-                putStoredFile, 
-                deleteStoredFile, 
+                getStoredFile,
+                getStoredFiles,
+                getMyStoredFiles,
+                putStoredFile,
+                deleteStoredFile,
                 postStoredFile,
                 upload,
                 uploadProfilePicture

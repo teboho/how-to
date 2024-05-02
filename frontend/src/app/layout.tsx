@@ -10,6 +10,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import "./globals.css";
+import PortfolioProvider from "@/providers/portfolioProvider";
 
 
 export const metadata: Metadata = {
@@ -45,15 +46,17 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
               <AuthProvider>
                 <StoredFileProvider>
                   <ProfileProvider>
-                    <TaskProvider>
-                      <OfferProvider>
-                        <PaymentProvider>
-                          <CategoryProvider>
-                            {children}  
-                          </CategoryProvider>
-                        </PaymentProvider>
-                      </OfferProvider>
-                    </TaskProvider>
+                    <PortfolioProvider>
+                      <TaskProvider>
+                        <OfferProvider>
+                          <PaymentProvider>
+                            <CategoryProvider>
+                              {children}  
+                            </CategoryProvider>
+                          </PaymentProvider>
+                        </OfferProvider>
+                      </TaskProvider>
+                    </PortfolioProvider>
                   </ProfileProvider>
                 </StoredFileProvider>
               </AuthProvider>

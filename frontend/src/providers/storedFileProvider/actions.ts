@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-import { StoredFile } from './context';
+import { IStoredFile } from './context';
 
 export const StoredFileActionEnums = {
     GetStoredFileRequest: 'GET_STORED_FILE_REQUEST',
@@ -38,7 +38,7 @@ export const getStoredFileRequestAction = createAction(
 
 export const getStoredFileSuccessAction = createAction(
     StoredFileActionEnums.GetStoredFileSuccess,
-    (storedFile: StoredFile) => ({ isSuccess: true, isPending: false, isError: false, storedFile })
+    (storedFile: IStoredFile) => ({ isSuccess: true, isPending: false, isError: false, storedFile })
 );
 
 export const getStoredFileErrorAction = createAction(
@@ -52,7 +52,7 @@ export const putStoredFileRequestAction = createAction(
 );
 export const putStoredFileSuccessAction = createAction(
     StoredFileActionEnums.PutStoredFileSuccess,
-    (storedFile: StoredFile) => ({ isSuccess: true, isPending: false, isError: false, storedFile })
+    (storedFile: IStoredFile) => ({ isSuccess: true, isPending: false, isError: false, storedFile })
 );
 export const putStoredFileErrorAction = createAction(
     StoredFileActionEnums.PutStoredFileError,
@@ -65,7 +65,7 @@ export const postStoredFileRequestAction = createAction(
 );
 export const postStoredFileSuccessAction = createAction(
     StoredFileActionEnums.PostStoredFileSuccess,
-    (storedFile: StoredFile) => ({ isSuccess: true, isPending: false, isError: false, storedFile })
+    (storedFile: IStoredFile) => ({ isSuccess: true, isPending: false, isError: false, storedFile })
 );
 export const postStoredFileErrorAction = createAction(
     StoredFileActionEnums.PostStoredFileError,
@@ -79,7 +79,7 @@ export const getStoredFilesRequestAction = createAction(
 
 export const getStoredFilesSuccessAction = createAction(
     StoredFileActionEnums.GetStoredFilesSuccess,
-    (storedFiles: StoredFile[]) => ({ isSuccess: true, isPending: false, isError: false, storedFiles })
+    (storedFiles: IStoredFile[]) => ({ isSuccess: true, isPending: false, isError: false, storedFiles })
 );
 
 export const getStoredFilesErrorAction = createAction(
