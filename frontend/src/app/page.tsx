@@ -1,7 +1,7 @@
 "use client";
 
 import LeftSide from "@/components/leftSide";
-import { useAuthActions } from "@/providers/authProvider";
+import { useAuthActions, useAuthState } from "@/providers/authProvider";
 import { useProfileActions } from "@/providers/profileProvider";
 import { getRole } from "@/utils";
 import { Button, Flex, Typography } from "antd";
@@ -9,12 +9,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import useStyles from "./style";
+import { log } from "console";
 
 const { Paragraph } = Typography;
 
 export default function Home() {
   const { cx, styles } = useStyles();
   const { push } = useRouter();
+  const {loginObj}=useAuthState();
   const { getUser } = useAuthActions();
   const { getMyProfile } = useProfileActions();
 
@@ -22,8 +24,8 @@ export default function Home() {
     if (typeof window !== "undefined") {
       const accessToken = localStorage.getItem("accessToken");
       if (accessToken) {
-        const role = getRole({accessToken});
-        
+        const role = getRole({ accessToken });
+
         getUser();
         getMyProfile();
 
@@ -31,6 +33,18 @@ export default function Home() {
       }
     }
   }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (loginObj) {
+        const role = getRole(loginObj);
+
+        getUser();
+        getMyProfile();
+
+        push(`/home/${role}`);
+      }
+    }
+  }, [loginObj]);
   
   return (
     <Flex className={cx(styles["h-full"])}>

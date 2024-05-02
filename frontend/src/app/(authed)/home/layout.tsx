@@ -21,8 +21,8 @@ import useStyles from "./style/style";
 const { Sider, Header, Content } = Layout;
 const { Title } = Typography;
 
-const HomeLayout = ({ 
-    children 
+const HomeLayout = ({
+    children
 }: {
     children: React.ReactNode
 }) => {
@@ -33,19 +33,19 @@ const HomeLayout = ({
     const { styles, cx, theme } = useStyles();
     const pathname = usePathname();
     const { push } = useRouter();
-        
+
     const clientMenu = (currentPath: string): MenuProps["items"] => [
         {
             key: 'client_expenditure',
             icon: <ShoppingCartOutlined />,
             label: <Link href={`${currentPath}/expenditure`}>Expenditure</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
         {
             key: 'client_new_task',
             icon: <PlusCircleOutlined />,
             label: <Link href={`${currentPath}/new-task`}>New Task</Link>,
-            onClick: () => {}
+            onClick: () => { }
         }
     ];
     const executorMenu = (currentPath: string): MenuProps["items"] => [
@@ -53,25 +53,25 @@ const HomeLayout = ({
             key: 'exec_revenue',
             icon: <MoneyCollectOutlined />,
             label: <Link href={`${currentPath}/revenue`}>Revenue</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
         {
             key: 'exec_tasks',
             icon: <ScheduleOutlined />,
             label: <Link href={`${currentPath}/tasks`}>Tasks</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
         {
             key: 'exec_guides',
             icon: <ReadOutlined />,
             label: <Link href={`${currentPath}/guides`}>Guides</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
         {
             key: 'exec_new_guide',
             icon: <PlusCircleOutlined />,
             label: <Link href={`${currentPath}/new-guide`}>New Guide</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
     ];
     const supportMenu = (currentPath: string): MenuProps["items"] => [
@@ -79,25 +79,25 @@ const HomeLayout = ({
             key: 'support_revenue',
             icon: <MoneyCollectOutlined />,
             label: <Link href={`${currentPath}/revenue`}>Revenue</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
         {
             key: 'support_tasks',
             icon: <ScheduleOutlined />,
             label: <Link href={`${currentPath}/tasks`}>Tasks</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
         {
             key: 'support_disputes',
             icon: <ExclamationCircleOutlined />,
             label: <Link href={`${currentPath}/disputes`}>Disputes</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
         {
             key: 'support_users',
             icon: <UsergroupAddOutlined />,
             label: <Link href={`${currentPath}/users`}>Manager Users</Link>,
-            onClick: () => {}
+            onClick: () => { }
         },
     ];
 
@@ -120,31 +120,30 @@ const HomeLayout = ({
                     setMenu([]);
                     break;
             }
-            
+
             return _role;
         } else {
             return "client";
         }
-    }, []);  
+    }, [loginObj]);
 
     return (
         <Layout className={cx(styles.layout)}>
-            <Sider className={cx(styles.sider)} theme="light" collapsible collapsed={collapsed} onCollapse={()=> setCollapsed(!collapsed)}>
+            <Sider className={cx(styles.sider)} theme="light" collapsible collapsed={collapsed} onCollapse={() => setCollapsed(!collapsed)}>
                 <div className="logo-vertical">
                     <Link href={"/"}><img src="/logo.svg" alt="logo" width={"100%"} /></Link>
                 </div>
-                <Menu 
+                <Menu
                     theme="light"
                     mode="inline"
-                    onClick={() => {}}
+                    onClick={() => { }}
                     items={menu}
                     className={cx(styles.menu)}
                 />
-                {/* Profile menu */}
-                <Menu 
+                <Menu
                     theme="light"
                     mode="inline"
-                    onClick={() => {}}
+                    onClick={() => { }}
                     items={[
                         {
                             key: 'profile',
