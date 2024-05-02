@@ -9,7 +9,7 @@ import {
     PlusCircleOutlined,
     ReadOutlined,
     ScheduleOutlined,
-    ShoppingCartOutlined,
+    CreditCardOutlined,
     UsergroupAddOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, MenuProps, Typography } from "antd";
@@ -37,7 +37,7 @@ const HomeLayout = ({
     const clientMenu = (currentPath: string): MenuProps["items"] => [
         {
             key: 'client_expenditure',
-            icon: <ShoppingCartOutlined />,
+            icon: <CreditCardOutlined />,
             label: <Link href={`${currentPath}/expenditure`}>Expenditure</Link>,
             onClick: () => { }
         },
