@@ -1,9 +1,4 @@
-﻿using System;
-using System.Text;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Abp.AspNetCore;
+﻿using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.SignalR;
 using Abp.Modules;
@@ -12,7 +7,12 @@ using Abp.Zero.Configuration;
 using Boxfusion.HowTo.Authentication.JwtBearer;
 using Boxfusion.HowTo.Configuration;
 using Boxfusion.HowTo.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace Boxfusion.HowTo
 {
@@ -20,7 +20,7 @@ namespace Boxfusion.HowTo
          typeof(HowToApplicationModule),
          typeof(HowToEntityFrameworkModule),
          typeof(AbpAspNetCoreModule)
-        ,typeof(AbpAspNetCoreSignalRModule)
+        , typeof(AbpAspNetCoreSignalRModule)
      )]
     public class HowToWebCoreModule : AbpModule
     {

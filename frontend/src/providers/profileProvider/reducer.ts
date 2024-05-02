@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
-import { ProfileStateContext_Default } from './context';
 import { ProfileActionEnums } from './actions';
+import { ProfileStateContext_Default } from './context';
 
 const profileReducer = handleActions(
     {

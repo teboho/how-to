@@ -1,12 +1,12 @@
 "use client";
 
 import { getAxiosInstace } from "@/utils";
+import { message } from "antd";
 import React, { useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
 import * as offerActions from "./actions";
-import offerReducer from "./reducer";
 import { IOffer, OfferActionsContext, OfferStateContext, OfferStateContext_Default } from "./context";
-import { message } from "antd";
+import offerReducer from "./reducer";
 
 const OfferProvider = ({ children }: { children: React.ReactNode }) => {
     const { loginObj } = useAuthState();

@@ -1,17 +1,17 @@
 "use client";
 
 import { getAxiosInstace } from "@/utils";
+import { message } from "antd";
 import React, { useEffect, useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
 import * as categoryActions from "./actions";
+import { CategoriesStateContext, CategoriesStateContext_Default, CategoryActionsContext, ICategory, IExecutorCategory, ITaskCategory } from "./context";
 import categoryReducer from "./reducer";
-import { ICategory, CategoryActionsContext, CategoriestateContext, CategoriestateContext_Default, ITaskCategory } from "./context";
-import { message } from "antd";
 
 const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
     const [messageApi, contextHolder] = message.useMessage();
     const { loginObj } = useAuthState();
-    const [state, dispatch] = useReducer(categoryReducer, CategoriestateContext_Default);
+    const [state, dispatch] = useReducer(categoryReducer, CategoriesStateContext_Default);
 
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
@@ -19,7 +19,7 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
             return getAxiosInstace(accessToken)
         } else {
             return getAxiosInstace("");
-        }        
+        }
     }, [loginObj]);
 
     useEffect(() => {
@@ -32,120 +32,157 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
         dispatch(categoryActions.getCategoryRequestAction());
         const endpoint = "api/services/app/Category/Get?id=" + id;
         instance.get(endpoint)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(categoryActions.getCategoriesuccessAction(response.data.result))
-                    } else {
-                        dispatch(categoryActions.getCategoryErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.getCategoriesuccessAction(response.data.result))
+                } else {
                     dispatch(categoryActions.getCategoryErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.getCategoryErrorAction())
+            );
     }
     const postCategory = (category: ICategory) => {
         dispatch(categoryActions.postCategoryRequestAction());
         const endpoint = "api/services/app/Category/Create"
         instance.post(endpoint, category)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(categoryActions.postCategoriesuccessAction(response.data.result));
-                        messageApi.success("Category created successfully");
-                    } else {
-                        dispatch(categoryActions.postCategoryErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.postCategoriesuccessAction(response.data.result));
+                    messageApi.success("Category created successfully");
+                } else {
                     dispatch(categoryActions.postCategoryErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.postCategoryErrorAction())
+            );
     }
     const putCategory = (category: ICategory) => {
         dispatch(categoryActions.putCategoryRequestAction());
         const endpoint = "api/services/app/Category/Update";
         instance.put(endpoint, category)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(categoryActions.putCategoriesuccessAction(response.data.result));
-                    } else {
-                        dispatch(categoryActions.putCategoryErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.putCategoriesuccessAction(response.data.result));
+                } else {
                     dispatch(categoryActions.putCategoryErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.putCategoryErrorAction())
+            );
     }
     const getCategories = () => {
         dispatch(categoryActions.getCategoriesRequestAction());
         const endpoint = "api/services/app/Category/GetAll";
         instance.get(endpoint)
-                .then(response => {
-                    console.log(response);
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(categoryActions.getCategoriesSuccessAction(response.data.result.items))
-                    } else {
-                        dispatch(categoryActions.getCategoriesErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                console.log(response);
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.getCategoriesSuccessAction(response.data.result.items))
+                } else {
                     dispatch(categoryActions.getCategoriesErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.getCategoriesErrorAction())
+            );
     }
     const getMyCategories = () => {
         dispatch(categoryActions.getCategoriesRequestAction());
         const endpoint = "api/services/app/Category/GetMyCategories";
         instance.get(endpoint)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(categoryActions.getCategoriesSuccessAction(response.data.result));
-                    } else {
-                        dispatch(categoryActions.getCategoriesErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.getCategoriesSuccessAction(response.data.result));
+                } else {
                     dispatch(categoryActions.getCategoriesErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.getCategoriesErrorAction())
+            );
     }
     const postTaskCategory = (categoryId: string, taskId: string) => {
         dispatch(categoryActions.postTaskCategoryRequestAction());
         const endpoint = "api/services/app/Category/PostTaskCategory";
         instance.post(endpoint, { categoryId, taskId })
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(categoryActions.postTaskCategorySuccessAction());
-                        messageApi.success("Task added to category successfully");
-                        addToTaskCategories(response.data.result);
-                    } else {
-                        dispatch(categoryActions.postTaskCategoryErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.postTaskCategorySuccessAction());
+                    messageApi.success("Task added to category successfully");
+                    addToTaskCategories(response.data.result);
+                } else {
                     dispatch(categoryActions.postTaskCategoryErrorAction())
-                );
-    }    
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.postTaskCategoryErrorAction())
+            );
+    }
     const getTaskCategories = () => {
         dispatch(categoryActions.getTaskCategoriesRequestAction());
         const endpoint = "api/services/app/TaskCategory/GetAll";
         instance.get(endpoint)
-                .then(response => {
-                    console.log(response);
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(categoryActions.getTaskCategoriesSuccessAction(response.data.result.items))
-                    } else {
-                        dispatch(categoryActions.getTaskCategoriesErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                console.log(response);
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.getTaskCategoriesSuccessAction(response.data.result.items))
+                } else {
                     dispatch(categoryActions.getTaskCategoriesErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.getTaskCategoriesErrorAction())
+            );
     }
     const addToTaskCategories = (taskCategory: ITaskCategory) => {
         const newTaskCategories = state.taskCategories ? [...state.taskCategories, taskCategory] : [taskCategory];
         dispatch(categoryActions.getTaskCategoriesSuccessAction(newTaskCategories));
     }
 
+    const postExecutorCategory = (categoryId: string, userId: number) => {
+        dispatch(categoryActions.postExecutorCategoryRequestAction());
+        const endpoint = "api/services/app/ExecutorCategory/Create";
+        instance.post(endpoint, { categoryId, taskId: userId })
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.postExecutorCategorySuccessAction());
+                    messageApi.success("Task added to category successfully");
+                    addToTaskCategories(response.data.result);
+                } else {
+                    dispatch(categoryActions.postExecutorCategoryErrorAction())
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.postExecutorCategoryErrorAction())
+            );
+    }
+    const getExecutorCategories = () => {
+        dispatch(categoryActions.getExecutorCategoriesRequestAction());
+        const endpoint = "api/services/app/ExecutorCategory/GetAll";
+        instance.get(endpoint)
+            .then(response => {
+                console.log(response);
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.getExecutorCategoriesSuccessAction(response.data.result.items))
+                } else {
+                    dispatch(categoryActions.getExecutorCategoriesErrorAction())
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.getExecutorCategoriesErrorAction())
+            );
+    }
+    const appendExecutorCategories = (executorCategory: IExecutorCategory) => {
+        const newExecutorCategories = state.executorCategories ? [...state.executorCategories, executorCategory] : [executorCategory];
+        dispatch(categoryActions.getExecutorCategoriesSuccessAction(newExecutorCategories));
+    }
 
     return (
-        <CategoriestateContext.Provider value={{ ...state }}>
+        <CategoriesStateContext.Provider value={{ ...state }}>
             <CategoryActionsContext.Provider value={{
                 getCategory,
                 postCategory,
@@ -153,19 +190,21 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
                 putCategory,
                 getCategories,
                 getMyCategories,
-                getTaskCategories
+                getTaskCategories,
+                postExecutorCategory,
+                getExecutorCategories
             }}>
                 {contextHolder}
                 {children}
             </CategoryActionsContext.Provider>
-        </CategoriestateContext.Provider>
+        </CategoriesStateContext.Provider>
     );
 }
 
 export default CategoryProvider;
 
-export const useCategoriestate = () => {
-    const context = React.useContext(CategoriestateContext);
+export const useCategoriesState = () => {
+    const context = React.useContext(CategoriesStateContext);
     if (!context) {
         throw new Error("useCategoriestate must be used as a descendant within a CategoryProvider");
     }

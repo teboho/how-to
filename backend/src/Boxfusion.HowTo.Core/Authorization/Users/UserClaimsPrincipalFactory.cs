@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Abp.Authorization;
-using Boxfusion.HowTo.Authorization.Roles;
+﻿using Abp.Authorization;
 using Abp.Domain.Uow;
+using Boxfusion.HowTo.Authorization.Roles;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace Boxfusion.HowTo.Authorization.Users
 {

@@ -1,13 +1,13 @@
 "use client";
 
 import { getAxiosInstace } from "@/utils";
+import { message } from "antd";
 import React, { useEffect, useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
-import * as taskActions from "./actions";
-import taskReducer from "./reducer";
-import { ITask, TaskActionsContext, TaskStateContext, TaskStateContext_Default } from "./context";
-import { message } from "antd";
 import { postTaskCategoryErrorAction, postTaskCategoryRequestAction, postTaskCategorySuccessAction } from "../categoryProvider/actions";
+import * as taskActions from "./actions";
+import { ITask, TaskActionsContext, TaskStateContext, TaskStateContext_Default } from "./context";
+import taskReducer from "./reducer";
 
 const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const [messageApi, contextHolder] = message.useMessage();

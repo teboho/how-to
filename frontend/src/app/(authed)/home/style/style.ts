@@ -5,6 +5,10 @@ const useStyles = createStyles(({css, token}) => {
         border: css`
             border: 1px solid red;
         `,
+        mainlayout: css`
+            height: 100%;
+            background: #E5E3D2;
+        `,
         layout: css`
             height: 100%;
             background: #E5E3D2;

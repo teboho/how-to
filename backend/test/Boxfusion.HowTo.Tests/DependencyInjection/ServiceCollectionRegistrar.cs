@@ -1,11 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor.MsDependencyInjection;
-using Abp.Dependency;
+﻿using Abp.Dependency;
 using Boxfusion.HowTo.EntityFrameworkCore;
 using Boxfusion.HowTo.Identity;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor.MsDependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Boxfusion.HowTo.Tests.DependencyInjection
 {

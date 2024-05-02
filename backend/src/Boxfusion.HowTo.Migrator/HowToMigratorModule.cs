@@ -1,11 +1,11 @@
-using Microsoft.Extensions.Configuration;
-using Castle.MicroKernel.Registration;
 using Abp.Events.Bus;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Boxfusion.HowTo.Configuration;
 using Boxfusion.HowTo.EntityFrameworkCore;
 using Boxfusion.HowTo.Migrator.DependencyInjection;
+using Castle.MicroKernel.Registration;
+using Microsoft.Extensions.Configuration;
 
 namespace Boxfusion.HowTo.Migrator
 {
@@ -31,7 +31,7 @@ namespace Boxfusion.HowTo.Migrator
 
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
             Configuration.ReplaceService(
-                typeof(IEventBus), 
+                typeof(IEventBus),
                 () => IocManager.IocContainer.Register(
                     Component.For<IEventBus>().Instance(NullEventBus.Instance)
                 )

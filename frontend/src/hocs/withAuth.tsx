@@ -1,7 +1,7 @@
 "use client";
-import React, { use, useContext, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuthState } from '@/providers/authProvider';
+import { useRouter } from 'next/navigation';
+import React, { useMemo } from 'react';
 
 /**
  * This hoc will protect pages which need the user to be logged in

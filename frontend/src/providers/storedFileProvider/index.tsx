@@ -1,28 +1,39 @@
 "use client";
+import { getAxiosInstace, getFormDataAxiosInstace } from '@/utils';
 import React, { useContext, useEffect, useMemo, useReducer } from 'react';
-import storedFileReducer from './reducer';
-import { StoredFile, StoredFileActionContext, StoredFileStateContext, StoredFileStateContext_InitState, UserFileStore } from './context';
 import { useAuthState } from '../authProvider';
-import { deleteStoredFileErrorAction, deleteStoredFileSuccessAction, getBridgeByUserErrorAction, getBridgeByUserRequestAction, getBridgeByUserSuccessAction, getStoredFileErrorAction, getStoredFileRequestAction, getStoredFilesErrorAction, getStoredFilesRequestAction, getStoredFilesSuccessAction, getStoredFileSuccessAction, postUserFileErrorAction, postUserFileRequestAction, postUserFileSuccessAction, putStoredFileErrorAction, putStoredFileRequestAction, putStoredFileSuccessAction } from './actions';
-import { getAxiosInstace } from '@/utils';
+import {
+    deleteStoredFileErrorAction, deleteStoredFileSuccessAction,
+    getStoredFileErrorAction, getStoredFileRequestAction,
+    getStoredFilesErrorAction, getStoredFilesRequestAction,
+    getStoredFilesSuccessAction, getStoredFileSuccessAction,
+    postStoredFileErrorAction, postStoredFileRequestAction,
+    postStoredFileSuccessAction, putStoredFileErrorAction,
+    putStoredFileRequestAction, putStoredFileSuccessAction
+} from './actions';
+import { IStoredFile, StoredFileActionContext, StoredFileStateContext, StoredFileStateContext_InitState } from './context';
+import storedFileReducer from './reducer';
 
-const StoredFileProvider = ({children}: {children: React.ReactNode}): React.ReactNode => {
+const StoredFileProvider = ({ children }: { children: React.ReactNode }): React.ReactNode => {
     const [state, dispatch] = useReducer(storedFileReducer, StoredFileStateContext_InitState);
     const { loginObj } = useAuthState();
 
     let accessToken = useMemo(() => loginObj?.accessToken, []);
     accessToken = useMemo(() => loginObj?.accessToken, [loginObj]);
     let instance = getAxiosInstace(accessToken || "");
+    let formDataInstance = useMemo(() => {
+        return getFormDataAxiosInstace(loginObj?.accessToken || "");
+    }, [loginObj]);
 
     useEffect(() => {
         if (accessToken) {
             console.log("found the accesss token", accessToken);
             instance = getAxiosInstace(accessToken);
-        } 
+        }
     }, []);
-    
+
     const getStoredFile = (id: string) => {
-        const endpoint = '/api/services/app/FileStore/Get';
+        const endpoint = 'api/services/app/StoredFile/Get';
         dispatch(getStoredFileRequestAction());
         instance.get(`${endpoint}?Id=${id}`)
             .then(res => {
@@ -33,13 +44,12 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(getStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(getStoredFileErrorAction())
             );
     };
-
     const getStoredFiles = () => {
-        const endpoint = '/api/services/app/FileStore/GetAll';
+        const endpoint = 'api/services/app/StoredFile/GetAll';
         dispatch(getStoredFilesRequestAction());
         instance.get(endpoint)
             .then(res => {
@@ -50,12 +60,28 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(getStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(getStoredFilesErrorAction())
             );
     };
-    const putStoredFile = (file: StoredFile) => {
-        const endpoint = '/api/services/app/FileStore/Update';        
+    const getMyStoredFiles = () => {
+        const endpoint = 'api/services/app/StoredFile/GetMyStoredFiles';
+        dispatch(getStoredFilesRequestAction());
+        instance.get(endpoint)
+            .then(res => {
+                const data = res.data;
+                if (data.success) {
+                    dispatch(getStoredFilesSuccessAction(data.result.items));
+                } else {
+                    dispatch(getStoredFileErrorAction());
+                }
+            })
+            .catch(err =>
+                dispatch(getStoredFilesErrorAction())
+            );
+    };
+    const putStoredFile = (file: IStoredFile) => {
+        const endpoint = 'api/services/app/StoredFile/Update';
         dispatch(putStoredFileRequestAction());
         instance.get(endpoint)
             .then(res => {
@@ -66,12 +92,12 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(putStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(putStoredFileErrorAction())
             );
     };
     const deleteStoredFile = (id: string) => {
-        const endpoint = '/api/services/app/FileStore/Delete';
+        const endpoint = 'api/services/app/StoredFile/Delete';
         dispatch(deleteStoredFileErrorAction())
         instance.delete(`${endpoint}?Id=${id}`)
             .then(res => {
@@ -82,13 +108,12 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(deleteStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(deleteStoredFileErrorAction())
             );
     };
-
-    const postStoredFile = (file: StoredFile) => {
-        const endpoint = '/api/services/app/FileStore/Create';
+    const postStoredFile = (file: IStoredFile) => {
+        const endpoint = 'api/services/app/StoredFile/Create';
         instance.post(endpoint, file)
             .then(res => {
                 const data = res.data;
@@ -98,51 +123,55 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
                     dispatch(putStoredFileErrorAction());
                 }
             })
-            .catch(err => 
+            .catch(err =>
                 dispatch(putStoredFileErrorAction())
             );
     }
-
-    const postUserFile = (bridge: UserFileStore) => {
-        console.log("bridge", bridge);
-        const endpoint = '/api/services/app/UserFileStore/CreateUserFileStore';
-        dispatch(postUserFileRequestAction());
-        instance.post(endpoint, bridge)
-            .then(res => {
-                const data = res.data;
-                console.log("...", data);
+    const upload = (formData: FormData) => {
+        const endpoint = 'Upload';
+        dispatch(postStoredFileRequestAction())
+        return formDataInstance.post(endpoint, formData)
+            .then(res => res.data)
+            .then(data => {
                 if (data.success) {
-                    dispatch(postUserFileSuccessAction(data.result));
+                    dispatch(postStoredFileSuccessAction(data.result));
                 } else {
-                    dispatch(postUserFileErrorAction());
+                    dispatch(postStoredFileErrorAction());
                 }
             })
-            .catch(err => 
-                dispatch(postUserFileErrorAction())
+            .catch(err =>
+                dispatch(putStoredFileErrorAction())
             );
     }
-
-    const getBridgeByUser = (userId: number) => {
-        const endpoint = '/api/services/app/UserFileStore/GetUserFileStore';
-        dispatch(getBridgeByUserRequestAction());
-        instance.get(`${endpoint}?userId=${userId}`)
-            .then(res => {
-                const data = res.data;
-                console.log("got the UserFileStore", data);
+    const uploadProfilePicture = (formData: FormData) => {
+        const endpoint = 'UploadProfilePicture';
+        dispatch(postStoredFileRequestAction())
+        return formDataInstance.post(endpoint, formData)
+            .then(res => res.data)
+            .then(data => {
                 if (data.success) {
-                    dispatch(getBridgeByUserSuccessAction(data.result));
+                    dispatch(postStoredFileSuccessAction(data.result));
                 } else {
-                    dispatch(getBridgeByUserErrorAction());
+                    dispatch(postStoredFileErrorAction());
                 }
             })
-            .catch(err => 
-                dispatch(getBridgeByUserErrorAction())
+            .catch(err =>
+                dispatch(putStoredFileErrorAction())
             );
     }
 
     return (
         <StoredFileStateContext.Provider value={state}>
-            <StoredFileActionContext.Provider value={{getBridgeByUser, postUserFile, getStoredFile, getStoredFiles, putStoredFile, deleteStoredFile, postStoredFile}}>
+            <StoredFileActionContext.Provider value={{
+                getStoredFile,
+                getStoredFiles,
+                getMyStoredFiles,
+                putStoredFile,
+                deleteStoredFile,
+                postStoredFile,
+                upload,
+                uploadProfilePicture
+            }}>
                 {children}
             </StoredFileActionContext.Provider>
         </StoredFileStateContext.Provider>
@@ -150,7 +179,7 @@ const StoredFileProvider = ({children}: {children: React.ReactNode}): React.Reac
 }
 
 export default StoredFileProvider;
-export const useStoreFileState = () => {
+export const useStoredFileState = () => {
     const context = useContext(StoredFileStateContext);
     if (!context) {
         throw new Error('useStoredFileState must be used within a StoredFileProvider, i.e. the StoredFileProvider must be an ancestor of the component using this hook.');

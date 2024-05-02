@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Services.StoredFileAppService
 {
-    public interface IStoredFileAppService : IApplicationService
+    public interface IStoredFileAppService : IApplicationService, IAsyncCrudAppService<StoredFileDto, Guid>
     {
-        Task<Domain.StoredFile> CreateStoredFile(StoredFileDto input);
+        Task<Domain.StoredFile> CreateStoredFile([FromForm] StoredFileDto input);
 
         Task<IActionResult> UpdateStoredFile(Guid id, [FromForm] StoredFileDto input);
 

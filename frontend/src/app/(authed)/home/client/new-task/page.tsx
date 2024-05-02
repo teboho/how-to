@@ -1,33 +1,33 @@
 "use client";
 
+import { useCategoriesState as useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
-import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Select, Tag, Typography } from "antd";
-import useStyles from "./style";
-import { useCategoriestate as useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import type { SelectProps } from 'antd';
+import { Button, Form, FormProps, Input, InputNumber, Select, Tag, Typography } from "antd";
+import useStyles from "./style";
 
 type TagRender = SelectProps['tagRender'];
 
 const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
 
 const tagRender: TagRender = (props) => {
-  const { label, value, closable, onClose } = props;
-  const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-  return (
-    <Tag
-      color={value}
-      onMouseDown={onPreventMouseDown}
-      closable={closable}
-      onClose={onClose}
-      style={{ marginInlineEnd: 4, background: '#B64326' }}
-    >
-      {label}
-    </Tag>
-  );
+    const { label, value, closable, onClose } = props;
+    const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+    };
+    return (
+        <Tag
+            color={value}
+            onMouseDown={onPreventMouseDown}
+            closable={closable}
+            onClose={onClose}
+            style={{ marginInlineEnd: 4, background: '#B64326' }}
+        >
+            {label}
+        </Tag>
+    );
 };
 
 const { Title } = Typography;
@@ -56,8 +56,8 @@ const Page = (): React.ReactNode => {
         console.log('Failed:', errorInfo);
     }
 
-    const options = categories?.map(category => ({ label: category.title, value: category.id, color: colors[Math.floor(Math.random() * colors.length)]}));
-    
+    const options = categories?.map(category => ({ label: category.title, value: category.id, color: colors[Math.floor(Math.random() * colors.length)] }));
+
     return (
         <section>
             <Title level={2}>New Task</Title>
@@ -74,12 +74,12 @@ const Page = (): React.ReactNode => {
                     name="title"
                     rules={[{ required: true, message: 'Please input the task title!' }]}
                 >
-                    <Input />   
+                    <Input />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Task Description"
                     name="description"
-                    rules={[{ required: true, message: 'Please input the task description!' }]} 
+                    rules={[{ required: true, message: 'Please input the task description!' }]}
                 >
                     <Input.TextArea />
                 </Form.Item>
@@ -88,7 +88,7 @@ const Page = (): React.ReactNode => {
                     name="amount"
                     rules={[{ required: true, message: 'Please input the task amount!' }]}
                 >
-                    <InputNumber prefix="R"  />
+                    <InputNumber prefix="R" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Task Time Frame"
@@ -105,7 +105,7 @@ const Page = (): React.ReactNode => {
                     name="categories"
                     rules={[{ required: true, message: 'Please select a category!' }]}
                 >
-                    <Select 
+                    <Select
                         mode="multiple"
                         tagRender={tagRender}
                         defaultValue={[]}
@@ -115,8 +115,8 @@ const Page = (): React.ReactNode => {
                     />
                 </Form.Item>
                 <Form.Item>
-                <Button type="primary" htmlType="submit">Submit</Button>
-                </Form.Item>                
+                    <Button type="primary" htmlType="submit">Submit</Button>
+                </Form.Item>
             </Form>
         </section>
     );

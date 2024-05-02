@@ -1,15 +1,17 @@
 "use client";
 
 import { getAxiosInstace } from "@/utils";
+import { message } from "antd";
 import React, { useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
 import * as profileActions from "./actions";
-import profileReducer from "./reducer";
 import { IProfile, ProfileActionsContext, ProfileStateContext, ProfileStateContext_Default } from "./context";
+import profileReducer from "./reducer";
 
 const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     const { loginObj } = useAuthState();
     const [state, dispatch] = useReducer(profileReducer, ProfileStateContext_Default);
+    const [messageApi, contextHolder] = message.useMessage();
 
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
@@ -41,7 +43,8 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
         instance.post(endpoint, profile)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.postProfileSuccessAction(response.data.result))
+                        dispatch(profileActions.postProfileSuccessAction(response.data.result));
+                        messageApi.success("Profile created successfully");
                     } else {
                         dispatch(profileActions.postProfileErrorAction())
                     }
@@ -56,7 +59,8 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
         instance.put(endpoint, profile)
                 .then(response => {
                     if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.putProfileSuccessAction(response.data.result))
+                        dispatch(profileActions.putProfileSuccessAction(response.data.result));
+                        messageApi.success("Profile updated successfully");
                     } else {
                         dispatch(profileActions.putProfileErrorAction())
                     }

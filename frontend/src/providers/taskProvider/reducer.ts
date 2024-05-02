@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
-import { TaskStateContext_Default } from './context';
 import { TaskActionEnums } from './actions';
+import { TaskStateContext_Default } from './context';
 
 const taskReducer = handleActions(
     {

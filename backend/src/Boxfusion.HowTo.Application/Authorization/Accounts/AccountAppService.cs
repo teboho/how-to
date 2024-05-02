@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
 using Abp.Configuration;
 using Abp.Zero.Configuration;
 using Boxfusion.HowTo.Authorization.Accounts.Dto;
 using Boxfusion.HowTo.Authorization.Users;
+using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Authorization.Accounts
 {

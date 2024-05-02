@@ -7,7 +7,7 @@ using Boxfusion.HowTo.EntityFrameworkCore.Seed;
 namespace Boxfusion.HowTo.EntityFrameworkCore
 {
     [DependsOn(
-        typeof(HowToCoreModule), 
+        typeof(HowToCoreModule),
         typeof(AbpZeroCoreEntityFrameworkCoreModule))]
     public class HowToEntityFrameworkModule : AbpModule
     {

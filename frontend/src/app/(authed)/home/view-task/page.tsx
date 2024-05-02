@@ -11,8 +11,10 @@ import { AbpTokenProperies } from "@/utils";
 import PaystackPop from '@paystack/inline-js';
 import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Table, Typography } from "antd";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import useStyles from "./style";
+import { PaystackButton, PaystackConsumer, usePaystackPayment } from "react-paystack";
+import type { HookConfig } from "react-paystack/dist/types";
 
 const { Title } = Typography;
 
@@ -25,10 +27,14 @@ const Page = () => {
     const { postOffer, getMyOffer, getTaskOffers, acceptOffer } = useOfferActions();
     const { offer, offers } = useOfferState();
     const { postPayment } = usePaymentActions();
-    const { payment } = usePaymentState();
     const { styles, cx } = useStyles();
     const params = new URLSearchParams(useSearchParams());
-        
+
+    const config: HookConfig = {
+        publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || ""
+    }
+    const initPayment = usePaystackPayment(config);
+
     const _taskId = params.get("id");
 
     const roleKey = AbpTokenProperies.role;
@@ -44,7 +50,7 @@ const Page = () => {
                 upViews(_taskId);
             }
         }
-    }, []);   
+    }, []);
 
     /**
      * 
@@ -52,28 +58,55 @@ const Page = () => {
      * @param execId person who made the offer
      */
     const goPay = (offerId: string, execId: number) => {
-        const paystack = new PaystackPop();
-        paystack.newTransaction({
-            key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
-            email: "teboho.dev@gmail.com",
-            amount: 500,
+        initPayment({
+            config: {
+                amount: 500, // cents
+                email: "teboho.dev@gmail.com",
+                reference: `paystack-howto-${(new Date()).getTime().toString()}`,
+                currency: "ZAR",
+                channels: ["card", "bank", "eft"],
+            },
             onSuccess: (response: IPayfastResponse) => {
                 console.log(response);
-                acceptOffer(offerId);
-                postPayment({
-                    beneficiaryId: execId,
-                    amount: 500,
-                    reference: response.reference,
-                    bank: response.bank,
-                    transaction: response.transaction,
-                    taskId: _taskId as string
-                });
+                // acceptOffer(offerId);
+                // postPayment({
+                //     beneficiaryId: execId,
+                //     amount: 500,
+                //     reference: response.reference,
+                //     bank: response.bank,
+                //     transaction: response.transaction,
+                //     taskId: _taskId as string
+                // });
             },
             onClose: () => {
                 console.log("closed");
             }
         });
-    
+
+        // next refuses to build this code below so we will use the hook instead
+        // if (window) {
+        //     const paystack = new PaystackPop();
+        //     paystack.newTransaction({
+        //         key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+        //         email: "teboho.dev@gmail.com",
+        //         amount: 500,
+        // onSuccess: (response: IPayfastResponse) => {
+        //     console.log(response);
+        //     acceptOffer(offerId);
+        //     postPayment({
+        //         beneficiaryId: execId,
+        //         amount: 500,
+        //         reference: response.reference,
+        //         bank: response.bank,
+        //         transaction: response.transaction,
+        //         taskId: _taskId as string
+        //     });
+        // },
+        // onClose: () => {
+        //     console.log("closed");
+        // }
+        //     });
+        // }
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
@@ -159,7 +192,7 @@ const Page = () => {
                     >
                         <Input />
                     </Form.Item>
-                    {   record.status === 0 &&                     
+                    {record.status === 0 &&
                         <Form.Item>
                             <Button type="primary" htmlType="submit">Accept</Button>
                         </Form.Item>
@@ -174,7 +207,7 @@ const Page = () => {
             )
         }
     ];
-    
+
     const clientViewTask = () => (
         <>
             <Title level={2}>View Task</Title>
@@ -197,12 +230,12 @@ const Page = () => {
                     name="title"
                     rules={[{ required: true, message: 'Please input the task title!' }]}
                 >
-                    <Input />   
+                    <Input />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Task Description"
                     name="description"
-                    rules={[{ required: true, message: 'Please input the task description!' }]} 
+                    rules={[{ required: true, message: 'Please input the task description!' }]}
                 >
                     <Input.TextArea />
                 </Form.Item>
@@ -211,7 +244,7 @@ const Page = () => {
                     name="amount"
                     rules={[{ required: true, message: 'Please input the task amount!' }]}
                 >
-                    <InputNumber prefix="R"  />
+                    <InputNumber prefix="R" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Task Time Frame"
@@ -228,12 +261,12 @@ const Page = () => {
                                 colorBgContainer: "#fff",
                                 colorPrimaryActive: "#B64326",
                                 colorBgTextActive: "#B64326"
-                            }        
+                            }
                         }}
                     >
                         <Button type="primary" htmlType="submit">Update</Button>
                     </ConfigProvider>
-                </Form.Item>                
+                </Form.Item>
             </Form>
             <Title level={3}>Task Offers</Title>
             <Table dataSource={offers} columns={columns} />
@@ -269,7 +302,7 @@ const Page = () => {
                     name="counterAmount"
                     rules={[{ required: true, message: 'Please input the offer amount!' }]}
                 >
-                    <InputNumber prefix="R"  />
+                    <InputNumber prefix="R" />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit">Submit Offer</Button>

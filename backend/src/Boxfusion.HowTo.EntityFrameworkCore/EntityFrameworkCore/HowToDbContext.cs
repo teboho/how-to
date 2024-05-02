@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Abp.Zero.EntityFrameworkCore;
+﻿using Abp.Zero.EntityFrameworkCore;
 using Boxfusion.HowTo.Authorization.Roles;
 using Boxfusion.HowTo.Authorization.Users;
-using Boxfusion.HowTo.MultiTenancy;
 using Boxfusion.HowTo.Domain;
+using Boxfusion.HowTo.MultiTenancy;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Boxfusion.HowTo.EntityFrameworkCore
@@ -15,7 +15,6 @@ namespace Boxfusion.HowTo.EntityFrameworkCore
         public DbSet<Guide> Guides { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<BankDetail> BankDetails { get; set; }
-        public DbSet<Photo> Photos { get; set; }
         // level3 
         public DbSet<Review> Reviews { get; set; }
         public DbSet<GuideStep> GuideSteps { get; set; }
@@ -40,7 +39,8 @@ namespace Boxfusion.HowTo.EntityFrameworkCore
 
         // level7
         public DbSet<StoredFile> StoredFiles { get; set; }
-        public DbSet<UserFileStore> UserFileStore { get; set; }
+        // level8
+        public DbSet<Portfolio> Portfolios { get; set; }
         public HowToDbContext(DbContextOptions<HowToDbContext> options)
             : base(options)
         {

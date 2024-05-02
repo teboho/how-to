@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { IOfferStateContext, IOffer } from "./context";
+import { IOffer, IOfferStateContext } from "./context";
 
 export const OfferActionEnums = {
     GetOfferRequest: "GET_OFFER_REQUEST",

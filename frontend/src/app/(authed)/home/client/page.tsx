@@ -29,7 +29,7 @@ const Page = (): React.ReactNode => {
             getPayments();
         }
     }, []);
-    
+
     const task_columns = [
         {
             title: 'Title',
@@ -39,13 +39,13 @@ const Page = (): React.ReactNode => {
         {
             title: 'Description',
             dataIndex: 'description',
-            key: 'description', 
+            key: 'description',
             // render a partial description
             render: (text: any) => {
                 return text.length > 100 ? text.slice(0, 100) + "..." : text;
             }
         },
-        { 
+        {
             title: 'Amount',
             dataIndex: 'amount',
             key: 'key',
@@ -109,12 +109,12 @@ const Page = (): React.ReactNode => {
         {
             title: 'Amount',
             dataIndex: 'amount',
-            key: 'amount', 
+            key: 'amount',
             render: (text: any) => {
                 return `R ${text}`;
             }
         },
-        { 
+        {
             title: 'Transaction',
             dataIndex: 'transaction',
             key: 'transaction'
@@ -156,7 +156,7 @@ const Page = (): React.ReactNode => {
                 <Title level={3}>Money Spent so far</Title>
                 <Paragraph className={cx(styles["total-money"])}>R7 564.07</Paragraph>
             </section>
-            <section className={cx(styles.box)}>                
+            <section className={cx(styles.box)}>
                 <Segmented
                     className={cx(styles.segmented)}
                     defaultValue="Tasks"
@@ -164,8 +164,9 @@ const Page = (): React.ReactNode => {
                     onChange={(value) => setTable(value)}
                     options={['Tasks', 'Payments']}
                 />
-                {tasksSuccess && paymentsSuccess && <Table columns={table === "Tasks" ? task_columns : payment_columns} dataSource={table === "Tasks" ? task_rows : payment_rows} />}
-                {isPending ? <Loading /> : null }
+                {table === "Tasks" && tasksSuccess && <Table columns={task_columns} dataSource={task_rows} />}
+                {table === "Payments" && paymentsSuccess && <Table columns={payment_columns} dataSource={payment_rows} />}
+                {isPending ? <Loading /> : null}
             </section>
         </section>
     );

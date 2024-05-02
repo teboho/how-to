@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Boxfusion.HowTo.Configuration;
+using Boxfusion.HowTo.Web;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Boxfusion.HowTo.Configuration;
-using Boxfusion.HowTo.Web;
 
 namespace Boxfusion.HowTo.EntityFrameworkCore
 {
@@ -12,7 +12,7 @@ namespace Boxfusion.HowTo.EntityFrameworkCore
         public HowToDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<HowToDbContext>();
-            
+
             /*
              You can provide an environmentName parameter to the AppConfigurations.Get method. 
              In this case, AppConfigurations will try to read appsettings.{environmentName}.json.

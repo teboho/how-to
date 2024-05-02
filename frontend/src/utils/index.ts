@@ -27,6 +27,14 @@ export const getAxiosInstace = (accessToken: string) => axios.create({
     baseURL: getApiUrl(),
     headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+    }
+}); 
+
+export const getFormDataAxiosInstace = (accessToken: string) => axios.create({
+    baseURL: getApiUrl(),
+    headers: {
+        'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${accessToken}`
     }
 }); 
@@ -59,3 +67,5 @@ export const getRole = (loginObj: any): string => {
     
     return "client";
 }
+
+export const imageURL_pre = process.env.NEXT_PUBLIC_API_IMAGE_URL_PRE;

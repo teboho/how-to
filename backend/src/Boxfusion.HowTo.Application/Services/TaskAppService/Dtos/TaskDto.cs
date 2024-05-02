@@ -1,11 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
-using Boxfusion.HowTo.Authorization.Users;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Services.TaskAppService.Dtos
