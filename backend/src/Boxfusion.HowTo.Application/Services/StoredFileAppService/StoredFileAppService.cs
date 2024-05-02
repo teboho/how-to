@@ -15,8 +15,13 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
 {
     public class StoredFileAppService : AsyncCrudAppService<Domain.StoredFile, StoredFileDto, Guid>, IAsyncCrudAppService<StoredFileDto, Guid>, IStoredFileAppService
     {
-        const string BASE_FILE_PATH = "App_Data/Images";
-        const string PROFILE_BASE_FILE_PATH = "App_Data/Profiles/Images";
+        private readonly string PROFILE_BASE_FILE_PATH = "App_Data/Profiles/Images";
+
+        private readonly string BASE_FILE_PATH = "App_Data/Images";
+        private readonly string PORTFOLIO_IMAGES_BASE_FILE_PATH = "App_Data/Portfolio/Images";
+        private readonly string PORTFOLIO_VIDEOS_BASE_FILE_PATH = "App_Data/Portfolio/Videos";
+        private readonly string PORTFOLIO_AUDIO_BASE_FILE_PATH = "App_Data/Portfolio/Audio";
+        private readonly string PORTFOLIO_DOCUMENTS_BASE_FILE_PATH = "App_Data/Portfolio/Documents";
 
         private readonly IRepository<Domain.StoredFile, Guid> _storedFileRepository;
         private readonly IRepository<Domain.Profile, Guid> _profileRepository;
@@ -169,7 +174,7 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
             return filePath;
         }
 
-        private static async Task SaveFile(string filePath, Stream stream)
+        public static async Task SaveFile(string filePath, Stream stream)
         {
             using (var fs = new FileStream(filePath, FileMode.Create))
             {
@@ -201,6 +206,44 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
             }
             memory.Position = 0;
             return new FileContentResult(memory.ToArray(), GetContentType(path));
+        }
+
+        // get my stored files
+        [HttpGet]
+        [Route("GetAllMyStoredFiles")]
+        public async Task<List<StoredFileDto>> GetAllMyStoredFiles()
+        {
+            var contentResults = new List<FileStreamResult>();
+            var response = new List<StoredFileDto>();
+            var files = _storedFileRepository.GetAllList();
+            if (files == null)
+                throw new UserFriendlyException("File not found");
+
+            foreach (var file in files)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), BASE_FILE_PATH, file.FileName);
+
+                if (!System.IO.File.Exists(path))
+                {
+                    continue;
+                }
+
+                byte[] bytes = System.IO.File.ReadAllBytes(path);
+                string base64String = Convert.ToBase64String(bytes);
+
+                response.Add(new StoredFileDto
+                {
+                    Id = file.Id,
+                    File = new FormFile(
+                            baseStream: System.IO.File.OpenRead(path),
+                            baseStreamOffset: 0,
+                            name: file.FileName,
+                            fileName: file.FileName,
+                            length: file.File.Length
+                    )
+                }); ;
+            }
+            return response;
         }
 
         public async Task<List<StoredFileDto>> GetAllFiles()
