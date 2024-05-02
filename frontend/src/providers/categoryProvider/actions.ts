@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { ICategoriestateContext, ICategory, ITaskCategory } from "./context";
+import { ICategoriesStateContext, ICategory, IExecutorCategory, ITaskCategory } from "./context";
 
 export const CategoryActionEnums = {
     GetCategoryRequest: "GET_CATEGORY_REQUEST",
@@ -14,6 +14,10 @@ export const CategoryActionEnums = {
     PostTaskCategorySuccess: "POST_TASK_CATEGORY_SUCCESS",
     PostTaskCategoryError: "POST_TASK_CATEGORY_ERROR",
 
+    PostExecutorCategoryRequest: "POST_EXECUTOR_CATEGORY_REQUEST",
+    PostExecutorCategorySuccess: "POST_EXECUTOR_CATEGORY_SUCCESS",
+    PostExecutorCategoryError: "POST_EXECUTOR_CATEGORY_ERROR",
+
     PutCategoryRequest: "PUT_CATEGORY_REQUEST",
     PutCategoriesuccess: "PUT_CATEGORY_SUCCESS",
     PutCategoryError: "PUT_CATEGORY_ERROR",
@@ -24,87 +28,117 @@ export const CategoryActionEnums = {
 
     GetTaskCategoriesRequest: "GET_TASK_CATEGORIES_REQUEST",
     GetTaskCategoriesSuccess: "GET_TASK_CATEGORIES_SUCCESS",
-    GetTaskCategoriesError: "GET_TASK_CATEGORIES_ERROR"
+    GetTaskCategoriesError: "GET_TASK_CATEGORIES_ERROR",
+
+    GetExecutorCategoriesRequest: "GET_EXECUTOR_CATEGORIES_REQUEST",
+    GetExecutorCategoriesSuccess: "GET_EXECUTOR_CATEGORIES_SUCCESS",
+    GetExecutorCategoriesError: "GET_EXECUTOR_CATEGORIES_ERROR"
 }
 
-export const getCategoryRequestAction = createAction<ICategoriestateContext>(
+export const getCategoryRequestAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.GetCategoryRequest,
     () => ({ isPending: true, isSuccess: false, isError: false, category: undefined })
 );
 
-export const getCategoriesuccessAction = createAction<ICategoriestateContext, ICategory>(
+export const getCategoriesuccessAction = createAction<ICategoriesStateContext, ICategory>(
     CategoryActionEnums.GetCategoriesuccess,
     (category: ICategory) => ({ isPending: false, isSuccess: true, isError: false, category })
 );
 
-export const getCategoryErrorAction = createAction<ICategoriestateContext>(
+export const getCategoryErrorAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.GetCategoryError,
     () => ({ isPending: false, isSuccess: false, isError: true, category: undefined })
 );
 
-export const postCategoryRequestAction = createAction<ICategoriestateContext>(
+export const postCategoryRequestAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.PostCategoryRequest,
     () => ({ isPending: true, isSuccess: false, isError: false, category: undefined })
 );
-export const postCategoriesuccessAction = createAction<ICategoriestateContext, ICategory>(
+export const postCategoriesuccessAction = createAction<ICategoriesStateContext, ICategory>(
     CategoryActionEnums.PostCategoriesuccess,
     (category: ICategory) => ({ isPending: false, isSuccess: true, isError: false, category })
 );
-export const postCategoryErrorAction = createAction<ICategoriestateContext>(
+export const postCategoryErrorAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.PostCategoryError,
     () => ({ isPending: false, isSuccess: false, isError: true, category: undefined })
 );
 
-export const postTaskCategoryRequestAction = createAction<ICategoriestateContext>(
+export const postTaskCategoryRequestAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.PostTaskCategoryRequest,
     () => ({ isPending: true, isSuccess: false, isError: false })
 );
-export const postTaskCategorySuccessAction = createAction<ICategoriestateContext>(
+export const postTaskCategorySuccessAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.PostTaskCategorySuccess,
     () => ({ isPending: false, isSuccess: true, isError: false })
 );
-export const postTaskCategoryErrorAction = createAction<ICategoriestateContext>(
+export const postTaskCategoryErrorAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.PostTaskCategoryError,
     () => ({ isPending: false, isSuccess: false, isError: true })
 );
 
-export const putCategoryRequestAction = createAction<ICategoriestateContext>(
+export const postExecutorCategoryRequestAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.PostExecutorCategoryRequest,
+    () => ({ isPending: true, isSuccess: false, isError: false })
+);
+export const postExecutorCategorySuccessAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.PostExecutorCategorySuccess,
+    () => ({ isPending: false, isSuccess: true, isError: false })
+);
+export const postExecutorCategoryErrorAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.PostExecutorCategoryError,
+    () => ({ isPending: false, isSuccess: false, isError: true })
+);
+
+export const putCategoryRequestAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.PutCategoryRequest,
     () => ({ isPending: true, isSuccess: false, isError: false, category: undefined })
 );
 
-export const putCategoriesuccessAction = createAction<ICategoriestateContext, ICategory>(
+export const putCategoriesuccessAction = createAction<ICategoriesStateContext, ICategory>(
     CategoryActionEnums.PutCategoriesuccess,
     (category: ICategory) => ({ isPending: false, isSuccess: true, isError: false, category })
 );
 
-export const putCategoryErrorAction = createAction<ICategoriestateContext>(
+export const putCategoryErrorAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.PutCategoryError,
     () => ({ isPending: false, isSuccess: false, isError: true, category: undefined })
 );
 
-export const getCategoriesRequestAction = createAction<ICategoriestateContext>(
+export const getCategoriesRequestAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.GetCategoriesRequest,
     () => ({ isPending: true, isSuccess: false, isError: false, categories: undefined })
 );
-export const getCategoriesSuccessAction = createAction<ICategoriestateContext, ICategory[]>(
+export const getCategoriesSuccessAction = createAction<ICategoriesStateContext, ICategory[]>(
     CategoryActionEnums.GetCategoriesSuccess,
     (categories: ICategory[]) => ({ isPending: false, isSuccess: true, isError: false, categories })
 );
-export const getCategoriesErrorAction = createAction<ICategoriestateContext>(
+export const getCategoriesErrorAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.GetCategoriesError,
     () => ({ isPending: false, isSuccess: false, isError: true, category: undefined })
 );
 
-export const getTaskCategoriesRequestAction = createAction<ICategoriestateContext>(
+export const getTaskCategoriesRequestAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.GetTaskCategoriesRequest,
     () => ({ isPending: true, isSuccess: false, isError: false, taskCategories: undefined })
 );
-export const getTaskCategoriesSuccessAction = createAction<ICategoriestateContext, ITaskCategory[]>(
+export const getTaskCategoriesSuccessAction = createAction<ICategoriesStateContext, ITaskCategory[]>(
     CategoryActionEnums.GetTaskCategoriesSuccess,
     (taskCategories: ITaskCategory[]) => ({ isPending: false, isSuccess: true, isError: false, taskCategories })
 );
-export const getTaskCategoriesErrorAction = createAction<ICategoriestateContext>(
+export const getTaskCategoriesErrorAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.GetTaskCategoriesError,
     () => ({ isPending: false, isSuccess: false, isError: true, taskCategories: undefined })
+);
+
+export const getExecutorCategoriesRequestAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.GetExecutorCategoriesRequest,
+    () => ({ isPending: true, isSuccess: false, isError: false, executorCategories: undefined })
+);
+export const getExecutorCategoriesSuccessAction = createAction<ICategoriesStateContext, IExecutorCategory[]>(
+    CategoryActionEnums.GetExecutorCategoriesSuccess,
+    (executorCategories: IExecutorCategory[]) => ({ isPending: false, isSuccess: true, isError: false, executorCategories })
+);
+export const getExecutorCategoriesErrorAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.GetExecutorCategoriesError,
+    () => ({ isPending: false, isSuccess: false, isError: true, executorCategories: undefined })
 );

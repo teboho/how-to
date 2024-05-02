@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { CategoryActionEnums } from './actions';
-import { CategoriestateContext_Default } from './context';
+import { CategoriesStateContext_Default } from './context';
 
 const categoryReducer = handleActions(
     {
@@ -52,9 +52,29 @@ const categoryReducer = handleActions(
         },
         [CategoryActionEnums.GetTaskCategoriesError]: (state) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, taskCategories: undefined };
+        },
+
+        [CategoryActionEnums.GetExecutorCategoriesRequest]: (state) => {
+            return { ...state, isPending: true, isSuccess: false, isError: false, executorCategories: undefined };
+        },
+        [CategoryActionEnums.GetExecutorCategoriesSuccess]: (state, action) => {
+            return { ...state, ...action.payload };
+        },
+        [CategoryActionEnums.GetExecutorCategoriesError]: (state) => {
+            return { ...state, isPending: false, isSuccess: false, isError: true, executorCategories: undefined };
+        },
+
+        [CategoryActionEnums.PostExecutorCategoryRequest]: (state) => {
+            return { ...state, isPending: true, isSuccess: false, isError: false, executorCategories: undefined };
+        },
+        [CategoryActionEnums.PostExecutorCategorySuccess]: (state, action) => {
+            return { ...state, ...action.payload };
+        },
+        [CategoryActionEnums.PostExecutorCategoryError]: (state) => {
+            return { ...state, isPending: false, isSuccess: false, isError: true, executorCategories: undefined };
         }
     },
-    CategoriestateContext_Default
+    CategoriesStateContext_Default
 );
 
 export default categoryReducer;

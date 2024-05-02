@@ -10,45 +10,56 @@ export interface ITaskCategory {
     taskId: string;
     categoryId: string;
 }
-export interface ICategoriestateContext {
+export interface IExecutorCategory {
+    id?: string;
+    userId: number;
+    categoryId: string;
+}
+export interface ICategoriesStateContext {
     isPending: boolean;
     isError: boolean;
     isSuccess: boolean;
     category?: ICategory;
     categories?: ICategory[];
     taskCategories?: ITaskCategory[];
+    executorCategories?: IExecutorCategory[];
 }
-export const CategoriestateContext_Default: ICategoriestateContext = {
+export const CategoriesStateContext_Default: ICategoriesStateContext = {
     isPending: false,
     isError: false,
     isSuccess: false,
     category: undefined,
     categories: undefined,
-    taskCategories: undefined
+    taskCategories: undefined,
+    executorCategories: undefined,
 }
 
 export interface ICategoryActionsContext {
     getCategory: (id: string) => void;
     postCategory: (category: ICategory) => void;
     postTaskCategory: (categoryId: string, taskId: string) => void;
+    postExecutorCategory: (categoryId: string, userId: number) => void;
     putCategory: (category: ICategory) => void;
     getCategories: () => void;
     getTaskCategories: () => void;
     getMyCategories: () => void;
+    getExecutorCategories: () => void;
 }
 export const CategoryActionsContext_Default: ICategoryActionsContext = {
     getCategory: () => {},
     postCategory: () => {},
     postTaskCategory: () => {},
+    postExecutorCategory: () => {},
     putCategory: () => {},
     getCategories: () => {},
     getTaskCategories: () => {},
     getMyCategories: () => {},
+    getExecutorCategories: () => {},
 }
 
-const CategoriestateContext = createContext<ICategoriestateContext>(CategoriestateContext_Default);
+const CategoriesStateContext = createContext<ICategoriesStateContext>(CategoriesStateContext_Default);
 const CategoryActionsContext = createContext<ICategoryActionsContext>(CategoryActionsContext_Default);
 
 export {
-    CategoryActionsContext, CategoriestateContext
+    CategoryActionsContext, CategoriesStateContext
 };

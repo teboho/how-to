@@ -24,6 +24,7 @@
     "react-data-grid": "^7.0.0-beta.43",
     "react-dom": "^18",
     "react-loading-skeleton": "^3.4.0",
+    "react-paystack": "^5.0.0",
     "react-table": "^7.8.0",
     "redux-actions": "^3.0.0",
     "typescript-guid": "^1.0.3",

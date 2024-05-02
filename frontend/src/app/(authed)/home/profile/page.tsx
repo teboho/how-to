@@ -1,19 +1,19 @@
 "use client";
 
 import { useAuthState } from "@/providers/authProvider";
+import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
+import { IPortfolioWithStoredFile } from "@/providers/portfolioProvider/context";
 import { useProfileActions, useProfileState } from "@/providers/profileProvider";
 import { IProfile } from "@/providers/profileProvider/context";
-import { useStoredFileActions, useStoredFileState } from "@/providers/storedFileProvider";
+import { useStoredFileActions } from "@/providers/storedFileProvider";
 import { UploadOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from "antd";
-import { Button, Divider, FormProps, Input, message, Row, Typography, Upload } from "antd";
+import { Button, Col, Divider, Flex, FormProps, message, Row, Typography, Upload } from "antd";
+import { Field, Form, Formik } from "formik";
 import { useEffect, useMemo, useState } from "react";
 import { Guid } from "typescript-guid";
 import useStyles from "./style";
-import moduleStyles from "./style/style.module.css";
-import { Formik, Field, Form } from "formik";
-import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
-import { IPortfolioWithStoredFile } from "@/providers/portfolioProvider/context";
+import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 
 const { Title } = Typography;
 
@@ -27,6 +27,9 @@ const Page = (): React.ReactNode => {
     const { uploadProfilePicture } = useStoredFileActions();
     const { isSuccess: portfolioSuccess, portfoliosWithStoredFiles } = usePortfolioState();
     const { upload, getMyPortfolio } = usePortfolioActions();
+    const { categories } = useCategoriesState();
+    const { getCategories, getMyCategories } = useCategoryActions();
+
     const { styles, cx } = useStyles();
     const [messageApi, contextHolder] = message.useMessage();
     const [file, setFile] = useState<UploadFile>();
@@ -36,7 +39,6 @@ const Page = (): React.ReactNode => {
 
     useEffect(() => {
         if (loginObj && loginObj?.userId) {
-            // getMyProfile();
             getMyPortfolio();
         }
     }, []);
@@ -132,74 +134,95 @@ const Page = (): React.ReactNode => {
     const showPicture = (id: string) => <img className={styles['profile-pic']} alt="profile-pic" src={`${imageUrlPre}${id}`} />;
 
     return (
-        <section>
+        <section
+            className="page"
+        >
             {contextHolder}
             <Title level={2}>Profile</Title>
-            {profile && profile.storedFileId && !Guid.parse(profile.storedFileId).isEmpty() && showPicture(profile.storedFileId)}
-            <article
-                className={cx(styles.form)}
-            >
-                <Title level={3}>Profile Picture</Title>
-                <Upload
-                    {...profilePicUploadProps}
-                >
-                    <Button icon={<UploadOutlined />}>Select File</Button>
-                </Upload>
-                <Button
-                    type="primary"
-                    onClick={handleUpload}
-                    disabled={!file}
-                    loading={uploading}
-                    style={{ marginTop: 16 }}
-                >
-                    {uploading ? 'Uploading' : 'Start Uploading'}
-                </Button>
-            </article>
+            <Flex gap={100}>
+                <div>
+                    {profile && profile.storedFileId && !Guid.parse(profile.storedFileId).isEmpty() && showPicture(profile.storedFileId)}
+                    <article
+                        className={cx(styles.form)}
+                    >
+                        <Title level={3}>Profile Picture</Title>
+                        <Upload
+                            {...profilePicUploadProps}
+                        >
+                            <Button icon={<UploadOutlined />}>Select File</Button>
+                        </Upload>
+                        <Button
+                            type="primary"
+                            onClick={handleUpload}
+                            disabled={!file}
+                            loading={uploading}
+                            style={{ marginTop: 16 }}
+                        >
+                            {uploading ? 'Uploading' : 'Start Uploading'}
+                        </Button>
+                    </article>
 
-            <Formik
-                initialValues={{
-                    identityNo: identityNo || "",
-                }}
-                onSubmit={onFinish}
-            >
-                <Form
-                    className={cx(styles.form)}
+                    <Formik
+                        initialValues={{
+                            identityNo: identityNo || "",
+                        }}
+                        onSubmit={onFinish}
+                    >
+                        <Form
+                            className={cx(styles.form)}
+                        >
+                            <label htmlFor="govId" className={styles.label}>Government Identity Number</label>
+                            <Field id="govId" className={styles["text-input"]} name="identityNo" type="text" />
+                            <Button type="primary" htmlType="submit">Save</Button>
+                        </Form>
+                    </Formik>
+                    <Divider>Categories</Divider>
+                    <Formik
+                        initialValues={{ category: "" }}
+                        onSubmit={() => { }}
+                    >
+                        <Field as={"select"}
+                            className={"select"}
+                            placeholder="Select a category"
+                            allowClear
+                        >
+                            <option value="1">Category 1</option>
+                            <option value="2">Category 2</option>
+                            <option value="3">Category 3</option>
+                        </Field>
+                    </Formik>
+                </div>
+                <article
+                    className={cx(styles["demo-container"])}
                 >
-                    <label htmlFor="govId" className={styles.label}>Government Identity Number</label>
-                    <Field id="govId" className={styles["text-input"]} name="identityNo" type="text" />
-                    <Button type="primary" htmlType="submit">Save</Button>
-                </Form>
-            </Formik>
-            <article
-                className={cx(styles.form)}
-            >
-                <Title level={3}>Portfolio</Title>
-                <Upload
-                    {...portfolioUploadProps}
-                >
-                    <Button icon={<UploadOutlined />}>Select File</Button>
-                </Upload>
-                <Button
-                    type="primary"
-                    onClick={handlePortfolioUpload}
-                    disabled={fileList.length === 0}
-                    loading={listUploading}
-                    style={{ marginTop: 16 }}
-                >
-                    {uploading ? 'Uploading Portfolio' : 'Start Uploading'}
-                </Button>
-                <Divider>Demo Files</Divider>
-                <Row gutter={16}>
-                    {portfolioSuccess && portfoliosWithStoredFiles?.map((portfolio: IPortfolioWithStoredFile, index: number) => (
-                        <Row key={index}>
-                            <img className={styles['profile-pic']} alt="profile-pic" src={`${imageUrlPre}${portfolio.storedFileId}`} />
-                        </Row>
-                    ))}
-                </Row>
-                <ul>
-                    
-                </ul>
-            </article>
+                    <Title level={3}>Portfolio</Title>
+                    <Upload
+                        {...portfolioUploadProps}
+                    >
+                        <Button icon={<UploadOutlined />}>Select File</Button>
+                    </Upload>
+                    <Button
+                        type="primary"
+                        onClick={handlePortfolioUpload}
+                        disabled={fileList.length === 0}
+                        loading={listUploading}
+                        style={{ marginTop: 16 }}
+                    >
+                        {uploading ? 'Uploading Portfolio' : 'Start Uploading'}
+                    </Button>
+                    <Divider>Demo Files</Divider>
+                    <Title level={4}>Images</Title>
+                    <Row gutter={16}>
+                        {portfolioSuccess && portfoliosWithStoredFiles?.map((portfolio: IPortfolioWithStoredFile, index: number) => (
+                            portfolio.storedFileModel.fileType.startsWith("image") && (
+                                <Col key={index} span={6}>
+                                    <img className={styles['demo-pic']} alt="demo-pic" src={`${imageUrlPre}${portfolio.storedFileId}`} />
+                                </Col>
+                            )
+                        ))}
+                    </Row>
+                </article>
+            </Flex>
         </section>
     );
 };

@@ -18,6 +18,7 @@ const useStyles = createStyles(({css}) => {
             font-size: 26px;
         `,
         title: css`
+            margin-top: 10px;
             color: white;
             font-size: 80px;
             text-align: center;
@@ -31,6 +32,14 @@ const useStyles = createStyles(({css}) => {
             width: 100%;
             max-width: 600px;
             margin-top: 20px;
+            padding: 10px 20px 20px 20px;
+            background: #E5E3D2;
+            border-radius: 20px;
+            box-shadow: 2px 2px 10px grey;
+        `,
+        "demo-container": css`
+            width: 100%;
+            margin-top: 20px;
             padding: 20px;
             background: #E5E3D2;
             border-radius: 20px;
@@ -41,6 +50,10 @@ const useStyles = createStyles(({css}) => {
         `,
         'profile-pic': css`
             width: 300px;
+            height: auto;
+        `,
+        'demo-pic': css`
+            width: 250px;
             height: auto;
         `,
         "text-input": css`
