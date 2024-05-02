@@ -195,7 +195,7 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
 
             var path = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                storedFile.BasePath.IsNullOrEmpty() ? storedFile.BasePath : PROFILE_BASE_FILE_PATH
+                !storedFile.BasePath.IsNullOrEmpty() ? storedFile.BasePath : PROFILE_BASE_FILE_PATH
                 , storedFile.FileName
             );
 
