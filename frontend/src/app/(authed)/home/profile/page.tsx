@@ -22,7 +22,7 @@ type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]; // the 0th 
 
 const Page = (): React.ReactNode => {
     const { loginObj } = useAuthState();
-    const { postProfile } = useProfileActions();
+    const { postProfile, getMyProfile } = useProfileActions();
     const { profile } = useProfileState();
     const { uploadProfilePicture } = useStoredFileActions();
     const { isSuccess: portfolioSuccess, portfoliosWithStoredFiles } = usePortfolioState();
@@ -38,12 +38,23 @@ const Page = (): React.ReactNode => {
     const [listUploading, setListUploading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (loginObj && loginObj?.userId) {
+        if (loginObj) {
             getMyPortfolio();
+            if (!profile) {
+                getMyProfile();
+            }
         }
     }, []);
+    useEffect(() => {
+        if (loginObj) {
+            getMyPortfolio();
+            if (!profile) {
+                getMyProfile();
+            }
+        }
+    }, [loginObj]);
 
-    const identityNo = useMemo(() => {
+    let identityNo = useMemo(() => {
         console.log('profile', profile);
         return profile?.identityNo
     }, [profile]);
@@ -163,8 +174,10 @@ const Page = (): React.ReactNode => {
                     </article>
 
                     <Formik
+                        // enableReinitialize
+                        enableReinitialize={true}
                         initialValues={{
-                            identityNo: identityNo || "",
+                            identityNo: profile && profile.identityNo || ""
                         }}
                         onSubmit={onFinish}
                     >
