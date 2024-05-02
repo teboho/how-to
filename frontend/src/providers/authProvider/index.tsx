@@ -21,7 +21,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 const userId_str = localStorage.getItem("userId");
                 let expireInSeconds = expireInSeconds_str === null ? 0 : Number.parseInt(expireInSeconds_str);
                 let userId = userId_str === null ? 0 : Number.parseInt(userId_str);
-                
+
                 if (accessToken && encryptedAccessToken && expireInSeconds && userId) {
                     const loginObj: ILoginResponse = {
                         accessToken,
@@ -30,6 +30,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         expireInSeconds
                     };
                     dispatch(authActions.loginSuccessAction(loginObj));
+                    dispatch(authActions.saveDecodedTokenAction(decodeToken(accessToken)));
                 }
             } catch (error) {
                 console.error("Error accessing localStorage: ", error);
@@ -43,7 +44,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return getAxiosInstace(accessToken)
         } else {
             return getAxiosInstace("");
-        }        
+        }
     }, [state]);
 
     useEffect(() => {
@@ -58,30 +59,31 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 localStorage.setItem("encryptedAccessToken", encryptedAccessToken);
                 localStorage.setItem("expireInSeconds", expireInSeconds + "");
                 localStorage.setItem("userId", userId + "");
-            }   else {
+            } else {
                 localStorage.clear();
-            }  
-        } 
+            }
+        }
     }, [state]);
-    
+
     const login = (loginRequest: ILoginRequest) => {
         dispatch(authActions.loginRequestAction());
         const endpoint = "api/TokenAuth/Authenticate"
         instance.post(endpoint, loginRequest)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(authActions.loginSuccessAction(response.data.result));
-                        const decodedToken: IDecodedToken = decodeToken(response.data.result.accessToken);
-                        const _role = (decodedToken[AbpTokenProperies.role]);
-                        console.log("role", _role);
-                        push("home/" + _role.toLocaleLowerCase());
-                    } else {
-                        dispatch(authActions.loginErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(authActions.loginSuccessAction(response.data.result));
+                    const decodedToken: IDecodedToken = decodeToken(response.data.result.accessToken);
+                    dispatch(authActions.saveDecodedTokenAction(decodedToken));
+                    const _role = (decodedToken[AbpTokenProperies.role]);
+                    console.log("role", _role);
+                    push("home/" + _role.toLocaleLowerCase());
+                } else {
                     dispatch(authActions.loginErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(authActions.loginErrorAction())
+            );
     };
 
     const register = (registerRequest: IRegisterRequest) => {
@@ -89,19 +91,19 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         dispatch(authActions.registerRequestAction());
         const endpoint = "api/services/app/User/Create"
         instance.post(endpoint, registerRequest)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(authActions.registerSuccessAction(response.data.result))
-                        push('login')
-                    } else {
-                        dispatch(authActions.registerErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(authActions.registerSuccessAction(response.data.result))
+                    push('login')
+                } else {
                     dispatch(authActions.registerErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(authActions.registerErrorAction())
+            );
     };
-    
+
     const getUser = () => {
         if (state.loginObj) {
             const decoded = decodeToken(state.loginObj.accessToken);
