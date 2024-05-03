@@ -82,7 +82,7 @@ const Page = () => {
                                     type="text"
                                     as={Input}
                                     suffix={
-                                        <Button type="primary" onClick={handleSubmit}>
+                                        <Button type="primary" onClick={e => handleSubmit()}>
                                             <SearchOutlined />
                                         </Button>
                                     }
@@ -103,7 +103,7 @@ const Page = () => {
                             <Form onSubmit={handleSubmit}>
                                 <Field
                                     name="_categories"
-                                    render={({ field }) => (
+                                    render={({ field }: { field: any }) => (
                                         <Select
                                             mode="multiple"
                                             style={{ width: '100%' }}
