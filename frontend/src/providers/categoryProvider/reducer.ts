@@ -72,7 +72,43 @@ const categoryReducer = handleActions(
         },
         [CategoryActionEnums.PostExecutorCategoryError]: (state) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, executorCategories: undefined };
-        }
+        },
+
+        [CategoryActionEnums.GetMyExecutorCategoriesRequest]: (state) => {
+            return { ...state, isPending: true, isSuccess: false, isError: false, myExecutorCategories: undefined };
+        },
+        [CategoryActionEnums.GetMyExecutorCategoriesSuccess]: (state, action) => {
+            return { ...state, ...action.payload };
+        },
+        [CategoryActionEnums.GetMyExecutorCategoriesError]: (state) => {
+            return { ...state, isPending: false, isSuccess: false, isError: true, myExecutorCategories: undefined };
+        },
+
+        [CategoryActionEnums.PostMyExecutorCategoriesRequest]: (state) => {
+            return { ...state, isPending: true, isSuccess: false, isError: false };
+        },
+        [CategoryActionEnums.PostMyExecutorCategoriesSuccess]: (state, action) => {
+            let executorCategories = state.myExecutorCategories || [];
+            executorCategories = executorCategories.concat(action.payload.myExecutorCategories || []);
+            return { ...state, ...action.payload, myExecutorCategories: executorCategories };
+        },
+        [CategoryActionEnums.PostMyExecutorCategoriesError]: (state) => {
+            return { ...state, isPending: false, isSuccess: false, isError: true };
+        },
+
+        [CategoryActionEnums.DeleteExecutorCategoryRequest]: (state) => {
+            return { ...state, isPending: true, isSuccess: false, isError: false };
+        },
+        [CategoryActionEnums.DeleteExecutorCategorySuccess]: (state, action) => {
+            let executorCategories = state.myExecutorCategories;
+            if (executorCategories) {
+                executorCategories = executorCategories.filter((executorCategory) => executorCategory.id !== (action.payload?.deletedId || ""));
+            }
+            return { ...state, ...action.payload, myExecutorCategories: executorCategories };
+        },  
+        [CategoryActionEnums.DeleteExecutorCategoryError]: (state) => {
+            return { ...state, isPending: false, isSuccess: false, isError: true };
+        },
     },
     CategoriesStateContext_Default
 );

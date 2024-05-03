@@ -48,15 +48,15 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
             {
                 var mappedInput = _mapper.Map<Domain.StoredFile>(input);
                 mappedInput.FileType = input.File.ContentType;
+                mappedInput.FileName = $"{Guid.NewGuid()}-{input.File.FileName}"; // input.File.FileName;
 
-                var filePath = $"{BASE_FILE_PATH}/{input.File.FileName}";
+                var filePath = $"{BASE_FILE_PATH}/{mappedInput.FileName}";
 
                 using (var fileStream = input.File.OpenReadStream())
                 {
                     await SaveFile(filePath, fileStream);
                 }
 
-                mappedInput.FileName = input.File.FileName;
                 mappedInput.FileType = input.File.ContentType;
                 mappedInput.BasePath = BASE_FILE_PATH;
 
@@ -83,15 +83,15 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
 
             var mappedInput = _mapper.Map<Domain.StoredFile>(input);
             mappedInput.FileType = input.File.ContentType;
+            mappedInput.FileName = $"{Guid.NewGuid()}-{input.File.FileName}";
 
-            var filePath = $"{PROFILE_BASE_FILE_PATH}/{input.File.FileName}";
+            var filePath = $"{PROFILE_BASE_FILE_PATH}/{mappedInput.FileName}";
 
             using (var fileStream = input.File.OpenReadStream())
             {
                 await SaveFile(filePath, fileStream);
             }
 
-            mappedInput.FileName = input.File.FileName;
             mappedInput.FileType = input.File.ContentType;
             mappedInput.BasePath = PROFILE_BASE_FILE_PATH;
 
@@ -195,7 +195,7 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
 
             var path = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                !storedFile.BasePath.IsNullOrEmpty() ? storedFile.BasePath : PROFILE_BASE_FILE_PATH
+                storedFile.BasePath
                 , storedFile.FileName
             );
 

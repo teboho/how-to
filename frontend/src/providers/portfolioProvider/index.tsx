@@ -138,6 +138,7 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
             .then(data => {
                 if (data.success) {
                     dispatch(postPortfolioSuccessAction(data.result));
+                    getMyPortfolio();
                 } else {
                     dispatch(postPortfolioErrorAction());
                 }
