@@ -15,7 +15,7 @@ const Portfolios = ({
     const { styles } = useStyles();
 
     return (
-        <Row gutter={16}>
+        <Row gutter={18}>
             {portfolioSuccess && portfoliosWithStoredFiles?.map((portfolio: IPortfolioWithStoredFile, index: number) => (
                 portfolio.storedFileModel.fileType.startsWith("image") && (
                     <Col key={index} span={6}>

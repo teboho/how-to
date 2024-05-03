@@ -214,7 +214,6 @@ const Page = (): React.ReactNode => {
                         onSubmit={(values) => {
                             console.log(values);
                         }}
-
                     >
                         {({ setFieldValue }) => (
                             <AntdForm title="select-category" onFinish={(values) => {

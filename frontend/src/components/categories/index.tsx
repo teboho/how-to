@@ -11,7 +11,7 @@ const Categories = (props: {
 }) => {
     // use antd tags to display categories
     return (
-        
+        <></>
     );
 };
 

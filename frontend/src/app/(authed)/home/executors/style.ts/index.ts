@@ -12,12 +12,17 @@ const useStyles = createStyles(({css, token}) => {
         layout: css`
             height: 100%;
             background: #E5E3D2;
+            padding-top: 0;
+            padding-bottom: 20px;
             overflow: auto;
+            overflow-x: hidden;
+            overflow-y: scroll;
         `,
         sider: css`
             height: 100%;
             background: #E5E3D2;
             border: 1px solid #B64326;
+            padding: 0 20px;
         `,
         menu: css`
             border: 1px solid #B64326;
@@ -25,8 +30,10 @@ const useStyles = createStyles(({css, token}) => {
         `,
         content: css`
             height: 100%;
-            margin: 0 16px 24px 16px;
             padding: 20px;
+            min-height: 280px;
+            border: 1px solid #B64326;
+            border-radius: 20px;
             overflow: auto;
         `,
         header: css`

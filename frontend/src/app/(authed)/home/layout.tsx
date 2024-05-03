@@ -10,7 +10,8 @@ import {
     ReadOutlined,
     ScheduleOutlined,
     CreditCardOutlined,
-    UsergroupAddOutlined
+    UsergroupAddOutlined,
+    SolutionOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, MenuProps, Typography } from "antd";
 import Link from "next/link";
@@ -46,6 +47,12 @@ const HomeLayout = ({
             icon: <PlusCircleOutlined />,
             label: <Link href={`${currentPath}/new-task`}>New Task</Link>,
             onClick: () => { }
+        },
+        {
+            key: 'executors',
+            icon: <SolutionOutlined />,
+            label: <Link href={`executors`}>Executors</Link>,
+            onClick: () => { }
         }
     ];
     const executorMenu = (currentPath: string): MenuProps["items"] => [
@@ -73,6 +80,12 @@ const HomeLayout = ({
             label: <Link href={`${currentPath}/new-guide`}>New Guide</Link>,
             onClick: () => { }
         },
+        {
+            key: 'executors',
+            icon: <SolutionOutlined />,
+            label: <Link href={`executors`}>Executors</Link>,
+            onClick: () => { }
+        }
     ];
     const supportMenu = (currentPath: string): MenuProps["items"] => [
         {
@@ -99,6 +112,12 @@ const HomeLayout = ({
             label: <Link href={`${currentPath}/users`}>Manager Users</Link>,
             onClick: () => { }
         },
+        {
+            key: 'executors',
+            icon: <SolutionOutlined />,
+            label: <Link href={`executors`}>Executors</Link>,
+            onClick: () => { }
+        }
     ];
 
     let role: string = useMemo(() => {
