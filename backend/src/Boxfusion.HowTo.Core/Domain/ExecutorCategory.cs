@@ -7,9 +7,9 @@ namespace Boxfusion.HowTo.Domain
 {
     public class ExecutorCategory : Entity<Guid>
     {
-        public long UserId { get; set; }
-        [ForeignKey("UserId")]
-        public User User { get; set; }
+        public Guid ExecutorId { get; set; }
+        [ForeignKey("ExecutorId")]
+        public Profile Profile { get; set; }
         public Guid CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }

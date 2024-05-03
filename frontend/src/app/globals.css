@@ -29,7 +29,7 @@ html, body {
 }
 .page {
     width: 100%;
-    padding: 0 20px;
+    padding: 0 20px 20px 20px;
     border: 1px solid #ccc;
     border-radius: 20px;
 }
@@ -41,4 +41,15 @@ html, body {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+.content {
+    height: 100%;
+    margin: 24px 16px;
+    padding: 20px;
+    min-height: 280px;
+    background: #E5E3D2;
+}
+.layout {
+    height: 100%;
+    background: #E5E3D2;
 }

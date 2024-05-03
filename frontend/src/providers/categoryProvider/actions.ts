@@ -32,7 +32,19 @@ export const CategoryActionEnums = {
 
     GetExecutorCategoriesRequest: "GET_EXECUTOR_CATEGORIES_REQUEST",
     GetExecutorCategoriesSuccess: "GET_EXECUTOR_CATEGORIES_SUCCESS",
-    GetExecutorCategoriesError: "GET_EXECUTOR_CATEGORIES_ERROR"
+    GetExecutorCategoriesError: "GET_EXECUTOR_CATEGORIES_ERROR",
+
+    GetMyExecutorCategoriesRequest: "GET_MY_EXECUTOR_CATEGORIES_REQUEST",
+    GetMyExecutorCategoriesSuccess: "GET_MY_EXECUTOR_CATEGORIES_SUCCESS",
+    GetMyExecutorCategoriesError: "GET_MY_EXECUTOR_CATEGORIES_ERROR",
+
+    PostMyExecutorCategoriesRequest: "POST_MY_EXECUTOR_CATEGORIES_REQUEST",
+    PostMyExecutorCategoriesSuccess: "POST_MY_EXECUTOR_CATEGORIES_SUCCESS",
+    PostMyExecutorCategoriesError: "POST_MY_EXECUTOR_CATEGORIES_ERROR",
+
+    DeleteExecutorCategoryRequest: "DELETE_EXECUTOR_CATEGORY_REQUEST",  
+    DeleteExecutorCategorySuccess: "DELETE_EXECUTOR_CATEGORY_SUCCESS",
+    DeleteExecutorCategoryError: "DELETE_EXECUTOR_CATEGORY_ERROR",
 }
 
 export const getCategoryRequestAction = createAction<ICategoriesStateContext>(
@@ -141,4 +153,43 @@ export const getExecutorCategoriesSuccessAction = createAction<ICategoriesStateC
 export const getExecutorCategoriesErrorAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.GetExecutorCategoriesError,
     () => ({ isPending: false, isSuccess: false, isError: true, executorCategories: undefined })
+);
+
+export const getMyExecutorCategoriesRequestAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.GetMyExecutorCategoriesRequest,
+    () => ({ isPending: true, isSuccess: false, isError: false, executorCategories: undefined })
+);
+export const getMyExecutorCategoriesSuccessAction = createAction<ICategoriesStateContext, IExecutorCategory[]>(
+    CategoryActionEnums.GetMyExecutorCategoriesSuccess,
+    (myExecutorCategories: IExecutorCategory[]) => ({ isPending: false, isSuccess: true, isError: false, myExecutorCategories })
+);
+export const getMyExecutorCategoriesErrorAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.GetMyExecutorCategoriesError,
+    () => ({ isPending: false, isSuccess: false, isError: true, executorCategories: undefined })
+);
+
+export const postMyExecutorCategoriesRequestAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.PostMyExecutorCategoriesRequest,
+    () => ({ isPending: true, isSuccess: false, isError: false, myExecutorCategories: undefined })
+);
+export const postMyExecutorCategoriesSuccessAction = createAction<ICategoriesStateContext, IExecutorCategory[]>(
+    CategoryActionEnums.PostMyExecutorCategoriesSuccess,
+    (myExecutorCategories: IExecutorCategory[]) => ({ isPending: false, isSuccess: true, isError: false, myExecutorCategories })
+);
+export const postMyExecutorCategoriesErrorAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.PostMyExecutorCategoriesError,
+    () => ({ isPending: false, isSuccess: false, isError: true, myExecutorCategories: undefined })
+);
+
+export const deleteExecutorCategoryRequestAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.DeleteExecutorCategoryRequest,
+    () => ({ isPending: true, isSuccess: false, isError: false })
+);
+export const deleteExecutorCategorySuccessAction = createAction<ICategoriesStateContext, string>(
+    CategoryActionEnums.DeleteExecutorCategorySuccess,
+    (deletedId: string) => ({ isPending: false, isSuccess: true, isError: false, deletedId })
+);
+export const deleteExecutorCategoryErrorAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.DeleteExecutorCategoryError,
+    () => ({ isPending: false, isSuccess: false, isError: true })
 );

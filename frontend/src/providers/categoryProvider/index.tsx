@@ -91,18 +91,34 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
             );
     }
     const getMyCategories = () => {
-        dispatch(categoryActions.getCategoriesRequestAction());
-        const endpoint = "api/services/app/Category/GetMyCategories";
+        dispatch(categoryActions.getMyExecutorCategoriesRequestAction());
+        const endpoint = "api/services/app/ExecutorCategory/GetMyExecutorCategories";
         instance.get(endpoint)
             .then(response => {
                 if (response.status > 199 && response.status < 300) {
-                    dispatch(categoryActions.getCategoriesSuccessAction(response.data.result));
+                    dispatch(categoryActions.getMyExecutorCategoriesSuccessAction(response.data.result));
                 } else {
-                    dispatch(categoryActions.getCategoriesErrorAction())
+                    dispatch(categoryActions.getMyExecutorCategoriesErrorAction())
                 }
             })
             .catch(err =>
-                dispatch(categoryActions.getCategoriesErrorAction())
+                dispatch(categoryActions.getMyExecutorCategoriesErrorAction())
+            );
+    }
+    const postMyCategories = (newExeCats: { executorCategories: IExecutorCategory[] }) => {
+        dispatch(categoryActions.postMyExecutorCategoriesRequestAction());
+        const endpoint = "api/services/app/ExecutorCategory/CreateMultiple";
+        instance.post(endpoint, newExeCats)
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.postMyExecutorCategoriesSuccessAction(response.data.result));
+                    messageApi.success("Category added successfully");
+                } else {
+                    dispatch(categoryActions.postMyExecutorCategoriesErrorAction())
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.postMyExecutorCategoriesErrorAction())
             );
     }
     const postTaskCategory = (categoryId: string, taskId: string) => {
@@ -176,6 +192,22 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
                 dispatch(categoryActions.getExecutorCategoriesErrorAction())
             );
     }
+    const deleteExecutorCategory = (id: string) => {
+        dispatch(categoryActions.deleteExecutorCategoryRequestAction());
+        const endpoint = "api/services/app/ExecutorCategory/Delete?id=" + id;
+        instance.delete(endpoint)
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(categoryActions.deleteExecutorCategorySuccessAction(id));
+                    messageApi.success("Task removed from category successfully");
+                } else {
+                    dispatch(categoryActions.deleteExecutorCategoryErrorAction())
+                }
+            })
+            .catch(err =>
+                dispatch(categoryActions.deleteExecutorCategoryErrorAction())
+            );
+    }
     const appendExecutorCategories = (executorCategory: IExecutorCategory) => {
         const newExecutorCategories = state.executorCategories ? [...state.executorCategories, executorCategory] : [executorCategory];
         dispatch(categoryActions.getExecutorCategoriesSuccessAction(newExecutorCategories));
@@ -192,7 +224,9 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
                 getMyCategories,
                 getTaskCategories,
                 postExecutorCategory,
-                getExecutorCategories
+                getExecutorCategories,
+                postMyCategories,
+                deleteExecutorCategory
             }}>
                 {contextHolder}
                 {children}

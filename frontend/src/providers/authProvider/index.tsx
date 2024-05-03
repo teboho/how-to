@@ -7,10 +7,12 @@ import * as authActions from './actions';
 import { AuthActionsContext, AuthStateContext, AuthStateContextInitial } from "./contexts";
 import authReducer from "./reducer";
 import type { ILoginRequest, ILoginResponse, IRegisterRequest } from "./types";
+import { message } from "antd";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(authReducer, AuthStateContextInitial);
     const { push } = useRouter();
+    const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -77,13 +79,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     const _role = (decodedToken[AbpTokenProperies.role]);
                     console.log("role", _role);
                     push("home/" + _role.toLocaleLowerCase());
+                    messageApi.success("Welcome or Welcome back!");
                 } else {
                     dispatch(authActions.loginErrorAction())
+                    messageApi.error("Invalid username or password");
                 }
             })
-            .catch(err =>
-                dispatch(authActions.loginErrorAction())
-            );
+            .catch(err => {
+                dispatch(authActions.loginErrorAction());
+                messageApi.error("Invalid username or password");
+            });
     };
 
     const register = (registerRequest: IRegisterRequest) => {
@@ -124,6 +129,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 getUser,
                 logout
             }}>
+                {contextHolder}
                 {children}
             </AuthActionsContext.Provider>
         </AuthStateContext.Provider>

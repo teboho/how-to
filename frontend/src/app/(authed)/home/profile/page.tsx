@@ -1,19 +1,19 @@
 "use client";
-
+import Portfolios from "@/components/portfolios";
 import { useAuthState } from "@/providers/authProvider";
+import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
-import { IPortfolioWithStoredFile } from "@/providers/portfolioProvider/context";
 import { useProfileActions, useProfileState } from "@/providers/profileProvider";
 import { IProfile } from "@/providers/profileProvider/context";
 import { useStoredFileActions } from "@/providers/storedFileProvider";
 import { UploadOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from "antd";
-import { Button, Col, Divider, Flex, FormProps, message, Row, Typography, Upload } from "antd";
+import { Button, Divider, Flex, FormProps, message, Typography, Upload, Form as AntdForm, Select, Tag } from "antd";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useMemo, useState } from "react";
 import { Guid } from "typescript-guid";
 import useStyles from "./style";
-import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
+import { IExecutorCategory } from "@/providers/categoryProvider/context";
 
 const { Title } = Typography;
 
@@ -27,8 +27,8 @@ const Page = (): React.ReactNode => {
     const { uploadProfilePicture } = useStoredFileActions();
     const { isSuccess: portfolioSuccess, portfoliosWithStoredFiles } = usePortfolioState();
     const { upload, getMyPortfolio } = usePortfolioActions();
-    const { categories } = useCategoriesState();
-    const { getCategories, getMyCategories } = useCategoryActions();
+    const { categories, myExecutorCategories } = useCategoriesState();
+    const { postMyCategories, getMyCategories, deleteExecutorCategory } = useCategoryActions();
 
     const { styles, cx } = useStyles();
     const [messageApi, contextHolder] = message.useMessage();
@@ -40,6 +40,7 @@ const Page = (): React.ReactNode => {
     useEffect(() => {
         if (loginObj) {
             getMyPortfolio();
+            getMyCategories();
             if (!profile) {
                 getMyProfile();
             }
@@ -48,16 +49,12 @@ const Page = (): React.ReactNode => {
     useEffect(() => {
         if (loginObj) {
             getMyPortfolio();
+            getMyCategories();
             if (!profile) {
                 getMyProfile();
             }
         }
     }, [loginObj]);
-
-    let identityNo = useMemo(() => {
-        console.log('profile', profile);
-        return profile?.identityNo
-    }, [profile]);
 
     const handleUpload = () => {
         const formData = new FormData();
@@ -144,6 +141,14 @@ const Page = (): React.ReactNode => {
     const imageUrlPre = process.env.NEXT_PUBLIC_API_IMAGE_URL_PRE;
     const showPicture = (id: string) => <img className={styles['profile-pic']} alt="profile-pic" src={`${imageUrlPre}${id}`} />;
 
+    const isSelected = (categoryId: string) => {
+        return myExecutorCategories?.findIndex((ec) => ec.categoryId === categoryId) !== -1;
+    }
+
+    const readCategory = (categoryId: string) => {
+        return categories?.find((category) => category.id === categoryId);
+    }
+
     return (
         <section
             className="page"
@@ -174,7 +179,6 @@ const Page = (): React.ReactNode => {
                     </article>
 
                     <Formik
-                        // enableReinitialize
                         enableReinitialize={true}
                         initialValues={{
                             identityNo: profile && profile.identityNo || ""
@@ -190,19 +194,59 @@ const Page = (): React.ReactNode => {
                         </Form>
                     </Formik>
                     <Divider>Categories</Divider>
+                    <div>
+                        {myExecutorCategories?.map((ec, i) => (
+                            <Tag key={i} closable onClose={
+                                () => {
+                                    deleteExecutorCategory(ec.id || "");
+                                }
+                            }>
+                                {readCategory(ec.categoryId)?.title}
+                            </Tag>
+                        ))}
+                    </div>
                     <Formik
-                        initialValues={{ category: "" }}
-                        onSubmit={() => { }}
+                        initialValues={{
+                            executorCategory: [
+                                ...categories?.filter((category) => isSelected(category.id || "")).map((category) => category.id) || []
+                            ]
+                        }}
+                        onSubmit={(values) => {
+                            console.log(values);
+                        }}
                     >
-                        <Field as={"select"}
-                            className={"select"}
-                            placeholder="Select a category"
-                            allowClear
-                        >
-                            <option value="1">Category 1</option>
-                            <option value="2">Category 2</option>
-                            <option value="3">Category 3</option>
-                        </Field>
+                        {({ setFieldValue }) => (
+                            <AntdForm title="select-category" onFinish={(values) => {
+                                console.log("onFinish")
+                                const _categories: IExecutorCategory[] = values.executorCategory.map((categoryId: string) => {
+                                    return {
+                                        executorId: profile?.id || "",
+                                        categoryId: categoryId
+                                    }
+                                });
+                                console.log(_categories);
+                                postMyCategories({
+                                    executorCategories: _categories
+                                });
+                                setFieldValue('executorCategory', []);
+                            }}>
+                                <AntdForm.Item name="executorCategory">
+                                    <Select
+                                        onChange={(value) => setFieldValue('executorCategory', value)}
+                                        mode="multiple"
+                                        options={categories?.map((category, i) => ({
+                                            label: `${i + 1}. ${category.title}`,
+                                            value: category.id,
+                                            disabled: isSelected(category.id || "")
+                                        }))}
+                                    >
+                                    </Select>
+                                </AntdForm.Item>
+                                <Button type="primary" htmlType="submit">
+                                    Save
+                                </Button>
+                            </AntdForm>
+                        )}
                     </Formik>
                 </div>
                 <article
@@ -225,15 +269,7 @@ const Page = (): React.ReactNode => {
                     </Button>
                     <Divider>Demo Files</Divider>
                     <Title level={4}>Images</Title>
-                    <Row gutter={16}>
-                        {portfolioSuccess && portfoliosWithStoredFiles?.map((portfolio: IPortfolioWithStoredFile, index: number) => (
-                            portfolio.storedFileModel.fileType.startsWith("image") && (
-                                <Col key={index} span={6}>
-                                    <img className={styles['demo-pic']} alt="demo-pic" src={`${imageUrlPre}${portfolio.storedFileId}`} />
-                                </Col>
-                            )
-                        ))}
-                    </Row>
+                    <Portfolios props={{ portfoliosWithStoredFiles }} />
                 </article>
             </Flex>
         </section>

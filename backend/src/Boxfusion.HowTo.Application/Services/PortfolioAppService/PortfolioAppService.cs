@@ -84,13 +84,9 @@ namespace Boxfusion.HowTo.Services.PortfolioAppService
                         break;
                 }
                 storedFile.BasePath = basePath;
+                storedFile.FileName = $"{Guid.NewGuid()}-{file.FileName}";
 
-                var existingFile = await _storedFileRepository.FirstOrDefaultAsync(x => x.FileName == file.FileName);
-                if (existingFile != null)
-                {
-                    storedFile.FileName = $"{Guid.NewGuid()}-{file.FileName}";
-                }
-                var filePath = $"{basePath}/{file.FileName}";
+                var filePath = $"{basePath}/{storedFile.FileName}";
                 using (var fileStream = file.OpenReadStream())
                 {
                     await StoredFileAppService.StoredFileAppService.SaveFile(filePath, fileStream);
