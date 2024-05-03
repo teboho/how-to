@@ -228,7 +228,6 @@ const Page = (): React.ReactNode => {
                                 postMyCategories({
                                     executorCategories: _categories
                                 });
-                                // reset the form
                                 setFieldValue('executorCategory', []);
                             }}>
                                 <AntdForm.Item name="executorCategory">

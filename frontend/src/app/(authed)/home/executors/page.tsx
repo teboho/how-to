@@ -38,7 +38,7 @@ const Page = () => {
         cards.push(
             <Card
                 key={`card__${i}`}
-                style={{ width: 350 }}
+                style={{ width: 300 }}
                 cover={
                     <img
                         alt="example"
@@ -63,9 +63,10 @@ const Page = () => {
     return (
         <div className="height-full">
             <Layout className={cx(styles.layout)}>
-                <Sider width={350} className={cx(styles.sider)} style={{
+                <Sider width={300} className={cx(styles.sider)} style={{
                     background: '#E5E3D2'
                 }}>
+                    <Title level={2}>Executors</Title>
                     <Divider>Search</Divider>
                     <Formik
                         enableReinitialize={true}
@@ -101,21 +102,25 @@ const Page = () => {
                     >
                         {({ handleSubmit }) => (
                             <Form onSubmit={handleSubmit}>
-                                {/* Select with category options */}
-                                <Select
-                                    mode="multiple"
-                                    style={{ width: '100%' }}
-                                    placeholder="Select categories"
-                                    defaultValue={[]}
-                                    onChange={(value) => {
-                                        console.log(value);
-                                    }}
-                                    options={categories?.map((category) => {
-                                        return {
-                                            label: category.title,
-                                            value: category.id
-                                        }
-                                    })}
+                                <Field 
+                                    name="_categories"
+                                    render={({ field }) => (
+                                        <Select
+                                            mode="multiple"
+                                            style={{ width: '100%' }}
+                                            placeholder="Select categories"
+                                            defaultValue={[]}
+                                            onChange={(value) => {
+                                                console.log(value);
+                                            }}
+                                            options={categories?.map((category) => {
+                                                return {
+                                                    label: category.title,
+                                                    value: category.id
+                                                }
+                                            })}
+                                        />
+                                    )}
                                 />
                             </Form>
                         )}
@@ -123,7 +128,7 @@ const Page = () => {
                     <Divider>Ratings</Divider>
                 </Sider>
                 <Content className={cx(styles.content)}>
-                    <Flex gap={20} wrap="wrap">
+                    <Flex gap={20} wrap="wrap" align="center" justify="center">
                         {cards}
                     </Flex>
                 </Content>

@@ -24,7 +24,7 @@ const ThemeTokenOverride = {
   colorBgTextActive: "#B64326",
   colorPrimary: "#B64326",
   colorBorderBg: "#B64326",
-  colorBorder: "#B64326"
+  colorBorder: "#B64326",
 }
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode, }>) {
@@ -39,7 +39,12 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                 Input: {
                   colorBorder: "#B64326",
                   colorText: "#B64326",
-                }}
+                },
+                Card: {
+                  colorBorder: "#B64326",
+                  colorBorderSecondary: "#B64326",
+                },
+              },
             }}
           >
             <div className="container">
@@ -51,7 +56,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                         <OfferProvider>
                           <PaymentProvider>
                             <CategoryProvider>
-                              {children}  
+                              {children}
                             </CategoryProvider>
                           </PaymentProvider>
                         </OfferProvider>

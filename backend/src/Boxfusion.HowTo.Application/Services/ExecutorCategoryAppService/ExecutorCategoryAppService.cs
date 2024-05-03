@@ -33,23 +33,24 @@ namespace Boxfusion.HowTo.Services.TaskAppService
             var profile = await _profileRepository.FirstOrDefaultAsync(p => p.CreatorUserId == AbpSession.UserId);
             if (profile == null)
             {
-                throw new UserFriendlyException("Profile not found");
+                var newProfile = new Domain.Profile();
+                newProfile.CreatorUserId = AbpSession.UserId;
+                var createdProfile = await _profileRepository.InsertAsync(newProfile);
+                CurrentUnitOfWork.SaveChanges();
+                profile = createdProfile;
             }
 
             List<ExecutorCategoryDto> result = new List<ExecutorCategoryDto>();
             foreach (var executorCategory in postMultipleExecutorCategoryDto.ExecutorCategories)
             {
-                // we need check if the executor category already exists
                 var existingExecutorCategory = await _repository.FirstOrDefaultAsync(ec => ec.ExecutorId == profile.Id & ec.CategoryId == executorCategory.CategoryId);
                 if (existingExecutorCategory != null)
                 {
-                    // if it exists, just add it to the list and continue
                     result.Add(ObjectMapper.Map<ExecutorCategoryDto>(existingExecutorCategory));
                     continue;
                 }
                 else
                 {
-                    // if it doesn't exist, create it
                     var newExecutorCategory = new Domain.ExecutorCategory();
                     newExecutorCategory.ExecutorId = executorCategory.ExecutorId;
                     newExecutorCategory.CategoryId = executorCategory.CategoryId;

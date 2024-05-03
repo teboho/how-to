@@ -9,11 +9,13 @@ import {
     PlusCircleOutlined,
     ReadOutlined,
     ScheduleOutlined,
+    UserOutlined,
     CreditCardOutlined,
     UsergroupAddOutlined,
-    SolutionOutlined
+    SolutionOutlined,
+    CarryOutOutlined
 } from '@ant-design/icons';
-import { Layout, Menu, MenuProps, Typography } from "antd";
+import { Button, Flex, Layout, Menu, MenuProps, Typography } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -49,6 +51,12 @@ const HomeLayout = ({
             onClick: () => { }
         },
         {
+            key: 'tasks',
+            icon: <CarryOutOutlined />,
+            label: <Link href={`tasks`}>Tasks</Link>,
+            onClick: () => { }
+        },
+        {
             key: 'executors',
             icon: <SolutionOutlined />,
             label: <Link href={`executors`}>Executors</Link>,
@@ -63,21 +71,9 @@ const HomeLayout = ({
             onClick: () => { }
         },
         {
-            key: 'exec_tasks',
-            icon: <ScheduleOutlined />,
-            label: <Link href={`${currentPath}/tasks`}>Tasks</Link>,
-            onClick: () => { }
-        },
-        {
-            key: 'exec_guides',
-            icon: <ReadOutlined />,
-            label: <Link href={`${currentPath}/guides`}>Guides</Link>,
-            onClick: () => { }
-        },
-        {
-            key: 'exec_new_guide',
-            icon: <PlusCircleOutlined />,
-            label: <Link href={`${currentPath}/new-guide`}>New Guide</Link>,
+            key: 'tasks',
+            icon: <CarryOutOutlined />,
+            label: <Link href={`tasks`}>Tasks</Link>,
             onClick: () => { }
         },
         {
@@ -95,9 +91,9 @@ const HomeLayout = ({
             onClick: () => { }
         },
         {
-            key: 'support_tasks',
-            icon: <ScheduleOutlined />,
-            label: <Link href={`${currentPath}/tasks`}>Tasks</Link>,
+            key: 'tasks',
+            icon: <CarryOutOutlined />,
+            label: <Link href={`tasks`}>Tasks</Link>,
             onClick: () => { }
         },
         {
@@ -182,7 +178,17 @@ const HomeLayout = ({
             </Sider>
             <Layout className={cx(styles.layout)}>
                 <Header className={cx(styles.header)}>
-                    <Title level={1}>{role} Dashboard</Title>
+                    <Flex justify="space-between" align="center" className={cx(styles.offsetUp)}>
+                        <Title level={1} style={{
+                            marginTop: 10,
+                        }}>{role} Dashboard</Title>
+                        <Button
+                            type="primary"
+                            shape="circle"
+                            icon={<UserOutlined />}
+                            onClick={() => setCollapsed(!collapsed)}
+                        />
+                    </Flex>
                 </Header>
                 <Content className={cx(styles.content)}>
                     {children}
