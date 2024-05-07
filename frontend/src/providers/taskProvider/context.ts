@@ -18,7 +18,7 @@ export interface ITask {
     status: TaskStatus;
 }
 
-enum TaskStatus {
+export enum TaskStatus {
     NEW,
     ASSIGNED,
     DONE
@@ -30,13 +30,15 @@ export interface ITaskStateContext {
     isSuccess: boolean;
     task?: ITask;
     tasks?: ITask[];
+    myTasks?: ITask[];
 }
 export const TaskStateContext_Default: ITaskStateContext = {
     isPending: false,
     isError: false,
     isSuccess: false,
     task: undefined,
-    tasks: undefined
+    tasks: undefined,
+    myTasks: undefined
 }
 
 export interface ITaskActionsContext {

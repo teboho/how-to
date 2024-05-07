@@ -2094,46 +2094,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Rating", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte>("Value")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("Ratings");
-                });
-
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Refund", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2204,6 +2164,9 @@ namespace Boxfusion.HowTo.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
+                    b.Property<byte>("Rating")
+                        .HasColumnType("tinyint");
+
                     b.Property<Guid>("TaskId")
                         .HasColumnType("uniqueidentifier");
 
@@ -2253,6 +2216,90 @@ namespace Boxfusion.HowTo.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StoredFiles");
+                });
+
+            modelBuilder.Entity("Boxfusion.HowTo.Domain.Submission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("StoredFileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TaskId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoredFileId");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("Submissions");
+                });
+
+            modelBuilder.Entity("Boxfusion.HowTo.Domain.SupportingFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("StoredFileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TaskId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoredFileId");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("SupportingFiles");
                 });
 
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Task", b =>
@@ -2798,17 +2845,6 @@ namespace Boxfusion.HowTo.Migrations
                     b.Navigation("StoredFileModel");
                 });
 
-            modelBuilder.Entity("Boxfusion.HowTo.Domain.Rating", b =>
-                {
-                    b.HasOne("Boxfusion.HowTo.Domain.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-                });
-
             modelBuilder.Entity("Boxfusion.HowTo.Domain.Refund", b =>
                 {
                     b.HasOne("Boxfusion.HowTo.Domain.Dispute", "Dispute")
@@ -2827,6 +2863,44 @@ namespace Boxfusion.HowTo.Migrations
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("Boxfusion.HowTo.Domain.Submission", b =>
+                {
+                    b.HasOne("Boxfusion.HowTo.Domain.StoredFile", "StoredFile")
+                        .WithMany()
+                        .HasForeignKey("StoredFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Boxfusion.HowTo.Domain.Task", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StoredFile");
+
+                    b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("Boxfusion.HowTo.Domain.SupportingFile", b =>
+                {
+                    b.HasOne("Boxfusion.HowTo.Domain.StoredFile", "StoredFile")
+                        .WithMany()
+                        .HasForeignKey("StoredFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Boxfusion.HowTo.Domain.Task", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StoredFile");
 
                     b.Navigation("Task");
                 });

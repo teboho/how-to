@@ -30,7 +30,6 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
 
     useEffect(() => {
         if (accessToken) {
-            console.log("found the accesss token", accessToken);
             instance = getAxiosInstace(accessToken);
         }
     }, []);
@@ -69,6 +68,22 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
     };
     const getMyPortfolio = () => {
         const endpoint = 'api/services/app/Portfolio/GetMyPortfolio';
+        dispatch(getPortfoliosWithStoredFilesRequestAction());
+        instance.get(endpoint)
+            .then(res => {
+                const data = res.data;
+                if (data.success) {
+                    dispatch(getPortfoliosWithStoredFilesSuccessAction(data.result));
+                } else {
+                    dispatch(getPortfoliosWithStoredFilesErrorAction());
+                }
+            })
+            .catch(err =>
+                dispatch(getPortfoliosWithStoredFilesErrorAction())
+            );
+    };
+    const getAllPortfolios = () => {
+        const endpoint = 'api/services/app/Portfolio/GetAllPortfolios';
         dispatch(getPortfoliosWithStoredFilesRequestAction());
         instance.get(endpoint)
             .then(res => {
@@ -174,6 +189,7 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
                 deletePortfolio,
                 postPortfolio,
                 upload,
+                getAllPortfolios
             }}>
                 {children}
             </PortfolioActionContext.Provider>

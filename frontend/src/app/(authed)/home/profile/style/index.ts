@@ -49,8 +49,9 @@ const useStyles = createStyles(({css}) => {
             font-size: 20px;
         `,
         'profile-pic': css`
-            width: 300px;
+            width: 350px;
             height: auto;
+            border-radius: 20px;
         `,
         'demo-pic': css`
             width: 250px;

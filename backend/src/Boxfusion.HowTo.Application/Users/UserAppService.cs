@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Users
 {
-    [AbpAuthorize(PermissionNames.Pages_Users)]
+    //[AbpAuthorize(PermissionNames.Pages_Users)]
     public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
     {
         private readonly UserManager _userManager;
@@ -245,6 +245,11 @@ namespace Boxfusion.HowTo.Users
 
             return true;
         }
+
+        //public override async Task<UserDto> GetAll(CreateUserDto input)
+        //{
+
+        //}
     }
 }
 

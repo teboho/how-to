@@ -13,6 +13,7 @@ namespace Boxfusion.HowTo.Domain
         public float Amount { get; set; }
         public int Views { get; set; }
         public int TimeFrame { get; set; }
+        // public DateTime DueDate { get; set; }
         public TaskStatus Status { get; set; }
     }
 

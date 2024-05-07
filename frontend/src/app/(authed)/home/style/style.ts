@@ -16,12 +16,15 @@ const useStyles = createStyles(({css, token}) => {
         `,
         sider: css`
             height: 100%;
-            background: #E5E3D2;
-            border: 1px solid #B64326;
+            background: #B64326;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        `,
+        logo: css`
+            text-align: center;
         `,
         menu: css`
             border: 1px solid #B64326;
-            background: #E5E3D2;
+            background: #B64326;
         `,
         content: css`
             height: 100%;
@@ -32,7 +35,8 @@ const useStyles = createStyles(({css, token}) => {
         header: css`
             background: ${token.colorBgContainer};
             padding: 0 10px;
-            margin: 0 16px;
+            margin: 0;
+            height: 90px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         `,
         toggle: css`

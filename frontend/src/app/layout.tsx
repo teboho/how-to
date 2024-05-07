@@ -11,6 +11,7 @@ import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import "./globals.css";
 import PortfolioProvider from "@/providers/portfolioProvider";
+import ReviewProvider from "@/providers/reviewProvider";
 
 
 export const metadata: Metadata = {
@@ -54,11 +55,13 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                     <PortfolioProvider>
                       <TaskProvider>
                         <OfferProvider>
-                          <PaymentProvider>
-                            <CategoryProvider>
-                              {children}
-                            </CategoryProvider>
-                          </PaymentProvider>
+                          <ReviewProvider>
+                            <PaymentProvider>
+                              <CategoryProvider>
+                                {children}
+                              </CategoryProvider>
+                            </PaymentProvider>
+                          </ReviewProvider>
                         </OfferProvider>
                       </TaskProvider>
                     </PortfolioProvider>

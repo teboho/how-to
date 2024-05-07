@@ -6,6 +6,7 @@ import { ITask } from "@/providers/taskProvider/context";
 import type { SelectProps } from 'antd';
 import { Button, Form, FormProps, Input, InputNumber, Select, Tag, Typography } from "antd";
 import useStyles from "./style";
+import { useEffect, useState } from "react";
 
 type TagRender = SelectProps['tagRender'];
 
@@ -40,6 +41,13 @@ const Page = (): React.ReactNode => {
     const { categories } = useCategoriesState();
     const { postTaskCategory } = useCategoryActions();
     const { styles, cx, theme } = useStyles();
+    const [time, setTime] = useState<number>(0);
+    const [amount, setAmount] = useState<number>(0);
+    const [total, setTotal] = useState<number>(0);
+
+    useEffect(() => {
+        setTotal(amount * time);
+    }, [amount, time])
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
         console.log('Success:', values);
@@ -55,6 +63,16 @@ const Page = (): React.ReactNode => {
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     }
+
+    const onAmountChange = (value: number | null) => {
+        value && setAmount(value);
+    }
+
+    const onTimeChange = (value: number | null) => {
+        value && setTime(value);
+    }
+
+
 
     const options = categories?.map(category => ({ label: category.title, value: category.id, color: colors[Math.floor(Math.random() * colors.length)] }));
 
@@ -84,22 +102,21 @@ const Page = (): React.ReactNode => {
                     <Input.TextArea />
                 </Form.Item>
                 <Form.Item<FieldType>
-                    label="Task Amount"
-                    name="amount"
-                    rules={[{ required: true, message: 'Please input the task amount!' }]}
-                >
-                    <InputNumber prefix="R" />
-                </Form.Item>
-                <Form.Item<FieldType>
                     label="Task Time Frame"
                     name="timeFrame"
                     help="The time frame is in hours"
                     rules={[{ required: true, message: 'Please input the task timeframe!' }]}
                 >
-                    <InputNumber />
+                    <InputNumber onChange={onTimeChange} />
                 </Form.Item>
-
-                {/* Select for categories */}
+                <Form.Item<FieldType>
+                    label="Task Amount (ZAR per hour)"
+                    name="amount"
+                    rules={[{ required: true, message: 'Please input the task amount!' }]}
+                >
+                    <InputNumber prefix="R" onChange={onAmountChange} />
+                </Form.Item>
+                <label>Total: {total} rands.</label>
                 <Form.Item
                     label="Category"
                     name="categories"

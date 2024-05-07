@@ -1,24 +1,28 @@
 "use client";
-
+import FileUploader from "@/components/fileUploader";
 import { useAuthState } from "@/providers/authProvider";
 import { useOfferActions, useOfferState } from "@/providers/offerProvider";
 import { IOffer, OfferStatus } from "@/providers/offerProvider/context";
-import { usePaymentActions, usePaymentState } from "@/providers/paymentProvider";
+import { usePaymentActions } from "@/providers/paymentProvider";
 import { IPayfastResponse } from "@/providers/paymentProvider/context";
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
 import { AbpTokenProperies } from "@/utils";
-import PaystackPop from '@paystack/inline-js';
-import { Button, ConfigProvider, Form, FormProps, Input, InputNumber, Table, Typography } from "antd";
+import { FrownOutlined, MehOutlined, SmileOutlined } from '@ant-design/icons';
+import { Button, ConfigProvider, Divider, Form, FormProps, Input, InputNumber, Layout, Rate, Table, Typography } from "antd";
 import { useSearchParams } from "next/navigation";
-import { use, useEffect } from "react";
-import useStyles from "./style";
-import { PaystackButton, PaystackConsumer, usePaystackPayment } from "react-paystack";
+import { useEffect } from "react";
+import { usePaystackPayment } from "react-paystack";
 import type { HookConfig } from "react-paystack/dist/types";
+import useStyles from "./style";
+import { IReview } from "@/providers/reviewProvider/context";
+import { useReviewActions, useReviewState } from "@/providers/reviewProvider";
 
 const { Title } = Typography;
+const { Sider } = Layout;
 
 type FieldType = ITask;
+type ReviewFieldType = IReview;
 
 const Page = () => {
     const { getTask, completeTask, upViews } = useTaskActions();
@@ -27,6 +31,8 @@ const Page = () => {
     const { postOffer, getMyOffer, getTaskOffers, acceptOffer } = useOfferActions();
     const { offer, offers } = useOfferState();
     const { postPayment } = usePaymentActions();
+    const { postReview } = useReviewActions();
+    const { review } = useReviewState();
     const { styles, cx } = useStyles();
     const params = new URLSearchParams(useSearchParams());
 
@@ -68,45 +74,20 @@ const Page = () => {
             },
             onSuccess: (response: IPayfastResponse) => {
                 console.log(response);
-                // acceptOffer(offerId);
-                // postPayment({
-                //     beneficiaryId: execId,
-                //     amount: 500,
-                //     reference: response.reference,
-                //     bank: response.bank,
-                //     transaction: response.transaction,
-                //     taskId: _taskId as string
-                // });
+                acceptOffer(offerId);
+                postPayment({
+                    beneficiaryId: execId,
+                    amount: 500,
+                    reference: response.reference,
+                    bank: response.bank,
+                    transaction: response.transaction,
+                    taskId: _taskId as string
+                });
             },
             onClose: () => {
                 console.log("closed");
             }
         });
-
-        // next refuses to build this code below so we will use the hook instead
-        // if (window) {
-        //     const paystack = new PaystackPop();
-        //     paystack.newTransaction({
-        //         key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
-        //         email: "teboho.dev@gmail.com",
-        //         amount: 500,
-        // onSuccess: (response: IPayfastResponse) => {
-        //     console.log(response);
-        //     acceptOffer(offerId);
-        //     postPayment({
-        //         beneficiaryId: execId,
-        //         amount: 500,
-        //         reference: response.reference,
-        //         bank: response.bank,
-        //         transaction: response.transaction,
-        //         taskId: _taskId as string
-        //     });
-        // },
-        // onClose: () => {
-        //     console.log("closed");
-        // }
-        //     });
-        // }
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
@@ -192,7 +173,7 @@ const Page = () => {
                     >
                         <Input />
                     </Form.Item>
-                    {record.status === 0 &&
+                    {record.status === 0 && (task?.status || 0) < 2 &&
                         <Form.Item>
                             <Button type="primary" htmlType="submit">Accept</Button>
                         </Form.Item>
@@ -208,69 +189,108 @@ const Page = () => {
         }
     ];
 
+    const desc = ['terrible', 'bad', 'mhh', 'good', 'wonderful'];
+    const customIcons: Record<number, React.ReactNode> = {
+        1: <FrownOutlined />,
+        2: <FrownOutlined />,
+        3: <MehOutlined />,
+        4: <SmileOutlined />,
+        5: <SmileOutlined />,
+    };
+
     const clientViewTask = () => (
-        <>
+        <div>
             <Title level={2}>View Task</Title>
-            <Form preserve={true}
-                name="new-task"
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                layout="vertical"
-                initialValues={{
-                    title: task?.title,
-                    description: task?.description,
-                    amount: task?.amount,
-                    timeFrame: task?.timeFrame
-                }}
-                className={cx(styles.form)}
-                disabled={task && task?.status > 1}
-            >
-                <Form.Item<FieldType>
-                    label="Title"
-                    name="title"
-                    rules={[{ required: true, message: 'Please input the task title!' }]}
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Task Description"
-                    name="description"
-                    rules={[{ required: true, message: 'Please input the task description!' }]}
-                >
-                    <Input.TextArea />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Task Amount"
-                    name="amount"
-                    rules={[{ required: true, message: 'Please input the task amount!' }]}
-                >
-                    <InputNumber prefix="R" />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Task Time Frame"
-                    name="timeFrame"
-                    help="The time frame is in hours"
-                    rules={[{ required: true, message: 'Please input the task timeframe!' }]}
-                >
-                    <InputNumber />
-                </Form.Item>
-                <Form.Item>
-                    <ConfigProvider
-                        theme={{
-                            token: {
-                                colorBgContainer: "#fff",
-                                colorPrimaryActive: "#B64326",
-                                colorBgTextActive: "#B64326"
-                            }
+            <Layout style={{ background: "#E5E3D2" }} className={cx(styles.layout)}>
+                <Sider theme="light" className={cx(styles.sider)} width={"65%"}>
+                    <Form preserve={true}
+                        name="new-task"
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                        layout="vertical"
+                        initialValues={{
+                            title: task?.title,
+                            description: task?.description,
+                            amount: task?.amount,
+                            timeFrame: task?.timeFrame
                         }}
+                        disabled={task && task?.status > 1}
                     >
-                        <Button type="primary" htmlType="submit">Update</Button>
-                    </ConfigProvider>
-                </Form.Item>
-            </Form>
+                        <Form.Item<FieldType> shouldUpdate
+                            label="Title"
+                            name="title"
+                            rules={[{ required: true, message: 'Please input the task title!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            label="Task Description"
+                            name="description"
+                            rules={[{ required: true, message: 'Please input the task description!' }]}
+                        >
+                            <Input.TextArea />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            label="Task Amount"
+                            name="amount"
+                            rules={[{ required: true, message: 'Please input the task amount!' }]}
+                        >
+                            <InputNumber prefix="R" />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            label="Task Time Frame"
+                            name="timeFrame"
+                            help="The time frame is in hours"
+                            rules={[{ required: true, message: 'Please input the task timeframe!' }]}
+                        >
+                            <InputNumber />
+                        </Form.Item>
+                        <Form.Item>
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        colorBgContainer: "#fff",
+                                        colorPrimaryActive: "#B64326",
+                                        colorBgTextActive: "#B64326"
+                                    }
+                                }}
+                            >
+                                <Button type="primary" htmlType="submit">Update</Button>
+                            </ConfigProvider>
+                        </Form.Item>
+                    </Form>
+                </Sider>
+                <Sider theme="light" width={"34%"} className={cx(styles.sider)} >
+                    {task && task?.status < 2 && <FileUploader taskId={_taskId || ""} />}
+                    <Divider>Review & Rate</Divider>
+                    {task && task?.status > 1 && (
+                        <Form
+                            onFinish={values => {
+                                console.log(values);
+                                if (!values?.rating || !values.content) {
+                                    alert("You must fill both the rating and the review!");
+                                    return;
+                                }
+                                const review: IReview = values;
+                                review.taskId = _taskId || "";
+                                // alert(JSON.stringify(review));
+                                postReview(review)
+                            }}
+                        >
+                            <Form.Item<ReviewFieldType> name="rating" label="Please rate:">
+                                <Rate id="rating" tooltips={desc} style={{ color: "green" }} character={({ index = 0 }) => customIcons[index + 1]} />
+                            </Form.Item>
+                            <Form.Item<ReviewFieldType> name="content" label="Please add review">
+                                <Input.TextArea id="content" title="task review" />
+                            </Form.Item>
+                            <Button htmlType="submit" >Complete Rating</Button>
+                        </Form>
+                    )}
+                </Sider>
+            </Layout>
             <Title level={3}>Task Offers</Title>
-            <Table dataSource={offers} columns={columns} />
-        </>
+            <Table dataSource={offers} columns={columns} className={cx(styles["box-shadow"])} />
+        </div>
     );
 
     const executorViewTask = () => (
@@ -302,7 +322,7 @@ const Page = () => {
                     name="counterAmount"
                     rules={[{ required: true, message: 'Please input the offer amount!' }]}
                 >
-                    <InputNumber prefix="R" />
+                    <InputNumber prefix="R" defaultValue={task?.amount} />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit">Submit Offer</Button>
@@ -329,6 +349,7 @@ const Page = () => {
 
     switch (role.toLocaleLowerCase()) {
         case "support":
+        case "admin":
             return supportViewTask();
         case "executor":
             return executorViewTask();

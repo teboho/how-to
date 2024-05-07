@@ -1,25 +1,27 @@
 "use client";
-import { useAuthState } from "@/providers/authProvider";
+import { useAuthActions, useAuthState } from "@/providers/authProvider";
+import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
 import { useProfileActions, useProfileState } from "@/providers/profileProvider";
-import { Avatar, Button, Card, Divider, Flex, Input, Layout, Typography, Select } from "antd";
-import { EditOutlined, EllipsisOutlined, SettingOutlined, SearchOutlined } from '@ant-design/icons';
-import React, { useEffect } from "react";
-import useStyles from "./style.ts";
+import { EditOutlined, EllipsisOutlined, MessageOutlined, SearchOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Divider, Flex, Input, Layout, Rate, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
+import { useEffect } from "react";
+import useStyles from "./style";
 
 const { Meta } = Card;
 const { Sider, Content } = Layout;
 const { Title } = Typography;
-const { Search } = Input;
+
+const img_base = process.env.NEXT_PUBLIC_API_IMAGE_URL_PRE;
 
 const Page = () => {
-    const { loginObj } = useAuthState();
-    const { getPortfolios } = usePortfolioActions();
-    const { portfoliosWithStoredFiles } = usePortfolioState();
-    const { } = useProfileActions();
-    const { } = useProfileState();
+    const { users } = useAuthState();
+    const { getAllUsers } = useAuthActions();
+    const { getPortfolios, getAllPortfolios } = usePortfolioActions();
+    const { portfolios } = usePortfolioState();
+    const { getProfiles } = useProfileActions();
+    const { profiles } = useProfileState();
     const { getCategories, getExecutorCategories } = useCategoryActions();
     const { categories, executorCategories } = useCategoriesState();
     const { cx, styles } = useStyles();
@@ -28,37 +30,51 @@ const Page = () => {
         if (!categories) {
             getCategories();
         }
-        if (executorCategories) {
+        if (!executorCategories) {
             getExecutorCategories();
+        }
+        if (!portfolios) {
+            getPortfolios();
+            getAllPortfolios();
+        }
+        if (!users) {
+            getAllUsers();
+        }
+        if (!profiles) {
+            getProfiles();
         }
     }, []);
 
-    let cards = [];
-    for (let i = 0; i < 50; i++) {
-        cards.push(
-            <Card
-                key={`card__${i}`}
-                style={{ width: 300 }}
-                cover={
-                    <img
-                        alt="example"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                }
-                actions={[
-                    <SettingOutlined key="setting" />,
-                    <EditOutlined key="edit" />,
-                    <EllipsisOutlined key="ellipsis" />,
-                ]}
-            >
-                <Meta
-                    avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
-                    title="Card title"
-                    description="This is the description"
+    console.log(img_base)
+
+    let _users = users?.filter(u => u.roleNames?.includes("EXECUTOR")).map((u, i) => (
+        <Card
+            key={`usercard__${i}`}
+            style={{ width: 300 }}
+            cover={
+                <img
+                    alt="example"
+                    src="/unDraw/covers/undraw_add_tasks_re_s5yj.svg"
                 />
-            </Card>
-        );
-    }
+            }
+            actions={[
+                <MessageOutlined key="chat" />,
+                <EditOutlined key="edit" />,
+                <EllipsisOutlined key="ellipsis" />,
+            ]}
+        >
+            <Meta
+                avatar={<Avatar alt="ddd" src={`${img_base}a9dd968a-daa8-4564-86ce-08dc6da6959e`} />}
+                title={u.fullName}
+                description={
+                    <>
+                        Rating
+                        <Rate defaultValue={3} style={{ color: "green" }} />
+                    </>
+                }
+            />
+        </Card>
+    ));
 
     return (
         <div className="height-full">
@@ -83,7 +99,7 @@ const Page = () => {
                                     type="text"
                                     as={Input}
                                     suffix={
-                                        <Button type="primary" onClick={e => handleSubmit()}>
+                                        <Button type="primary" onClick={() => handleSubmit()}>
                                             <SearchOutlined />
                                         </Button>
                                     }
@@ -102,9 +118,10 @@ const Page = () => {
                     >
                         {({ handleSubmit }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Field 
+                                <Field
                                     name="_categories"
-                                    render={({ field }: { field: any}) => (
+                                >
+                                    {() => (
                                         <Select
                                             mode="multiple"
                                             style={{ width: '100%' }}
@@ -121,7 +138,7 @@ const Page = () => {
                                             })}
                                         />
                                     )}
-                                />
+                                </Field>
                             </Form>
                         )}
                     </Formik>
@@ -129,7 +146,9 @@ const Page = () => {
                 </Sider>
                 <Content className={cx(styles.content)}>
                     <Flex gap={20} wrap="wrap" align="center" justify="center">
-                        {cards}
+                        {
+                            _users
+                        }
                     </Flex>
                 </Content>
             </Layout>

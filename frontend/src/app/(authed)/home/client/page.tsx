@@ -1,5 +1,4 @@
 "use client";
-
 import { useAuthState } from '@/providers/authProvider';
 import { usePaymentActions, usePaymentState } from '@/providers/paymentProvider';
 import { useTaskActions, useTaskState } from '@/providers/taskProvider';
@@ -8,7 +7,6 @@ import { EyeOutlined } from '@ant-design/icons';
 import { Segmented, Space, Table, Typography } from 'antd';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
-import 'react-data-grid/lib/styles.css';
 import Loading from './loading';
 import useStyles from './style';
 
@@ -42,7 +40,7 @@ const Page = (): React.ReactNode => {
             key: 'description',
             // render a partial description
             render: (text: any) => {
-                return text.length > 100 ? text.slice(0, 100) + "..." : text;
+                return text.length > 50 ? text.slice(0, 50) + "..." : text;
             }
         },
         {
@@ -153,6 +151,7 @@ const Page = (): React.ReactNode => {
     return (
         <section>
             <section className={cx(styles.box)}>
+                <Title level={2}>Welcome John Doe!</Title>
                 <Title level={3}>Money Spent so far</Title>
                 <Paragraph className={cx(styles["total-money"])}>R7 564.07</Paragraph>
             </section>
@@ -164,7 +163,7 @@ const Page = (): React.ReactNode => {
                     onChange={(value) => setTable(value)}
                     options={['Tasks', 'Payments']}
                 />
-                {table === "Tasks" && tasksSuccess && <Table columns={task_columns} dataSource={task_rows} />}
+                {table === "Tasks" && tasksSuccess && <Table columns={task_columns} dataSource={task_rows} pagination={{ pageSize: 5 }} scroll={{ y: 240 }} />}
                 {table === "Payments" && paymentsSuccess && <Table columns={payment_columns} dataSource={payment_rows} />}
                 {isPending ? <Loading /> : null}
             </section>

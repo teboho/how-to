@@ -1,5 +1,4 @@
 "use client";
-
 import { getAxiosInstace } from "@/utils";
 import { message } from "antd";
 import React, { useMemo, useReducer } from "react";
@@ -19,85 +18,84 @@ const PaymentProvider = ({ children }: { children: React.ReactNode }) => {
             return getAxiosInstace(accessToken)
         } else {
             return getAxiosInstace("");
-        }        
+        }
     }, [loginObj]);
 
     const getPayment = (id: string) => {
         dispatch(paymentActions.getPaymentRequestAction());
         const endpoint = "api/services/app/Payment/Get?id=" + id;
         instance.get(endpoint)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(paymentActions.getPaymentSuccessAction(response.data.result))
-                    } else {
-                        dispatch(paymentActions.getPaymentErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(paymentActions.getPaymentSuccessAction(response.data.result))
+                } else {
                     dispatch(paymentActions.getPaymentErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(paymentActions.getPaymentErrorAction())
+            );
     }
     const postPayment = (payment: IPayment) => {
         dispatch(paymentActions.postPaymentRequestAction());
         const endpoint = "api/services/app/Payment/Create"
         instance.post(endpoint, payment)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(paymentActions.postPaymentSuccessAction(response.data.result));
-                        messageApi.success("Payment created successfully");
-                    } else {
-                        dispatch(paymentActions.postPaymentErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(paymentActions.postPaymentSuccessAction(response.data.result));
+                    messageApi.success("Payment created successfully");
+                } else {
                     dispatch(paymentActions.postPaymentErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(paymentActions.postPaymentErrorAction())
+            );
     }
     const putPayment = (payment: IPayment) => {
         dispatch(paymentActions.putPaymentRequestAction());
         const endpoint = "api/services/app/Payment/Update";
         instance.put(endpoint, payment)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(paymentActions.putPaymentSuccessAction(response.data.result));
-                    } else {
-                        dispatch(paymentActions.putPaymentErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(paymentActions.putPaymentSuccessAction(response.data.result));
+                } else {
                     dispatch(paymentActions.putPaymentErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(paymentActions.putPaymentErrorAction())
+            );
     }
     const getPayments = () => {
         dispatch(paymentActions.getPaymentsRequestAction());
         const endpoint = "api/services/app/Payment/GetAll";
         instance.get(endpoint)
-                .then(response => {
-                    console.log(response);
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(paymentActions.getPaymentsSuccessAction(response.data.result.items))
-                    } else {
-                        dispatch(paymentActions.getPaymentsErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(paymentActions.getPaymentsSuccessAction(response.data.result.items))
+                } else {
                     dispatch(paymentActions.getPaymentsErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(paymentActions.getPaymentsErrorAction())
+            );
     }
     const getMyPayments = () => {
         dispatch(paymentActions.getPaymentsRequestAction());
         const endpoint = "api/services/app/Payment/GetMyPayments";
         instance.get(endpoint)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(paymentActions.getPaymentsSuccessAction(response.data.result));
-                    } else {
-                        dispatch(paymentActions.getPaymentsErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(paymentActions.getPaymentsSuccessAction(response.data.result));
+                } else {
                     dispatch(paymentActions.getPaymentsErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(paymentActions.getPaymentsErrorAction())
+            );
     }
 
     return (

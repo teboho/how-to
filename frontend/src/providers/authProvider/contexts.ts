@@ -10,14 +10,18 @@ export interface IAuthStateContext {
     loginObj?: ILoginResponse;
     registerObj?: IRegisterResponse;
     userObj?: IUser;
-    decodedToken?: IDecodedToken
+    decodedToken?: IDecodedToken;
+    users?: IUser[];
 }
 
 export interface IAuthActionsContext {
     login: (loginRequest: ILoginRequest) => void;
     register: (registerRequest: IRegisterRequest) => void;
+    registerSupport: (registerRequest: IRegisterRequest) => void;
     getUser: () => void;
     logout: () => void;
+    getAllUsers: () => void;
+    getMyUser: () => void;
 }
 
 export const AuthStateContextInitial: IAuthStateContext = {
@@ -27,14 +31,18 @@ export const AuthStateContextInitial: IAuthStateContext = {
     loginObj: undefined,
     registerObj: undefined,
     userObj: undefined,
-    decodedToken: undefined
+    decodedToken: undefined,
+    users: undefined
 }
 
 export const AuthActionsContextInitial: IAuthActionsContext = {
     login: (loginReqest: ILoginRequest) => {},
     register: (registerRequest: IRegisterRequest) => {},
+    registerSupport: (registerRequest: IRegisterRequest) => {},
     getUser: () => {},
-    logout: () => {}
+    logout: () => {},
+    getAllUsers: () => {},
+    getMyUser: () => {}
 }
 
 const AuthStateContext = createContext(AuthStateContextInitial);

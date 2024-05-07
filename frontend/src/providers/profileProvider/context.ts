@@ -36,6 +36,7 @@ export interface IProfileActionsContext {
     putProfile: (profile: IProfile) => void;
     deleteProfile: (profile: IProfile) => void;
     getProfiles: () => void;
+    getLocalProfile: (userId: number) => IProfile|undefined;
 }
 export const ProfileActionsContext_Default: IProfileActionsContext = {
     getProfile: () => {},
@@ -44,6 +45,7 @@ export const ProfileActionsContext_Default: IProfileActionsContext = {
     putProfile: () => {},
     deleteProfile: () => {},
     getProfiles: () => {},
+    getLocalProfile: () => undefined
 }
 
 const ProfileStateContext = createContext<IProfileStateContext>(ProfileStateContext_Default);

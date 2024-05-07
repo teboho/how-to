@@ -1,5 +1,4 @@
 "use client";
-
 import { getAxiosInstace } from "@/utils";
 import { message } from "antd";
 import React, { useEffect, useMemo, useReducer } from "react";
@@ -15,13 +14,13 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(taskReducer, TaskStateContext_Default);
 
     useEffect(() => {
-        if (loginObj) {
+        if (loginObj && !state.tasks) {
             getTasks();
         }
     }, []);
 
     useEffect(() => {
-        if (loginObj) {
+        if (loginObj && !state.tasks) {
             getTasks();
         }
     }, [loginObj]);

@@ -25,9 +25,21 @@ const StoredFileProvider = ({ children }: { children: React.ReactNode }): React.
         return getFormDataAxiosInstace(loginObj?.accessToken || "");
     }, [loginObj]);
 
+
+    useEffect(() => {
+        if (loginObj && !state.storedFiles) {
+            getStoredFiles();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (loginObj && !state.storedFiles) {
+            getStoredFiles();
+        }
+    }, [loginObj]);
+
     useEffect(() => {
         if (accessToken) {
-            console.log("found the accesss token", accessToken);
             instance = getAxiosInstace(accessToken);
         }
     }, []);

@@ -16,6 +16,10 @@ export const AuthActionEnums = {
     GetUserSuccess: "GET_USER_SUCCESS",
     GetUserError: "GET_USER_ERROR",
 
+    GetAllUsersRequest: "GET_ALL_USERS_REQUEST",
+    GetAllUsersSuccess: "GET_ALL_USERS_SUCCESS",
+    GetAllUsersError: "GET_ALL_USERS_ERROR",
+
     Logout: "LOGOUT",
     SaveTokens: "SAVE_TOKENS",
     SaveDecodedToken: "SAVE_DECODE_TOKEN"
@@ -80,3 +84,16 @@ export const saveDecodedTokenAction = createAction(
     AuthActionEnums.SaveDecodedToken,
     (decodedToken: IDecodedToken) => ({ decodedToken })
 )
+
+export const getAllUsersRequestAction = createAction(
+    AuthActionEnums.GetAllUsersRequest,
+    () => ({ isPending: true, isSuccess: false, isError: false, users: undefined })
+);
+export const getAllUsersSuccessAction = createAction(
+    AuthActionEnums.GetAllUsersRequest,
+    (users: IUser[]) => ({ isPending: false, isSuccess: true, isError: false, users })
+);
+export const getAllUsersErrorAction = createAction(
+    AuthActionEnums.GetAllUsersError,
+    () => ({ isPending: false, isSuccess: false, isError: false, users: undefined })
+);

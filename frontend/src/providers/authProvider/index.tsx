@@ -1,12 +1,11 @@
 "use client";
-
 import { AbpTokenProperies, type IDecodedToken, decodeToken, getAxiosInstace } from "@/utils";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useMemo, useReducer } from "react";
 import * as authActions from './actions';
 import { AuthActionsContext, AuthStateContext, AuthStateContextInitial } from "./contexts";
 import authReducer from "./reducer";
-import type { ILoginRequest, ILoginResponse, IRegisterRequest } from "./types";
+import type { ILoginRequest, ILoginResponse, IRegisterRequest, IUser } from "./types";
 import { message } from "antd";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -33,6 +32,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     };
                     dispatch(authActions.loginSuccessAction(loginObj));
                     dispatch(authActions.saveDecodedTokenAction(decodeToken(accessToken)));
+
+                    // getMyUser();
                 }
             } catch (error) {
                 console.error("Error accessing localStorage: ", error);
@@ -77,7 +78,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     const decodedToken: IDecodedToken = decodeToken(response.data.result.accessToken);
                     dispatch(authActions.saveDecodedTokenAction(decodedToken));
                     const _role = (decodedToken[AbpTokenProperies.role]);
-                    console.log("role", _role);
                     push("home/" + _role.toLocaleLowerCase());
                     messageApi.success("Welcome or Welcome back!");
                 } else {
@@ -92,7 +92,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const register = (registerRequest: IRegisterRequest) => {
-        console.log(registerRequest)
         dispatch(authActions.registerRequestAction());
         const endpoint = "api/services/app/User/Create"
         instance.post(endpoint, registerRequest)
@@ -109,6 +108,26 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             );
     };
 
+    const registerSupport = (registerRequest: IRegisterRequest) => {
+        dispatch(authActions.registerRequestAction());
+        const endpoint = "api/services/app/User/Create"
+        instance.post(endpoint, registerRequest)
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(authActions.registerSuccessAction(response.data.result));
+                    messageApi.success("New support team member registered!");
+                } else {
+                    dispatch(authActions.registerErrorAction())
+                    messageApi.error("Something went wrong with support registration.");
+                    appendUser(response.data.result);
+                }
+            })
+            .catch(err => {
+                dispatch(authActions.registerErrorAction());
+                messageApi.error("Something went wrong with support registration.");
+            });
+    };
+
     const getUser = () => {
         if (state.loginObj) {
             const decoded = decodeToken(state.loginObj.accessToken);
@@ -121,13 +140,60 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         push('/login');
     };
 
+    // current logged in information
+
+    const getAllUsers = () => {
+        const endpoint = 'api/services/app/User/GetAll?MaxResultCount=50';
+        dispatch(authActions.getAllUsersRequestAction());
+        const _instance = getAxiosInstace(state.loginObj?.accessToken || "");
+        _instance.get(endpoint)
+            .then(res => {
+                const data = res.data;
+                if (data.success) {
+                    dispatch(authActions.getAllUsersSuccessAction(data.result.items));
+                } else {
+                    dispatch(authActions.getAllUsersErrorAction());
+                }
+            })
+            .catch(err =>
+                dispatch(authActions.getAllUsersErrorAction())
+            );
+    }
+    const getMyUser = () => {
+        const endpoint = 'api/services/app/Session/GetCurrentLoginInformations';
+        dispatch(authActions.getUserRequestAction());
+        const _instance = getAxiosInstace(state.loginObj?.accessToken || "");
+        _instance.get(endpoint)
+            .then(res => {
+                const data = res.data;
+                if (data.success) {
+                    dispatch(authActions.getUserSuccessAction(data.result.items));
+                } else {
+                    dispatch(authActions.getUserErrorAction());
+                }
+            })
+            .catch(err =>
+                dispatch(authActions.getUserErrorAction())
+            );
+    }
+
+    const appendUser = (user: IUser) => {
+        const users = state.users ? [...state?.users, user] : undefined;
+        if (users) {
+            dispatch(authActions.getAllUsersSuccessAction(users));
+        }
+    }
+
     return (
         <AuthStateContext.Provider value={state}>
             <AuthActionsContext.Provider value={{
                 login,
                 register,
+                registerSupport,
                 getUser,
-                logout
+                logout,
+                getAllUsers,
+                getMyUser
             }}>
                 {contextHolder}
                 {children}

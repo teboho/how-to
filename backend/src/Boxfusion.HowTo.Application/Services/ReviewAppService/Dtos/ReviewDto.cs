@@ -8,6 +8,8 @@ namespace Boxfusion.HowTo.Services.ReviewAppService.Dtos
     public class ReviewDto : FullAuditedEntityDto<Guid>
     {
         public string Content { get; set; }
+        public byte Rating { get; set; }
+
         public Guid TaskId { get; set; }
     }
 }

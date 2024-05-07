@@ -105,7 +105,6 @@ const OfferProvider = ({ children }: { children: React.ReactNode }) => {
         const endpoint = "api/services/app/Offer/GetAll";
         instance.get(endpoint)
                 .then(response => {
-                    console.log(response);
                     if (response.status > 199 && response.status < 300) {
                         dispatch(offerActions.getOffersSuccessAction(response.data.result.items))
                     } else {
@@ -121,7 +120,6 @@ const OfferProvider = ({ children }: { children: React.ReactNode }) => {
         const endpoint = `api/services/app/Offer/GetOffers?taskId=${taskId}`;
         instance.get(endpoint)
                 .then(response => {
-                    console.log(response);
                     if (response.status > 199 && response.status < 300) {
                         dispatch(offerActions.getOffersSuccessAction(response.data.result))
                     } else {

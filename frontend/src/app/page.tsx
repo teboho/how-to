@@ -36,10 +36,12 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (loginObj) {
-        const role = getRole(loginObj);
+        let role = getRole(loginObj);
 
         getUser();
         getMyProfile();
+
+        if (role === "admin") role = "support";
 
         push(`/home/${role}`);
       }
