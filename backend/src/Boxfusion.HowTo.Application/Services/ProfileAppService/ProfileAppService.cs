@@ -1,6 +1,8 @@
 ﻿using Abp.Application.Services;
+using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
+using AutoMapper;
 using Boxfusion.HowTo.Services.ProfileAppService.Dtos;
 using System;
 using System.Collections.Generic;
@@ -13,14 +15,15 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
     {
         IRepository<Domain.Profile, Guid> _repository;
         IRepository<Domain.StoredFile, Guid> _storedFileRepository;
+        IMapper _mapper;
         private readonly string BASE_FILE_PATH = "App_Data/Images";
         private readonly string PROFILE_BASE_FILE_PATH = "App_Data/Profiles/Images";
 
-
-        public ProfileAppService(IRepository<Domain.Profile, Guid> repository, IRepository<Domain.StoredFile, Guid> storedFileRepository) : base(repository)
+        public ProfileAppService(IRepository<Domain.Profile, Guid> repository, IRepository<Domain.StoredFile, Guid> storedFileRepository, IMapper mapper) : base(repository)
         {
             _repository = repository;
             _storedFileRepository = storedFileRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -30,13 +33,32 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
         /// <returns>the latest profile</returns>
         public override async Task<ProfileDto> CreateAsync(ProfileDto input)
         {
-            var existingProfile = await _repository.FirstOrDefaultAsync(x => x.CreatorUserId == input.CreatorUserId);
-            if (existingProfile != null && !input.IdentityNo.Trim().IsNullOrEmpty())
+            if (input.Id.Equals(Guid.Empty) || input.Id.Equals(null))
             {
-                existingProfile.IdentityNo = input.IdentityNo.Trim();
-                return await base.UpdateAsync(input);
+                return await base.CreateAsync(input);
             }
-            return await base.CreateAsync(input);
+            else 
+            {
+                var existingProfile = await _repository.GetAsync(input.Id);
+                if (existingProfile == null) {
+                    return await base.CreateAsync(input);
+                }
+                if (existingProfile != null && !input.IdentityNo.Trim().IsNullOrEmpty())
+                {
+                    existingProfile.IdentityNo = input.IdentityNo.Trim();
+                }
+                var _existingProfile = await _repository.FirstOrDefaultAsync(x => x.Username == input.Username);
+                if (_existingProfile == null && !input.Username.Trim().IsNullOrEmpty())
+                {
+                    existingProfile.Username = input.Username.Trim();
+                } else if (_existingProfile != null && _existingProfile.Id != existingProfile.Id)
+                {
+                    throw new ArgumentException("The username is already taken.");
+                }
+                
+                var profileDto = existingProfile.MapTo<ProfileDto>();
+                return await base.UpdateAsync(profileDto);
+            }
         }
 
         /// <summary>
@@ -49,7 +71,10 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
             var profile = await _repository.FirstOrDefaultAsync(x => x.CreatorUserId == userId);
             if (profile == null)
             {
-                return null;
+                profile = new Domain.Profile();
+                profile.CreatorUserId = userId;
+                profile = await _repository.InsertAsync(profile);
+                await CurrentUnitOfWork.SaveChangesAsync();
             }
             var profileDto = ObjectMapper.Map<ProfileDto>(profile);
             return await base.GetAsync(profileDto);
