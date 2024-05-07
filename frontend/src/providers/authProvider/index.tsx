@@ -33,7 +33,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     dispatch(authActions.loginSuccessAction(loginObj));
                     dispatch(authActions.saveDecodedTokenAction(decodeToken(accessToken)));
 
-                    // getMyUser();
+                    getMyUser(accessToken);
                 }
             } catch (error) {
                 console.error("Error accessing localStorage: ", error);
@@ -80,6 +80,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     const _role = (decodedToken[AbpTokenProperies.role]);
                     push("home/" + _role.toLocaleLowerCase());
                     messageApi.success("Welcome or Welcome back!");
+
+                    getMyUser(response.data.result.accessToken);
                 } else {
                     dispatch(authActions.loginErrorAction())
                     messageApi.error("Invalid username or password");
@@ -159,15 +161,33 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 dispatch(authActions.getAllUsersErrorAction())
             );
     }
-    const getMyUser = () => {
+    const getMyUser = (accessToken: string) => {
         const endpoint = 'api/services/app/Session/GetCurrentLoginInformations';
         dispatch(authActions.getUserRequestAction());
-        const _instance = getAxiosInstace(state.loginObj?.accessToken || "");
+        const _instance = getAxiosInstace(accessToken);
         _instance.get(endpoint)
             .then(res => {
                 const data = res.data;
                 if (data.success) {
-                    dispatch(authActions.getUserSuccessAction(data.result.items));
+                    console.log(data.result);
+                    dispatch(authActions.getUserSuccessAction(data.result.user));
+                } else {
+                    dispatch(authActions.getUserErrorAction());
+                }
+            })
+            .catch(err =>
+                dispatch(authActions.getUserErrorAction())
+            );
+    }
+    const getOtherUser = () => {
+        const endpoint = 'api/services/app/Session/GetCurrentLoginInformations';
+        dispatch(authActions.getUserRequestAction());
+        instance.get(endpoint)
+            .then(res => {
+                const data = res.data;
+                if (data.success) {
+                    console.log(data.result);
+                    dispatch(authActions.getUserSuccessAction(data.result.user));
                 } else {
                     dispatch(authActions.getUserErrorAction());
                 }
@@ -193,7 +213,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 getUser,
                 logout,
                 getAllUsers,
-                getMyUser
+                getMyUser,
+                getOtherUser
             }}>
                 {contextHolder}
                 {children}

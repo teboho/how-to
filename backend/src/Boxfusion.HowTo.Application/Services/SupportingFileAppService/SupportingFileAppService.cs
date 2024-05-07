@@ -22,7 +22,7 @@ namespace Boxfusion.HowTo.Services.SupportingFileAppService
 
         private readonly string TASK_IMAGES_BASE_FILE_PATH = "App_Data/Tasks/Images";
         private readonly string TASK_VIDEOS_BASE_FILE_PATH = "App_Data/Tasks/Videos";
-        private readonly string TASK_DOCUMENTS_BASE_FILE_PATH = "App_Data/Tasks/Documents";
+        private readonly string TASK_DOCUMENTS_BASE_FILE_PATH = "App_Data/Tasks/Docs";
 
         public SupportingFileAppService(IRepository<Domain.SupportingFile, Guid> repository,
             IRepository<Domain.StoredFile, Guid> storedFileRepository,
@@ -85,32 +85,13 @@ namespace Boxfusion.HowTo.Services.SupportingFileAppService
             return await Task.FromResult(supportingFile);
         }
 
-        //[HttpPost]
-        //[Consumes("multipart/form-data")]
-        //public async Task<IActionResult> EchoAsync(IFormFile File, [FromForm] Guid taskId)
-        //{
-        //    long? userId = AbpSession.UserId;
-        //    if (userId == null)
-        //    {
-        //        throw new UserFriendlyException("User not found");
-        //    }
-        //    var file = File;
 
-        //    var memory = new MemoryStream();
-        //    using (var stream = File.OpenReadStream())
-        //    {
-        //        await stream.CopyToAsync(memory);
-        //    }
-        //    memory.Position = 0;
-        //    if (taskId != null)
-        //    {
-        //        // add a header to the response
-        //        HttpContext.Response.Headers.Add("Associated-Task", $"{taskId}");
-        //    }
-        //    //HttpContenAdd("Associated-Task", $"{taskId}");
-
-        //    return new FileContentResult(memory.ToArray(), File.ContentType);
-        //}
+        // get the supporting files by task id
+        public async Task<List<SupportingFileDto>> GetByTaskId(Guid taskId)
+        {
+            var supportingFiles = await _repository.GetAllListAsync(x => x.TaskId == taskId);
+            return await Task.FromResult(_mapper.Map<List<SupportingFileDto>>(supportingFiles));
+        }
 
         private string GetContentType(string path)
         {

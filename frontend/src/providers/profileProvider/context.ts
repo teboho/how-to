@@ -10,6 +10,8 @@ export interface IProfile {
     deleterUserId?: number;
     deletionTime?: string;
     identityNo: string;
+    username?: string;
+    bio?: string;
     isVerified?: boolean;
     storedFileId?: string;
 }
@@ -21,6 +23,7 @@ export interface IProfileStateContext {
     profile?: IProfile;
     profiles?: IProfile[];
 }
+
 export const ProfileStateContext_Default: IProfileStateContext = {
     isPending: false,
     isError: false,
@@ -31,6 +34,7 @@ export const ProfileStateContext_Default: IProfileStateContext = {
 
 export interface IProfileActionsContext {
     getProfile: () => void;
+    getProfileByUsername: (username: string) => void;
     getMyProfile: () => void;
     postProfile: (profile: IProfile) => void;
     putProfile: (profile: IProfile) => void;
@@ -40,6 +44,7 @@ export interface IProfileActionsContext {
 }
 export const ProfileActionsContext_Default: IProfileActionsContext = {
     getProfile: () => {},
+    getProfileByUsername: () => {},
     getMyProfile: () => {},
     postProfile: () => {},
     putProfile: () => {},

@@ -1,8 +1,62 @@
 import { createStyles } from 'antd-style';
 
-const useStyles = createStyles(({css}) => {
+const useStyles = createStyles(({css, token}) => {
     return {
-        'h-full': css`
+        border: css`
+            border: 1px solid red;
+        `,
+        mainlayout: css`
+            height: 100%;
+            background: #E5E3D2;
+        `,
+        layout: css`
+            height: 100%;
+            background: #E5E3D2;
+            padding-top: 0;
+            padding-bottom: 20px;
+            overflow: auto;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        `,
+        sider: css`
+            height: 100%;
+            background: #E5E3D2;
+            border-radius: 20px;
+            padding: 0 20px;
+            margin: 0 1px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        `,
+        menu: css`
+            // border: 1px solid #B64326;
+            background: #E5E3D2;            
+        `,
+        content: css`
+            height: 100%;
+            width: 100%;
+            padding: 10px;
+            margin: 0;
+            min-height: 280px;
+            border: 1px solid #B64326;
+            border-radius: 20px;
+            overflow: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        `,
+        header: css`
+            background: ${token.colorBgContainer};
+            padding: 0 20px 20px 40px;
+            margin: 0 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        `,
+        toggle: css`
+            font-size: 16px;
+            width: 64px;
+            height: 64px;
+        `,
+        logout: css`
+            display: float;
+            bottom: 0;
+        `,
+                'h-full': css`
             height: 100%;
         `,
         'right-inner-flex': css`
@@ -14,11 +68,10 @@ const useStyles = createStyles(({css}) => {
             color: #B64326;
         `,
         para: css`
-            color: #fff;
+            color: #B64326;
             font-size: 26px;
         `,
         title: css`
-            margin-top: 10px;
             color: white;
             font-size: 80px;
             text-align: center;
@@ -31,50 +84,13 @@ const useStyles = createStyles(({css}) => {
         form: css`
             width: 100%;
             max-width: 600px;
-            margin-top: 20px;
-            padding: 10px 20px 20px 20px;
-            background: #E5E3D2;
-            border-radius: 20px;
-            box-shadow: 2px 2px 10px grey;
-        `,
-        "demo-container": css`
-            width: 100%;
-            margin-top: 20px;
-            padding: 20px;
+            padding: 20px 20px 0 20px;
             background: #E5E3D2;
             border-radius: 20px;
             box-shadow: 2px 2px 10px grey;
         `,
         'form-item': css`
             font-size: 20px;
-        `,
-        'profile-pic': css`
-            width: 350px;
-            height: auto;
-            border-radius: 20px;
-        `,
-        'demo-pic': css`
-            width: 250px;
-            height: auto;
-        `,
-        "text-input": css`
-            padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        `,
-        "select": css`
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        `,
-        label: css`
-            margin-right: 20px;
         `
     }
 });

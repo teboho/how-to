@@ -28,7 +28,7 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
         if (accessToken) {
-            return getAxiosInstace(accessToken)
+            return getAxiosInstace(accessToken);
         } else {
             return getAxiosInstace("");
         }
@@ -37,6 +37,21 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     const getProfile = () => {
         dispatch(profileActions.getProfileRequestAction());
         const endpoint = "api/services/app/Profile/Get";
+        instance.get(endpoint)
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(profileActions.getProfileSuccessAction(response.data.result))
+                } else {
+                    dispatch(profileActions.getProfileErrorAction())
+                }
+            })
+            .catch(err =>
+                dispatch(profileActions.getProfileErrorAction())
+            );
+    }
+    const getProfileByUsername = (username: string) => {
+        dispatch(profileActions.getProfileRequestAction());
+        const endpoint = `api/services/app/Profile/GetProfileByUsername?username=${username}`;
         instance.get(endpoint)
             .then(response => {
                 if (response.status > 199 && response.status < 300) {
@@ -141,7 +156,8 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
                 putProfile,
                 deleteProfile,
                 getProfiles,
-                getLocalProfile
+                getLocalProfile,
+                getProfileByUsername
             }}>
                 {children}
             </ProfileActionsContext.Provider>

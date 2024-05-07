@@ -15,6 +15,7 @@
     <ProjectReference Include="..\..\src\Boxfusion.HowTo.EntityFrameworkCore\Boxfusion.HowTo.EntityFrameworkCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="NSubstitute" Version="5.1.0" />
     <PackageReference Include="Shouldly" Version="4.2.1" />

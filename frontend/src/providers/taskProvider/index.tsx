@@ -14,13 +14,13 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(taskReducer, TaskStateContext_Default);
 
     useEffect(() => {
-        if (loginObj && !state.tasks) {
+        if (loginObj && (!state.tasks || state.tasks.length)) {
             getTasks();
         }
     }, []);
 
     useEffect(() => {
-        if (loginObj && !state.tasks) {
+        if (loginObj && (!state.tasks || state.tasks.length)) {
             getTasks();
         }
     }, [loginObj]);
@@ -90,13 +90,16 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                 if (response.status > 199 && response.status < 300) {
                     dispatch(taskActions.putTaskSuccessAction(response.data.result));
                     updateStateTask(response.data.result);
+                    messageApi.success("Task updated successfully");
                 } else {
                     dispatch(taskActions.putTaskErrorAction())
+                    messageApi.error("Task update failed");
                 }
             })
-            .catch(err =>
+            .catch(err => {
                 dispatch(taskActions.putTaskErrorAction())
-            );
+                messageApi.error("Task update failed");
+            });
     }
     const deleteTask = (task: ITask) => {
         dispatch(taskActions.deleteTaskRequestAction());

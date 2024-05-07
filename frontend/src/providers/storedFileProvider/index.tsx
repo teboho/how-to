@@ -171,6 +171,9 @@ const StoredFileProvider = ({ children }: { children: React.ReactNode }): React.
                 dispatch(putStoredFileErrorAction())
             );
     }
+    const getLocal = (id: string) => {
+        return state.storedFiles?.find(file => file.id === id);
+    }
 
     return (
         <StoredFileStateContext.Provider value={state}>
@@ -182,7 +185,8 @@ const StoredFileProvider = ({ children }: { children: React.ReactNode }): React.
                 deleteStoredFile,
                 postStoredFile,
                 upload,
-                uploadProfilePicture
+                uploadProfilePicture,
+                getLocal
             }}>
                 {children}
             </StoredFileActionContext.Provider>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useAuthActions } from "@/providers/authProvider";
 import { useProfileState } from "@/providers/profileProvider";
@@ -6,6 +6,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Drawer, DrawerProps, Flex } from 'antd';
 import React, { useMemo } from 'react';
 import useStyles from "./style";
+import { useRouter } from 'next/navigation';
 
 export interface IAccountDrawerProps {
     fullname: string;
@@ -28,6 +29,7 @@ const AccountDrawer = ({
     const { logout } = useAuthActions();
     const { profile } = useProfileState();
     const { cx, styles } = useStyles();
+    const { push } = useRouter();
 
     let profilePicId = useMemo(() => {
         return profile?.storedFileId
@@ -62,6 +64,8 @@ const AccountDrawer = ({
                         <p><i className="ri-safe-line"></i> {role}</p>
                     </div>
                     <hr />
+                    <Button onClick={() => push("/home/profile/edit")}>Edit Profile</Button>
+                    <br />
                     <Button onClick={logout}>Logout</Button>
                 </Flex>
             </Drawer>

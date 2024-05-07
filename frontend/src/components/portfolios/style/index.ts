@@ -53,8 +53,12 @@ const useStyles = createStyles(({css}) => {
             height: auto;
         `,
         'demo-pic': css`
-            width: 250px;
-            height: auto;
+            width: 200px;
+            height: 200px;
+            border: 1px solid grey;
+            border-radius: 20px;
+            object-fit: contain;
+            backround-color: black;
         `,
         "text-input": css`
             padding: 12px 20px;
@@ -65,12 +69,12 @@ const useStyles = createStyles(({css}) => {
             box-sizing: border-box;
         `,
         "select": css`
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         `,
         label: css`
             margin-right: 20px;

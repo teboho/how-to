@@ -3,11 +3,12 @@ import { useAuthActions, useAuthState } from "@/providers/authProvider";
 import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
 import { useProfileActions, useProfileState } from "@/providers/profileProvider";
-import { EditOutlined, EllipsisOutlined, MessageOutlined, SearchOutlined } from '@ant-design/icons';
+import { EditOutlined, EllipsisOutlined, MessageOutlined, SearchOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Divider, Flex, Input, Layout, Rate, Select, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
 import { useEffect } from "react";
 import useStyles from "./style";
+import Link from "next/link";
 
 const { Meta } = Card;
 const { Sider, Content } = Layout;
@@ -20,7 +21,7 @@ const Page = () => {
     const { getAllUsers } = useAuthActions();
     const { getPortfolios, getAllPortfolios } = usePortfolioActions();
     const { portfolios } = usePortfolioState();
-    const { getProfiles } = useProfileActions();
+    const { getProfiles, getLocalProfile } = useProfileActions();
     const { profiles } = useProfileState();
     const { getCategories, getExecutorCategories } = useCategoryActions();
     const { categories, executorCategories } = useCategoriesState();
@@ -45,36 +46,40 @@ const Page = () => {
         }
     }, []);
 
-    console.log(img_base)
-
-    let _users = users?.filter(u => u.roleNames?.includes("EXECUTOR")).map((u, i) => (
-        <Card
-            key={`usercard__${i}`}
-            style={{ width: 300 }}
-            cover={
-                <img
-                    alt="example"
-                    src="/unDraw/covers/undraw_add_tasks_re_s5yj.svg"
-                />
-            }
-            actions={[
-                <MessageOutlined key="chat" />,
-                <EditOutlined key="edit" />,
-                <EllipsisOutlined key="ellipsis" />,
-            ]}
-        >
-            <Meta
-                avatar={<Avatar alt="ddd" src={`${img_base}a9dd968a-daa8-4564-86ce-08dc6da6959e`} />}
-                title={u.fullName}
-                description={
-                    <>
-                        Rating
-                        <Rate defaultValue={3} style={{ color: "green" }} />
-                    </>
+    let _users = users?.filter(u => u.roleNames?.includes("EXECUTOR")).map((u, i) => {
+        const p = getLocalProfile(u.id);
+        const profileLink = p ? (p?.username ? `/home/profile?username=${p?.username}` : `/home/profile?profileId=${p.id}`) : "";
+        return (
+            <Card
+                key={`usercard__${i}`}
+                style={{ width: 300 }}
+                cover={
+                    <img
+                        alt="example"
+                        src="/unDraw/covers/undraw_add_tasks_re_s5yj.svg"
+                    />
                 }
-            />
-        </Card>
-    ));
+                actions={[
+                    // <MessageOutlined key="chat" />,
+                    p ? (<Link href={profileLink}>
+                        <EyeOutlined key="view_executor_profile" title="View profile" />
+                    </Link>) : <EyeInvisibleOutlined key="view_executor_profile" title="This user does not yet have a profile" />,
+                    // <EllipsisOutlined key="ellipsis" />,
+                ]}
+            >
+                <Meta
+                    avatar={<Avatar alt="ddd" src={`${img_base}a9dd968a-daa8-4564-86ce-08dc6da6959e`} />}
+                    title={u.fullName}
+                    description={
+                        <>
+                            Avg. Rating
+                            <Rate defaultValue={3} style={{ color: "green" }} />
+                        </>
+                    }
+                />
+            </Card>
+        )
+    });
 
     return (
         <div className="height-full">

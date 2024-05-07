@@ -32,7 +32,7 @@ const HomeLayout = ({
     const [collapsed, setCollapsed] = useState(false);
     const [open, setOpen] = useState(false);
     const [menu, setMenu] = useState<MenuProps["items"]>([]);
-    const { loginObj, decodedToken } = useAuthState();
+    const { loginObj, decodedToken, userObj } = useAuthState();
     const { logout: auth_logout } = useAuthActions();
     const { } = useAuthActions
     const { styles, cx, theme } = useStyles();
@@ -41,7 +41,7 @@ const HomeLayout = ({
 
     // useEffect()
 
-    const fullname = useMemo(() => decodedToken ? decodedToken[AbpTokenProperies.name] : "John Doe", [decodedToken]);
+    const fullname = useMemo(() => userObj ? `${userObj.name} ${userObj.surname}` : "John Doe", [userObj]);
 
     const clientMenu = (currentPath: string): MenuProps["items"] => [
         // {
@@ -53,12 +53,14 @@ const HomeLayout = ({
         {
             key: 'client_new_task',
             icon: <PlusCircleOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/client/new-task`}>New Task</Link>,
             onClick: () => { }
         },
         {
             key: 'executors',
             icon: <SolutionOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/executors`}>Executors</Link>,
             onClick: () => { }
         }
@@ -67,18 +69,21 @@ const HomeLayout = ({
         {
             key: 'exec_revenue',
             icon: <MoneyCollectOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/executor/revenue`}>Revenue</Link>,
             onClick: () => { }
         },
         {
             key: 'tasks',
             icon: <CarryOutOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/tasks`}>Tasks</Link>,
             onClick: () => { }
         },
         {
             key: 'executors',
             icon: <SolutionOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/executors`}>Executors</Link>,
             onClick: () => { }
         }
@@ -87,30 +92,35 @@ const HomeLayout = ({
         {
             key: 'support_revenue',
             icon: <MoneyCollectOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/support/revenue`}>Revenue</Link>,
             onClick: () => { }
         },
         {
             key: 'tasks',
             icon: <CarryOutOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/tasks`}>Tasks</Link>,
             onClick: () => { }
         },
         {
             key: 'support_disputes',
             icon: <ExclamationCircleOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/support/disputes`}>Disputes</Link>,
             onClick: () => { }
         },
         {
             key: 'support_users',
             icon: <UsergroupAddOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/support/new-user`}>Manager Users</Link>,
             onClick: () => { }
         },
         {
             key: 'executors',
             icon: <SolutionOutlined />,
+            className: cx(styles["white-link"]),
             label: <Link href={`/home/executors`}>Executors</Link>,
             onClick: () => { }
         }
@@ -163,33 +173,28 @@ const HomeLayout = ({
                 background: "#B64326"
             }} width={320} theme="light" collapsible collapsed={collapsed} onCollapse={() => setCollapsed(!collapsed)}>
                 <div className={cx(styles.logo)}>
-                    <Link href={"/"}><img src="/logo-icon-only.svg" alt="logo" width={80} /></Link>
+                    <Link href={"/"}><img src="/logo-icon-only-light.svg" alt="logo" width={80} /></Link>
                 </div>
                 <Menu
                     theme="light"
                     mode="inline"
                     onClick={() => { }}
-                    items={menu}
-                    className={cx(styles.menu)}
-                />
-                <Menu
-                    theme="light"
-                    mode="inline"
-                    onClick={() => { }}
-                    items={[
-                        {
-                            key: 'profile',
-                            icon: <UserOutlined />,
-                            label: 'Profile',
-                            onClick: () => push('profile')
-                        },
+                    items={[...(menu ? menu : []), ...[
+                        // {
+                        //     key: 'profile',
+                        //     icon: <UserOutlined />,
+                        //     label: <Link href={"/home/profile/edit"}>Edit Profile</Link>,
+                        //     className: cx(styles["white-link"]),
+                        //     onClick: () => { }
+                        // },
                         {
                             key: 'logout',
                             icon: <LogoutOutlined />,
                             label: 'Logout',
+                            className: cx(styles["white-link"]),
                             onClick: () => auth_logout()
                         }
-                    ]}
+                    ]]}
                     className={cx(styles.menu)}
                 />
             </Sider>

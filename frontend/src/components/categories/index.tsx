@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { ICategory } from "@/providers/categoryProvider/context";
 import { Tag } from "antd";
 /**

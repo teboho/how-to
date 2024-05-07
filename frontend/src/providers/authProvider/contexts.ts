@@ -10,6 +10,7 @@ export interface IAuthStateContext {
     loginObj?: ILoginResponse;
     registerObj?: IRegisterResponse;
     userObj?: IUser;
+    otherUserObj?: IUser;
     decodedToken?: IDecodedToken;
     users?: IUser[];
 }
@@ -19,9 +20,10 @@ export interface IAuthActionsContext {
     register: (registerRequest: IRegisterRequest) => void;
     registerSupport: (registerRequest: IRegisterRequest) => void;
     getUser: () => void;
+    getOtherUser: (userId: number) => void;
     logout: () => void;
     getAllUsers: () => void;
-    getMyUser: () => void;
+    getMyUser: (accessToken: string) => void;
 }
 
 export const AuthStateContextInitial: IAuthStateContext = {
@@ -40,6 +42,7 @@ export const AuthActionsContextInitial: IAuthActionsContext = {
     register: (registerRequest: IRegisterRequest) => {},
     registerSupport: (registerRequest: IRegisterRequest) => {},
     getUser: () => {},
+    getOtherUser: () => {},
     logout: () => {},
     getAllUsers: () => {},
     getMyUser: () => {}

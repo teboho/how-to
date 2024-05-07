@@ -51,7 +51,15 @@ const useStyles = createStyles(({css, token}) => {
         offsetUp: css`
             padding-bottom: 100px;
             margin: 0;
-        `
+        `, 
+        'white-link': css`
+            color: #E5E3D2 !important;
+            font-weight: bold;
+        `,
+        "menu-item-selected": {
+            
+            // backgroundColor: 'green', // replace 'yourColorHere' with the color you want
+        },
     }
 });
 
