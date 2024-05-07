@@ -38,7 +38,7 @@ namespace Boxfusion.HowTo.Services.TaskAppService
         public async Task<TaskDto> Complete(Guid taskId)
         {
             var task = await _repository.GetAsync(taskId);
-            task.Status = Domain.TaskStatus.DONE;
+            task.Status = Domain.MyTaskStatus.DONE;
             await _repository.UpdateAsync(task);
             CurrentUnitOfWork.SaveChanges();
             return MapToEntityDto(task);

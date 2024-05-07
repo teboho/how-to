@@ -55,7 +55,7 @@ namespace Boxfusion.HowTo.Services.OfferAppService
             CurrentUnitOfWork.SaveChanges();
 
             var task = await _taskRepository.GetAsync(offer.TaskId);
-            task.Status = Domain.TaskStatus.ASSIGNED;
+            task.Status = Domain.MyTaskStatus.ASSIGNED;
             await _taskRepository.UpdateAsync(task);
             CurrentUnitOfWork.SaveChanges();
 

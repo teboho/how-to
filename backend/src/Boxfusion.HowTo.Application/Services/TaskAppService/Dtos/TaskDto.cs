@@ -1,7 +1,7 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Boxfusion.HowTo.Domain;
 using System;
-using System.Threading.Tasks;
 
 namespace Boxfusion.HowTo.Services.TaskAppService.Dtos
 {
@@ -14,6 +14,6 @@ namespace Boxfusion.HowTo.Services.TaskAppService.Dtos
         public float Amount { get; set; }
         public int Views { get; set; }
         public int TimeFrame { get; set; }
-        public TaskStatus Status { get; set; }
+        public MyTaskStatus Status { get; set; }
     }
 }
