@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Boxfusion.HowTo.Domain;
 using System;
 
 namespace Boxfusion.HowTo.Services.SupportingFileAppService.Dtos
@@ -9,6 +10,8 @@ namespace Boxfusion.HowTo.Services.SupportingFileAppService.Dtos
     {
         public Guid TaskId { get; set; }
         public Guid StoredFileId { get; set; }
+        public SupportingFileItemType ItemType { get; set; }
+        public string Content { get; set; }
 
     }
 }

@@ -42,6 +42,8 @@ namespace Boxfusion.HowTo.EntityFrameworkCore
         // level9
         public DbSet<SupportingFile> SupportingFiles { get; set; }
         public DbSet<Submission> Submissions { get; set; }
+        // level10
+        public DbSet<Chat> Chats { get; set; }
         public HowToDbContext(DbContextOptions<HowToDbContext> options)
             : base(options)
         {

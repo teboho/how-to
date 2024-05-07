@@ -47,6 +47,10 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
                 {
                     existingProfile.IdentityNo = input.IdentityNo.Trim();
                 }
+                if (existingProfile != null && !input.Bio.Trim().IsNullOrEmpty())
+                {
+                    existingProfile.Bio = input.Bio.Trim();
+                }
                 var _existingProfile = await _repository.FirstOrDefaultAsync(x => x.Username == input.Username);
                 if (_existingProfile == null && !input.Username.Trim().IsNullOrEmpty())
                 {
@@ -75,6 +79,18 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
                 profile.CreatorUserId = userId;
                 profile = await _repository.InsertAsync(profile);
                 await CurrentUnitOfWork.SaveChangesAsync();
+            }
+            var profileDto = ObjectMapper.Map<ProfileDto>(profile);
+            return await base.GetAsync(profileDto);
+        }
+
+        // get profile by username
+        public async Task<ProfileDto> GetProfileByUsername(string username)
+        {
+            var profile = await _repository.FirstOrDefaultAsync(x => x.Username == username);
+            if (profile == null)
+            {
+                throw new ArgumentException("The profile does not exist.");
             }
             var profileDto = ObjectMapper.Map<ProfileDto>(profile);
             return await base.GetAsync(profileDto);

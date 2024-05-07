@@ -12,5 +12,16 @@ namespace Boxfusion.HowTo.Domain
         public Guid StoredFileId { get; set; }
         [ForeignKey("StoredFileId")]
         public StoredFile StoredFile { get; set; }
+        public SupportingFileItemType ItemType { get; set; }
+        public string Content { get; set; }
+    }
+
+
+    public enum SupportingFileItemType
+    {
+        Image,
+        Video,
+        Document,
+        Text // to hold a link or extra information
     }
 }
