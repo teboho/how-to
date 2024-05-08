@@ -1,17 +1,17 @@
 "use client";
+import TaskCategories from "@/components/taskCategories";
 import { useAuthState } from "@/providers/authProvider";
 import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
 import { useTaskActions, useTaskState } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context.js";
-import { EditOutlined, EllipsisOutlined, SearchOutlined, SettingOutlined, EyeOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Divider, Flex, Input, Layout, Select, Tag, Typography } from "antd";
+import { EyeOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Divider, Flex, Input, Layout, Select, Tag, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
+import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useMemo } from "react";
 import useStyles from "./style.ts";
-import { ITaskCategory } from "@/providers/categoryProvider/context.js";
-import TaskCategories from "@/components/taskCategories";
-import Link from "next/link.js";
 
 const { Meta } = Card;
 const { Sider, Content } = Layout;
@@ -73,8 +73,8 @@ const Page = () => {
                     <Link href={`/home/view-task?id=${task.id}`}>
                         <EyeOutlined key="view_task" />
                     </Link>,
-                    <EditOutlined key="edit" />,
-                    <EllipsisOutlined key="ellipsis" />, // popover for description
+                    // <EditOutlined key="edit" />,
+                    // <EllipsisOutlined key="ellipsis" />, // popover for description
                 ]}
             >
                 <Meta

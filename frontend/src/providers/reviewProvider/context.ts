@@ -34,6 +34,7 @@ export const ReviewStateContext_Default: IReviewStateContext = {
 
 export interface IReviewActionsContext {
     getReview: (id: string) => void;
+    getReviewByTaskId: (taskId: string) => void;
     postReview: (review: IReview) => void;
     putReview: (review: IReview) => void;
     deleteReview: (review: IReview) => void;
@@ -43,6 +44,7 @@ export interface IReviewActionsContext {
 }
 export const ReviewActionsContext_Default: IReviewActionsContext = {
     getReview: () => {},
+    getReviewByTaskId: () => {},
     postReview: () => {},
     putReview: () => {},
     deleteReview: () => {},

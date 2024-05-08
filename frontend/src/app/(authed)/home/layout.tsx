@@ -20,6 +20,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import useStyles from "./style/style";
 import AccountDrawer, { IAccountDrawerProps } from "@/components/accountDrawer";
+import Image from "next/image";
 
 const { Sider, Header, Content } = Layout;
 const { Title } = Typography;
@@ -67,13 +68,6 @@ const HomeLayout = ({
     ];
     const executorMenu = (currentPath: string): MenuProps["items"] => [
         {
-            key: 'exec_revenue',
-            icon: <MoneyCollectOutlined />,
-            className: cx(styles["white-link"]),
-            label: <Link href={`/home/executor/revenue`}>Revenue</Link>,
-            onClick: () => { }
-        },
-        {
             key: 'tasks',
             icon: <CarryOutOutlined />,
             className: cx(styles["white-link"]),
@@ -89,13 +83,6 @@ const HomeLayout = ({
         }
     ];
     const supportMenu = (currentPath: string): MenuProps["items"] => [
-        {
-            key: 'support_revenue',
-            icon: <MoneyCollectOutlined />,
-            className: cx(styles["white-link"]),
-            label: <Link href={`/home/support/revenue`}>Revenue</Link>,
-            onClick: () => { }
-        },
         {
             key: 'tasks',
             icon: <CarryOutOutlined />,
@@ -173,7 +160,7 @@ const HomeLayout = ({
                 background: "#B64326"
             }} width={320} theme="light" collapsible collapsed={collapsed} onCollapse={() => setCollapsed(!collapsed)}>
                 <div className={cx(styles.logo)}>
-                    <Link href={"/"}><img src="/logo-icon-only-light.svg" alt="logo" width={80} /></Link>
+                    <Link href={"/"}><Image src="/logo-icon-only-light.svg" alt="logo" width={80} height={80} /></Link>
                 </div>
                 <Menu
                     theme="light"

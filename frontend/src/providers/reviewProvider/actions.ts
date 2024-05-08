@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { IReview, IReviewStateContext } from "./context";
+import { IReview, IReviewStateContext, ReviewStateContext_Default } from "./context";
 
 export const ReviewActionEnums = {
     GetReviewRequest: "GET_REVIEW_REQUEST",
@@ -24,7 +24,9 @@ export const ReviewActionEnums = {
 
     GetMyReviewsRequest: "GET_MY_REVIEWS_REQUEST",
     GetMyReviewsSuccess: "GET_MY_REVIEWS_SUCCESS",
-    GetMyReviewsError: "GET_MY_REVIEWS_ERROR"
+    GetMyReviewsError: "GET_MY_REVIEWS_ERROR",
+
+    ClearReviewState: "CLEAR_REVIEW_STATE"
 }
 
 export const getReviewRequestAction = createAction<IReviewStateContext>(
@@ -90,4 +92,14 @@ export const getReviewsSuccessAction = createAction<IReviewStateContext, IReview
 export const getReviewsErrorAction = createAction<IReviewStateContext>(
     ReviewActionEnums.GetReviewsError,
     () => ({ isPending: false, isSuccess: false, isError: true, review: undefined })
+);
+
+export const getMyReviewsRequestAction = createAction<IReviewStateContext>(
+    ReviewActionEnums.GetMyReviewsRequest,
+    () => ({ ...ReviewStateContext_Default })
+);
+
+export const clearReviewStateAction = createAction<IReviewStateContext>(
+    ReviewActionEnums.ClearReviewState,
+    () => ({ ...ReviewStateContext_Default })
 );

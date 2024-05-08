@@ -13,6 +13,12 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(categoryReducer, CategoriesStateContext_Default);
 
     useEffect(() => {
+        if (!loginObj && localStorage.getItem("accessToken") === null) {
+            clearState();
+        }
+    }, [loginObj]);
+
+    useEffect(() => {
         if (loginObj?.accessToken && !state.categories) {
             getCategories();
         }
@@ -224,6 +230,15 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
         const bridges = state.taskCategories;
         return bridges?.filter(task => task.taskId === id);
     }
+    const getLocalExecutorCategories = (id?: string) => {
+        if (!id) return;
+        const bridges = state.executorCategories;
+        return bridges?.filter(task => task.executorId === id);
+    }
+
+    const clearState = () => {
+        dispatch(categoryActions.clearCategoryStateAction());
+    }
 
     return (
         <CategoriesStateContext.Provider value={{ ...state }}>
@@ -240,7 +255,8 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
                 postMyCategories,
                 deleteExecutorCategory,
                 getLocalCategory,
-                getLocalTaskCategories
+                getLocalTaskCategories,
+                getLocalExecutorCategories,
             }}>
                 {contextHolder}
                 {children}

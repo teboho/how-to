@@ -109,6 +109,10 @@ const categoryReducer = handleActions(
         [CategoryActionEnums.DeleteExecutorCategoryError]: (state) => {
             return { ...state, isPending: false, isSuccess: false, isError: true };
         },
+
+        [CategoryActionEnums.ClearCategoryState]: (state) => {
+            return { ...CategoriesStateContext_Default };
+        }
     },
     CategoriesStateContext_Default
 );

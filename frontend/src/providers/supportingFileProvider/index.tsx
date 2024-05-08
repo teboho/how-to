@@ -4,6 +4,7 @@ import { message } from 'antd';
 import React, { useContext, useEffect, useMemo, useReducer } from 'react';
 import { useAuthState } from '../authProvider';
 import {
+    clearSupportingFileStateAction,
     deleteSupportingFileErrorAction, deleteSupportingFileSuccessAction,
     getSupportingFileErrorAction, getSupportingFileRequestAction,
     getSupportingFilesErrorAction, getSupportingFilesRequestAction,
@@ -29,6 +30,12 @@ const SupportingFileProvider = ({ children }: { children: React.ReactNode }): Re
 
     let formDataInstance = useMemo(() => {
         return getFormDataAxiosInstace(loginObj?.accessToken || "");
+    }, [loginObj]);
+
+    useEffect(() => {
+        if (!loginObj) {
+            clearSupportingFileState();
+        }
     }, [loginObj]);
 
     useEffect(() => {
@@ -182,6 +189,9 @@ const SupportingFileProvider = ({ children }: { children: React.ReactNode }): Re
                 dispatch(putSupportingFileErrorAction());
                 messageApi.error('File upload failed');
             });
+    }
+    const clearSupportingFileState = () => {
+        dispatch(clearSupportingFileStateAction());
     }
 
     return (

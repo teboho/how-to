@@ -4,11 +4,12 @@ import { useCategoriesState, useCategoryActions } from "@/providers/categoryProv
 import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
 import { useProfileActions, useProfileState } from "@/providers/profileProvider";
 import { EditOutlined, EllipsisOutlined, MessageOutlined, SearchOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Divider, Flex, Input, Layout, Rate, Select, Typography } from "antd";
+import { Avatar, Button, Card, Divider, Flex, Input, Layout, Rate, Select, Tag, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useStyles from "./style";
 import Link from "next/link";
+import Image from "next/image";
 
 const { Meta } = Card;
 const { Sider, Content } = Layout;
@@ -23,9 +24,10 @@ const Page = () => {
     const { portfolios } = usePortfolioState();
     const { getProfiles, getLocalProfile } = useProfileActions();
     const { profiles } = useProfileState();
-    const { getCategories, getExecutorCategories } = useCategoryActions();
+    const { getCategories, getExecutorCategories, getLocalExecutorCategories } = useCategoryActions();
     const { categories, executorCategories } = useCategoriesState();
     const { cx, styles } = useStyles();
+    const [_users, setUsers] = useState([]);
 
     useEffect(() => {
         if (!categories) {
@@ -46,7 +48,11 @@ const Page = () => {
         }
     }, []);
 
-    let _users = users?.filter(u => u.roleNames?.includes("EXECUTOR")).map((u, i) => {
+    const readCategory = (id: string) => {
+        return categories?.find(c => c.id === id);
+    }
+
+    const temp = users?.filter(u => u.roleNames?.includes("EXECUTOR")).map((u, i) => {
         const p = getLocalProfile(u.id);
         const profileLink = p ? (p?.username ? `/home/profile?username=${p?.username}` : `/home/profile?profileId=${p.id}`) : "";
         return (
@@ -68,12 +74,18 @@ const Page = () => {
                 ]}
             >
                 <Meta
-                    avatar={<Avatar alt="ddd" src={`${img_base}a9dd968a-daa8-4564-86ce-08dc6da6959e`} />}
+                    avatar={<Avatar alt="ddd" src={`${img_base}${p?.storedFileId || "a9dd968a-daa8-4564-86ce-08dc6da6959e"}`} />}
                     title={u.fullName}
                     description={
                         <>
                             Avg. Rating
                             <Rate defaultValue={3} style={{ color: "green" }} />
+                            {getLocalExecutorCategories(p?.id || "")?.map((ec, i) => (
+                                <Tag key={"tag_${i}"}>
+                                    {readCategory(ec.categoryId)?.title}
+                                </Tag>
+                            ))}
+
                         </>
                     }
                 />
@@ -95,6 +107,14 @@ const Page = () => {
                         onSubmit={(values, actions) => {
                             console.log(values);
                             actions.setSubmitting(false);
+
+                            const search = values.search;
+                            const results = users?.filter(u => u.name.toLowerCase().includes(search.toLowerCase())
+                                || u.emailAddress.toLowerCase().includes(search.toLowerCase())
+                                || u.surname.toLowerCase().includes(search.toLowerCase())
+                                || u.userName.toLowerCase().includes(search.toLowerCase()));
+
+                            // setUsers(results || []);
                         }}
                     >
                         {({ handleSubmit }) => (
@@ -119,6 +139,9 @@ const Page = () => {
                         onSubmit={(values, actions) => {
                             console.log(values);
                             actions.setSubmitting(false);
+
+                            const _categories = values._categories;
+                            // const _executorCategories = executorCategories?.filter(ec => _categories.includes(values.));
                         }}
                     >
                         {({ handleSubmit }) => (
@@ -152,7 +175,7 @@ const Page = () => {
                 <Content className={cx(styles.content)}>
                     <Flex gap={20} wrap="wrap" align="center" justify="center">
                         {
-                            _users
+                            temp
                         }
                     </Flex>
                 </Content>

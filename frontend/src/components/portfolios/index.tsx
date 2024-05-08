@@ -3,6 +3,7 @@ import { usePortfolioState } from "@/providers/portfolioProvider";
 import { IPortfolioWithStoredFile } from "@/providers/portfolioProvider/context";
 import { Col, Row } from "antd";
 import useStyles from "./style";
+import Image from "next/image";
 
 const imageUrlPre = process.env.NEXT_PUBLIC_API_IMAGE_URL_PRE;
 

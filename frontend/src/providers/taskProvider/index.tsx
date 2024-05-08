@@ -14,13 +14,19 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(taskReducer, TaskStateContext_Default);
 
     useEffect(() => {
-        if (loginObj && (!state.tasks || state.tasks.length)) {
+        if (!loginObj) {
             getTasks();
         }
     }, []);
 
     useEffect(() => {
-        if (loginObj && (!state.tasks || state.tasks.length)) {
+        if (!loginObj) {
+            clearTaskState();
+        }
+    }, [loginObj]);
+
+    useEffect(() => {
+        if (!loginObj) {
             getTasks();
         }
     }, [loginObj]);
@@ -204,6 +210,9 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
             return tasks.find(t => t.id === id);
         }
         return undefined;
+    }
+    const clearTaskState = () => {
+        dispatch(taskActions.clearTaskStateAction());
     }
 
     return (

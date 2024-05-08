@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { IChat, IChatStateContext } from "./context";
+import { ChatStateContext_Default, IChat, IChatStateContext } from "./context";
 
 export const ChatActionEnums = {
     GetChatRequest: "GET_CHAT_REQUEST",
@@ -20,7 +20,9 @@ export const ChatActionEnums = {
 
     GetChatsRequest: "GET_CHATS_REQUEST",
     GetChatsSuccess: "GET_CHATS_SUCCESS",
-    GetChatsError: "GET_CHATS_ERROR"
+    GetChatsError: "GET_CHATS_ERROR",
+
+    ClearChatState: "CLEAR_CHAT_STATE"
 }
 
 export const getChatRequestAction = createAction<IChatStateContext>(
@@ -86,4 +88,9 @@ export const getChatsSuccessAction = createAction<IChatStateContext, IChat[]>(
 export const getChatsErrorAction = createAction<IChatStateContext>(
     ChatActionEnums.GetChatsError,
     () => ({ isPending: false, isSuccess: false, isError: true, chat: undefined })
+);
+
+export const clearChatStateAction = createAction<IChatStateContext>(
+    ChatActionEnums.ClearChatState,
+    () => ({ ...ChatStateContext_Default })
 );

@@ -12,6 +12,7 @@ import { Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { Guid } from "typescript-guid";
 import useStyles from "./style";
+import Image from "next/image";
 
 const { Title } = Typography;
 const { TextArea } = Input;

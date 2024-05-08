@@ -55,6 +55,10 @@ const chatReducer = handleActions(
         },
         [ChatActionEnums.GetChatsError]: (state, action) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, chats: undefined };
+        },
+
+        [ChatActionEnums.ClearChatState]: (state) => {
+            return { ...ChatStateContext_Default };
         }
     },
     ChatStateContext_Default

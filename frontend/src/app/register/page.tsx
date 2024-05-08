@@ -7,6 +7,7 @@ import type { FormProps } from "antd";
 import { Button, Flex, Form, Input, Select, Typography } from "antd";
 import Link from "next/link";
 import useStyles from "./style/style";
+import Image from "next/image";
 
 const { Paragraph } = Typography;
 
@@ -51,7 +52,7 @@ export default function Register() {
       <LeftSide />
       <div className={cx("half-box", "right")}>
         <Flex vertical className={cx(styles["right-inner-flex"])} align="center" justify="center">
-          <img height={50} src="/unDraw/undraw_join_re_w1lh.svg" alt="No tasks" />
+          <Image height={50} src="/unDraw/undraw_join_re_w1lh.svg" alt="No tasks" />
 
           <Paragraph className={cx(styles.para)}>Please enter your details to Register.</Paragraph>
 

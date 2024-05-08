@@ -61,6 +61,7 @@ export interface ICategoryActionsContext {
     /** Read a specific category from the state */
     getLocalCategory: (id?: string) => ICategory | undefined;
     getLocalTaskCategories: (id?: string) => ITaskCategory[] | undefined;
+    getLocalExecutorCategories: (id?: string) => IExecutorCategory[] | undefined;
 }
 export const CategoryActionsContext_Default: ICategoryActionsContext = {
     getCategory: () => {},
@@ -75,7 +76,8 @@ export const CategoryActionsContext_Default: ICategoryActionsContext = {
     postMyCategories: () => {},
     deleteExecutorCategory: () => {},
     getLocalCategory: () => undefined,
-    getLocalTaskCategories: () => undefined
+    getLocalTaskCategories: () => undefined,
+    getLocalExecutorCategories: () => undefined,
 }
 
 const CategoriesStateContext = createContext<ICategoriesStateContext>(CategoriesStateContext_Default);

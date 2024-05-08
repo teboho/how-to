@@ -3,6 +3,7 @@ import { getAxiosInstace, getFormDataAxiosInstace } from '@/utils';
 import React, { useContext, useEffect, useMemo, useReducer } from 'react';
 import { useAuthState } from '../authProvider';
 import {
+    clearStoredFileStateAction,
     deleteStoredFileErrorAction, deleteStoredFileSuccessAction,
     getStoredFileErrorAction, getStoredFileRequestAction,
     getStoredFilesErrorAction, getStoredFilesRequestAction,
@@ -25,6 +26,12 @@ const StoredFileProvider = ({ children }: { children: React.ReactNode }): React.
         return getFormDataAxiosInstace(loginObj?.accessToken || "");
     }, [loginObj]);
 
+
+    useEffect(() => {
+        if (!loginObj) {
+            clearStoredFileState();
+        }
+    }, [loginObj]);
 
     useEffect(() => {
         if (loginObj && !state.storedFiles) {
@@ -173,6 +180,9 @@ const StoredFileProvider = ({ children }: { children: React.ReactNode }): React.
     }
     const getLocal = (id: string) => {
         return state.storedFiles?.find(file => file.id === id);
+    }
+    const clearStoredFileState = () => {
+        dispatch(clearStoredFileStateAction());
     }
 
     return (

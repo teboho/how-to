@@ -21,8 +21,8 @@ const useStyles = createStyles(({css, token}) => {
         sider: css`
             height: 100%;
             background: #E5E3D2;
-            border: 1px solid #B64326;
             border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             padding: 0 20px;
             margin: 0 1px;
         `,
@@ -32,10 +32,10 @@ const useStyles = createStyles(({css, token}) => {
         `,
         content: css`
             height: 100%;
-            padding: 10px;
+            padding: 20px;
             margin: 0;
             min-height: 280px;
-            border: 1px solid #B64326;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             border-radius: 20px;
             overflow: auto;
         `,

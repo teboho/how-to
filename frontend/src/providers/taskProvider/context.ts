@@ -14,6 +14,7 @@ export interface ITask {
     description: string;
     amount: number;
     views?: number;
+    paymentStatus?: number;
     timeFrame: number;
     status: TaskStatus;
 }

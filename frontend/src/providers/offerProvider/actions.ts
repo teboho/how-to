@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { IOffer, IOfferStateContext } from "./context";
+import { IOffer, IOfferStateContext, OfferStateContext_Default } from "./context";
 
 export const OfferActionEnums = {
     GetOfferRequest: "GET_OFFER_REQUEST",
@@ -20,7 +20,9 @@ export const OfferActionEnums = {
 
     GetOffersRequest: "GET_OFFERS_REQUEST",
     GetOffersSuccess: "GET_OFFERS_SUCCESS",
-    GetOffersError: "GET_OFFERS_ERROR"
+    GetOffersError: "GET_OFFERS_ERROR",
+
+    ClearOfferState: "CLEAR_OFFER_STATE"
 }
 
 export const getOfferRequestAction = createAction<IOfferStateContext>(
@@ -86,4 +88,9 @@ export const getOffersSuccessAction = createAction<IOfferStateContext, IOffer[]>
 export const getOffersErrorAction = createAction<IOfferStateContext>(
     OfferActionEnums.GetOffersError,
     () => ({ isPending: false, isSuccess: false, isError: true, offer: undefined })
+);
+
+export const clearOfferStateAction = createAction<IOfferStateContext>(
+    OfferActionEnums.ClearOfferState,
+    () => ({ ...OfferStateContext_Default })
 );

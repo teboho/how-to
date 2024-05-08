@@ -1,7 +1,7 @@
 'use client';
 import { useAuthState } from "@/providers/authProvider";
 import { IOffer, OfferStatus } from "@/providers/offerProvider/context";
-import { useReviewActions } from "@/providers/reviewProvider";
+import { useReviewActions, useReviewState } from "@/providers/reviewProvider";
 import { IReview } from "@/providers/reviewProvider/context";
 import { useStoredFileActions, useStoredFileState } from "@/providers/storedFileProvider";
 import { useSupportingFileActions, useSupportingFileState } from "@/providers/supportingFileProvider";
@@ -44,7 +44,8 @@ const ClientViewTask = ({
     const { supportingFiles } = useSupportingFileState();
     const { getStoredFiles, getLocal } = useStoredFileActions();
     const { storedFiles } = useStoredFileState();
-    const { postReview } = useReviewActions();
+    const { postReview, getReviewByTaskId } = useReviewActions();
+    const { review } = useReviewState();
     const [file, setFile] = useState<UploadFile>();
     const [messageApi, contextHolder] = message.useMessage();
     const [uploading, setUploading] = useState<boolean>(false);
@@ -52,16 +53,19 @@ const ClientViewTask = ({
     const _taskId = task?.id || "";
 
     useEffect(() => {
-        if (loginObj) {
-            getByTaskId(_taskId);
-        }
         if (!storedFiles || storedFiles?.length) {
             getStoredFiles();
+        }
+        if (!review) {
+            getReviewByTaskId(_taskId);
         }
     }, []);
 
     useEffect(() => {
         console.log(supportingFiles);
+        if (loginObj) {
+            getByTaskId(_taskId);
+        }
     }, [_taskId]);
 
     const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
@@ -201,13 +205,13 @@ const ClientViewTask = ({
                     </Formik>
                 </Sider>
                 <Sider theme="light" width={"34%"} className={cx(styles.sider)} >
-                    {task && task?.status < 2 && (
+                    {(task && task?.status < 2) ? (
                         <div>
                             <Title level={3}>Supporting Files</Title>
                             <div>
                                 {supportingFiles && supportingFiles.map((file, index) => (
                                     <div key={`file_${index}`}>
-                                        <a href={`${storedFileBaseUrl}${file.id}`} target="_blank" rel="noreferrer">File {index}</a>
+                                        <a href={`${storedFileBaseUrl}${file.storedFileId}`} target="_blank" rel="noreferrer">File {index}</a>
                                     </div>
                                 ))}
                             </div>
@@ -220,14 +224,26 @@ const ClientViewTask = ({
                             </Upload>
                             {file && (<Button type="primary" onClick={handleUpload} loading={uploading}>Upload</Button>)}
                         </div>
+                    ) : (
+                        supportingFiles &&
+                        <div>
+                            <Title level={3}>Supporting Files</Title>
+                            <div>
+                                {supportingFiles && supportingFiles.map((file, index) => (
+                                    <div key={`file_${index}`}>
+                                        <a href={`${storedFileBaseUrl}${file.storedFileId}`} target="_blank" rel="noreferrer">File {index}</a>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     )}
                     <Divider>Review & Rate</Divider>
                     {task && task?.status > 1 && (
                         <Formik
                             initialValues={{
-                                rating: 0,
-                                content: "",
-                                taskId: ""
+                                rating: review?.rating || 0,
+                                content: review?.content || "",
+                                taskId: _taskId || ""
                             }}
                             onSubmit={values => {
                                 console.log(values);
@@ -242,13 +258,20 @@ const ClientViewTask = ({
                             }}
                         >
                             <Form>
-                                <AntdForm.Item label="Rating: ">
-                                    <Field name="rating" type="number" as={() => (
-                                        <Rate id="rating" tooltips={desc} style={{ color: "green" }} character={({ index = 0 }) => customIcons[index + 1]} />
-                                    )} />
-                                </AntdForm.Item>
-                                <Field name="content" type="text" as={Input.TextArea} />
-                                <Button htmlType="submit" >Complete Rating</Button>
+                                {review ?
+                                    <Rate id="rating" tooltips={desc} style={{ color: "green" }} value={review.rating} disabled character={({ index = 0 }) => customIcons[index + 1]} />
+                                    : <AntdForm.Item label="Rating: ">
+                                        <Field as="select" name="rating" type="number">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </Field>
+                                    </AntdForm.Item>}
+                                <Field name="content" type="text" as={Input.TextArea} disabled={review ? true : false} />
+                                <br />
+                                {!review && <Button htmlType="submit">Complete Rating</Button>}
                             </Form>
                         </Formik>
                     )}

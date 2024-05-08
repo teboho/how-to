@@ -12,6 +12,11 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(profileReducer, ProfileStateContext_Default);
     const [messageApi, contextHolder] = message.useMessage();
 
+    useEffect(() => {
+        if (!loginObj) {
+            clearProfileState();
+        }
+    }, [loginObj]);
 
     useEffect(() => {
         if (loginObj && !state.profiles) {
@@ -145,6 +150,10 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     const getLocalProfile = (userId: number) => {
         const profiles = state.profiles;
         return profiles?.find(t => t.creatorUserId === userId);
+    }
+
+    const clearProfileState = () => {
+        dispatch(profileActions.clearProfileStateAction());
     }
 
     return (

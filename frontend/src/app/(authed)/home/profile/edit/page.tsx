@@ -10,9 +10,11 @@ import { useStoredFileActions } from "@/providers/storedFileProvider";
 import { AbpTokenProperies } from "@/utils";
 import { UploadOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from "antd";
-import { Button, Divider, Flex, Input, message, Typography, Upload } from "antd";
+import { Button, Divider, Flex, Input, message, Select, Tag, Typography, Upload, Form as AntdForm } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import useStyles from "./style";
+import { Formik } from "formik";
+import { IExecutorCategory } from "@/providers/categoryProvider/context";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -24,10 +26,10 @@ const Page = (): React.ReactNode => {
     const { postProfile, getMyProfile } = useProfileActions();
     const { profile } = useProfileState();
     const { uploadProfilePicture } = useStoredFileActions();
-    const { portfoliosWithStoredFiles } = usePortfolioState();
+    const { isSuccess: portfolioSuccess, portfoliosWithStoredFiles } = usePortfolioState();
     const { upload, getMyPortfolio } = usePortfolioActions();
     const { categories, myExecutorCategories } = useCategoriesState();
-    const { getMyCategories } = useCategoryActions();
+    const { postMyCategories, getMyCategories, deleteExecutorCategory } = useCategoryActions();
 
     const { styles, cx } = useStyles();
     const [messageApi, contextHolder] = message.useMessage();
@@ -108,6 +110,13 @@ const Page = (): React.ReactNode => {
         return <ClientProfileView />;
     }
 
+    const readCategory = (categoryId: string) => {
+        return categories?.find((category) => category.id === categoryId);
+    }
+    const isSelected = (categoryId: string) => {
+        return myExecutorCategories?.findIndex((ec) => ec.categoryId === categoryId) !== -1;
+    }
+
     return (
         <section
             className="page"
@@ -115,7 +124,64 @@ const Page = (): React.ReactNode => {
             {contextHolder}
             <Title level={2}>Profile</Title>
             <Flex gap={100}>
-                <ClientProfileView />
+                <div>
+                    <ClientProfileView />
+                    <Divider>Categories</Divider>
+                    <div>
+                        {myExecutorCategories?.map((ec, i) => (
+                            <Tag key={i} closable onClose={
+                                () => {
+                                    deleteExecutorCategory(ec.id || "");
+                                }
+                            }>
+                                {readCategory(ec.categoryId)?.title}
+                            </Tag>
+                        ))}
+                    </div>
+                    <Formik
+                        initialValues={{
+                            executorCategory: [
+                                ...categories?.filter((category) => isSelected(category.id || "")).map((category) => category.id) || []
+                            ]
+                        }}
+                        onSubmit={(values) => {
+                            console.log(values);
+                        }}
+                    >
+                        {({ setFieldValue }) => (
+                            <AntdForm title="select-category" onFinish={(values) => {
+                                console.log("onFinish")
+                                const _categories: IExecutorCategory[] = values.executorCategory.map((categoryId: string) => {
+                                    return {
+                                        executorId: profile?.id || "",
+                                        categoryId: categoryId
+                                    }
+                                });
+                                console.log(_categories);
+                                postMyCategories({
+                                    executorCategories: _categories
+                                });
+                                setFieldValue('executorCategory', []);
+                            }}>
+                                <AntdForm.Item name="executorCategory">
+                                    <Select
+                                        onChange={(value) => setFieldValue('executorCategory', value)}
+                                        mode="multiple"
+                                        options={categories?.map((category, i) => ({
+                                            label: `${i + 1}. ${category.title}`,
+                                            value: category.id,
+                                            disabled: isSelected(category.id || "")
+                                        }))}
+                                    >
+                                    </Select>
+                                </AntdForm.Item>
+                                <Button type="primary" htmlType="submit">
+                                    Save
+                                </Button>
+                            </AntdForm>
+                        )}
+                    </Formik>
+                </div>
                 <article
                     className={cx(styles["demo-container"])}
                 >

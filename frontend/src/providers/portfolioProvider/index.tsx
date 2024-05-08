@@ -16,6 +16,7 @@ import {
 } from './actions';
 import { IPortfolio, PortfolioActionContext, PortfolioStateContext, PortfolioStateContext_Default } from './context';
 import portfolioReducer from './reducer';
+import { clearProfileStateAction } from '../profileProvider/actions';
 
 const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.ReactNode => {
     const [state, dispatch] = useReducer(portfolioReducer, PortfolioStateContext_Default);
@@ -33,6 +34,13 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
             instance = getAxiosInstace(accessToken);
         }
     }, []);
+
+
+    useEffect(() => {
+        if (!loginObj) {
+            clearPortfolioState();
+        }
+    }, [loginObj]);
 
     const getPortfolio = (id: string) => {
         const endpoint = 'api/services/app/Portfolio/Get';
@@ -177,6 +185,9 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
             .catch(err =>
                 dispatch(putPortfolioErrorAction())
             );
+    }
+    const clearPortfolioState = () => {
+        dispatch(clearProfileStateAction());
     }
 
     return (

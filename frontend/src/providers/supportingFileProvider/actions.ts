@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-import { ISupportingFile, ISupportingFileWithStoredFile } from './context';
+import { ISupportingFile, ISupportingFileWithStoredFile, SupportingFileStateContext_Default } from './context';
 
 export const SupportingFileActionEnums = {
     GetSupportingFileRequest: 'GET_SUPPORTING_FILE_REQUEST',
@@ -29,6 +29,8 @@ export const SupportingFileActionEnums = {
     PostSupportingFilesRequest: 'POST_SUPPORTING_FILES_REQUEST',
     PostSupportingFilesSuccess: 'POST_SUPPORTING_FILES_SUCCESS',
     PostSupportingFilesError: 'POST_SUPPORTING_FILES_ERROR',
+
+    ClearSupportingFileState: 'CLEAR_SUPPORTING_FILE_STATE'
 };
 
 export const getSupportingFileRequestAction = createAction(
@@ -120,4 +122,9 @@ export const deleteSupportingFileSuccessAction = createAction(
 export const deleteSupportingFileErrorAction = createAction(
     SupportingFileActionEnums.DeleteSupportingFileError,
     () => ({ isSuccess: false, isPending: false, isError: true, supportingFile: undefined })
+);
+
+export const clearSupportingFileStateAction = createAction(
+    SupportingFileActionEnums.ClearSupportingFileState,
+    () => (SupportingFileStateContext_Default)
 );

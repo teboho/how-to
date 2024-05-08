@@ -1,7 +1,7 @@
 "use client";
 import { getAxiosInstace } from "@/utils";
 import { message } from "antd";
-import React, { useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
 import * as paymentActions from "./actions";
 import { IPayment, PaymentActionsContext, PaymentStateContext, PaymentStateContext_Default } from "./context";
@@ -11,6 +11,13 @@ const PaymentProvider = ({ children }: { children: React.ReactNode }) => {
     const [messageApi, contextHolder] = message.useMessage();
     const { loginObj } = useAuthState();
     const [state, dispatch] = useReducer(paymentReducer, PaymentStateContext_Default);
+
+
+    useEffect(() => {
+        if (!loginObj) {
+            clearPaymentState();
+        }
+    }, [loginObj]);
 
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
@@ -96,6 +103,9 @@ const PaymentProvider = ({ children }: { children: React.ReactNode }) => {
             .catch(err =>
                 dispatch(paymentActions.getPaymentsErrorAction())
             );
+    }
+    const clearPaymentState = () => {
+        dispatch(paymentActions.clearPaymentStateAction());
     }
 
     return (

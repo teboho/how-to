@@ -12,6 +12,13 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const { loginObj } = useAuthState();
     const [state, dispatch] = useReducer(chatReducer, ChatStateContext_Default);
 
+
+    useEffect(() => {
+        if (!loginObj) {
+            clearChatState();
+        }
+    }, [loginObj]);
+
     useEffect(() => {
         if (loginObj && (!state.chats || state.chats.length)) {
             getChats();
@@ -168,6 +175,10 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
             return chats.find(t => t.id === id);
         }
         return undefined;
+    }
+
+    const clearChatState = () => {
+        dispatch(chatActions.clearChatStateAction());
     }
 
     return (

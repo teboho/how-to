@@ -72,6 +72,10 @@ const reviewReducer = handleActions(
         },
         [ReviewActionEnums.GetMyReviewsError]: (state, action) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, myReviews: undefined };
+        },
+
+        [ReviewActionEnums.ClearReviewState]: (state) => {
+            return { ...ReviewStateContext_Default };
         }
     },
     ReviewStateContext_Default

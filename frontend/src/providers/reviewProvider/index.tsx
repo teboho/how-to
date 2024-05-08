@@ -24,6 +24,13 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, [loginObj]);
 
+
+    useEffect(() => {
+        if (!loginObj) {
+            clearReviewState();
+        }
+    }, [loginObj]);
+
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
         if (accessToken) {
@@ -36,6 +43,21 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
     const getReview = (id: string) => {
         dispatch(reviewActions.getReviewRequestAction());
         const endpoint = "api/services/app/Review/Get?id=" + id;
+        instance.get(endpoint)
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(reviewActions.getReviewSuccessAction(response.data.result))
+                } else {
+                    dispatch(reviewActions.getReviewErrorAction())
+                }
+            })
+            .catch(err =>
+                dispatch(reviewActions.getReviewErrorAction())
+            );
+    }
+    const getReviewByTaskId = (taskId: string) => {
+        dispatch(reviewActions.getReviewRequestAction());
+        const endpoint = "api/services/app/Review/GetReviewByTask?taskId=" + taskId;
         instance.get(endpoint)
             .then(response => {
                 if (response.status > 199 && response.status < 300) {
@@ -124,6 +146,9 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
                 dispatch(reviewActions.getReviewsErrorAction())
             );
     }
+    const clearReviewState = () => {
+        dispatch(reviewActions.clearReviewStateAction());
+    }
 
     const getLocalReview = (id?: string) => state.reviews?.find(r => r.id === id);
 
@@ -136,7 +161,8 @@ const ReviewProvider = ({ children }: { children: React.ReactNode }) => {
                 deleteReview,
                 getReviews,
                 getMyReviews,
-                getLocalReview
+                getLocalReview,
+                getReviewByTaskId
             }}>
                 {contextHolder}
                 {children}

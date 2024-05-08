@@ -4,6 +4,7 @@ import { Avatar, Card, Divider, Flex, Layout, Rate, Tag, Typography } from 'antd
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import useStyles from './style';
+import Image from 'next/image';
 
 const { Sider, Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -37,11 +38,6 @@ const Page = () => {
 
     return (
         <Layout className={cx(styles.layout)}>
-            {/* <Header className={cx(styles.header)}>
-                <Title level={2}>Public Profile</Title>
-                {username && <p>Username: {searchParams.get('username')}</p>}
-                {profileId && <p>Profile ID: {searchParams.get('profileId')}</p>}
-            </Header> */}
             <Sider className={cx(styles.sider)} theme='light' width={"65%"}>
                 <Flex vertical={true} align='' justify=''>
                     <Avatar size={128} src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
@@ -62,8 +58,7 @@ const Page = () => {
                             {portfolioImageCard()}
                             {portfolioImageCard()}
                         </Flex>
-                        <Title level={3}>Documents</Title>
-
+                        {/* <Title level={3}>Documents</Title> */}
                     </div>
                 </Flex>
             </Sider>

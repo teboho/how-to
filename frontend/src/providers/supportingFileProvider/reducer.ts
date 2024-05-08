@@ -53,7 +53,7 @@ const supportingFileReducer = handleActions(
             if (!supportingFiles) { 
                 supportingFiles = [];
             }
-            if (supportingFile) supportingFiles.push(supportingFile);
+            if (supportingFile) supportingFiles = [...supportingFiles, supportingFile];
             return {
                 ...state,
                 ...action.payload,
@@ -103,6 +103,11 @@ const supportingFileReducer = handleActions(
             ...state,
             ...action.payload
         }),
+
+        [SupportingFileActionEnums.ClearSupportingFileState]: (state, action) => ({
+            ...state,
+            ...action.payload
+        })
     },
     SupportingFileStateContext_Default
 );

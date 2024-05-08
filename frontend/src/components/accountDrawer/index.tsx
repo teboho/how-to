@@ -7,6 +7,7 @@ import { Avatar, Button, Drawer, DrawerProps, Flex } from 'antd';
 import React, { useMemo } from 'react';
 import useStyles from "./style";
 import { useRouter } from 'next/navigation';
+import Image from "next/image";
 
 export interface IAccountDrawerProps {
     fullname: string;
@@ -53,7 +54,7 @@ const AccountDrawer = ({
                 <Flex vertical justify="center" align="center">
                     <div>
                         {
-                            profilePicId ? <img src={`${encodeURI(`https://localhost:44311/GetStoredFile/${profilePicId}`)}`} width={64} height={64} alt="profile" />
+                            profilePicId ? <Image src={`${encodeURI(`https://localhost:44311/GetStoredFile/${profilePicId}`)}`} width={64} height={64} alt="profile" />
                                 :
                                 <Avatar src={profilePicId && `/GetStoredFile/${profilePicId}`} size={64} icon={<UserOutlined />} />
                         }

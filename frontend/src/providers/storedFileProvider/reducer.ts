@@ -93,6 +93,10 @@ const storedFileReducer = handleActions(
         [StoredFileActionEnums.GetBridgeByUserError]: (state, action) => ({
             ...state,
             ...action.payload
+        }),
+
+        [StoredFileActionEnums.ClearStoredFileState]: (state, action) => ({
+            ...StoredFileStateContext_InitState
         })
     },
     StoredFileStateContext_InitState
