@@ -53,7 +53,7 @@ const Page = () => {
                         overflowY: 'scroll',
                     }}>
                         <Title level={3}>Pictures</Title>
-                        <Flex wrap={true} align='center' justify='center' gap={20}>
+                        <Flex wrap={"wrap"} align='center' justify='center' gap={20}>
                             {portfolioImageCard()}
                             {portfolioImageCard()}
                             {portfolioImageCard()}
