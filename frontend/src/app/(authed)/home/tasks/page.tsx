@@ -1,42 +1,67 @@
 "use client";
+import TaskCategories from "@/components/taskCategories";
 import { useAuthState } from "@/providers/authProvider";
-import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
-import { useProfileActions, useProfileState } from "@/providers/profileProvider";
-import { Avatar, Button, Card, Divider, Flex, Input, Layout, Typography, Select } from "antd";
-import { EditOutlined, EllipsisOutlined, SettingOutlined, SearchOutlined } from '@ant-design/icons';
-import React, { useEffect } from "react";
-import useStyles from "./style.ts";
-import { Field, Form, Formik } from "formik";
 import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
+import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
+import { useTaskActions, useTaskState } from "@/providers/taskProvider";
+import { ITask } from "@/providers/taskProvider/context.js";
+import { EyeOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Divider, Flex, Input, Layout, Select, Tag, Typography } from "antd";
+import { Field, Form, Formik } from "formik";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useEffect, useMemo } from "react";
+import useStyles from "./style.ts";
 
 const { Meta } = Card;
 const { Sider, Content } = Layout;
 const { Title } = Typography;
 
+const pickStatus = (status: number): React.ReactNode => {
+    switch (status) {
+        case 0:
+            return <Tag color="blue">NEW</Tag>;
+        case 1:
+            return <Tag color="orange">ASSIGNED</Tag>;
+        case 2:
+            return <Tag color="green">DONE</Tag>;
+    }
+}
+
 const Page = () => {
     const { loginObj } = useAuthState();
     const { getPortfolios } = usePortfolioActions();
     const { portfoliosWithStoredFiles } = usePortfolioState();
-    const { } = useProfileActions();
-    const { } = useProfileState();
-    const { getCategories, getExecutorCategories } = useCategoryActions();
-    const { categories, executorCategories } = useCategoriesState();
+    const { getTasks } = useTaskActions();
+    const { tasks } = useTaskState();
+    const { getCategories, getExecutorCategories, getTaskCategories, getLocalCategory, getLocalTaskCategories } = useCategoryActions();
+    const { categories, executorCategories, taskCategories } = useCategoriesState();
     const { cx, styles } = useStyles();
 
     useEffect(() => {
         if (!categories) {
             getCategories();
         }
-        if (executorCategories) {
+        if (!executorCategories) {
             getExecutorCategories();
+        }
+        if (!tasks) {
+            getTasks();
+        }
+        if (!taskCategories) {
+            getTaskCategories();
         }
     }, []);
 
-    let cards = [];
-    for (let i = 0; i < 50; i++) {
-        cards.push(
+
+    const handleFilter = () => {
+
+    }
+
+    let _tasks = useMemo(() => {
+        return tasks?.map((task: ITask, index: number) => (
             <Card
-                key={`card__${i}`}
+                key={`task_card__${index}`}
                 style={{ width: 300 }}
                 cover={
                     <img
@@ -45,19 +70,32 @@ const Page = () => {
                     />
                 }
                 actions={[
-                    <SettingOutlined key="setting" />,
-                    <EditOutlined key="edit" />,
-                    <EllipsisOutlined key="ellipsis" />,
+                    <Link href={`/home/view-task?id=${task.id}`}>
+                        <EyeOutlined key="view_task" />
+                    </Link>,
+                    // <EditOutlined key="edit" />,
+                    // <EllipsisOutlined key="ellipsis" />, // popover for description
                 ]}
             >
                 <Meta
-                    avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
-                    title="Card title"
-                    description="This is the description"
+                    // avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
+                    title={task.title}
+                    description={
+                        <>
+                            {pickStatus(task.status)}
+                            <br />
+                            {
+                                new Date(task?.creationTime || "").toLocaleString('en-ZA', { timeZone: 'UTC' })
+                            }
+                            <br />
+                            <TaskCategories taskId={task?.id} />
+                        </>
+                    }
                 />
+                <TaskCategories taskId={task?.id} /><TaskCategories taskId={task?.id} />
             </Card>
-        );
-    }
+        ));
+    }, [tasks])
 
     return (
         <div className="height-full">
@@ -103,7 +141,8 @@ const Page = () => {
                             <Form onSubmit={handleSubmit}>
                                 <Field
                                     name="_categories"
-                                    render={({ field }: { field: any }) => (
+                                >
+                                    {({ field }: { field: any }) => (
                                         <Select
                                             mode="multiple"
                                             style={{ width: '100%' }}
@@ -120,14 +159,14 @@ const Page = () => {
                                             })}
                                         />
                                     )}
-                                />
+                                </Field>
                             </Form>
                         )}
                     </Formik>
                 </Sider>
                 <Content className={cx(styles.content)}>
                     <Flex gap={20} wrap="wrap" align="center" justify="center">
-                        {cards}
+                        {_tasks}
                     </Flex>
                 </Content>
             </Layout>

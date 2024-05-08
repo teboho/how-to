@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using Boxfusion.HowTo.Authorization.Users;
+using Abp.Authorization.Users;
+using Boxfusion.HowTo.Authorization.Roles;
 
 namespace Boxfusion.HowTo.Services.PortfolioAppService
 {
@@ -19,6 +22,8 @@ namespace Boxfusion.HowTo.Services.PortfolioAppService
         IRepository<Domain.Portfolio, Guid> _repository;
         IRepository<Domain.StoredFile, Guid> _storedFileRepository;
         IRepository<Domain.Profile, Guid> _profileFileRepository;
+        IRepository<User, long> _userRepository;
+        IRepository<Role> _roleRepository;
         IMapper _mapper;
 
         private readonly string BASE_FILE_PATH = "App_Data/Images";
@@ -30,11 +35,15 @@ namespace Boxfusion.HowTo.Services.PortfolioAppService
         public PortfolioAppService(IRepository<Domain.Portfolio, Guid> repository, 
             IRepository<Domain.StoredFile, Guid> storedFileRepository,
             IRepository<Domain.Profile, Guid> profileFileRepository,
+            IRepository<User, long>  userRepository,
+            IRepository<Role> roleRepository,
             IMapper mapper) : base(repository)
         {
             _repository = repository;
             _storedFileRepository = storedFileRepository;
             _profileFileRepository = profileFileRepository;
+            _userRepository = userRepository;
+            _roleRepository = roleRepository;
             _mapper = mapper;
         }
 
@@ -114,7 +123,7 @@ namespace Boxfusion.HowTo.Services.PortfolioAppService
                 await CurrentUnitOfWork.SaveChangesAsync();
             }
             return profile;
-        }
+        }       
 
         [HttpGet]
         public async Task<List<Domain.Portfolio>> GetMyPortfolio()
@@ -123,6 +132,13 @@ namespace Boxfusion.HowTo.Services.PortfolioAppService
             var profile = await GetProfile(userId);
             var portfolio = await _repository.GetAllIncluding(p => p.StoredFileModel).Where(x => x.ProfileId == profile.Id).ToListAsync();
             return _mapper.Map<List<Domain.Portfolio>>(portfolio);
-        }   
+        }
+
+        [HttpGet]
+        public async Task<List<Domain.Portfolio>> GetAllPortfolios()
+        {
+            var portfolio = await _repository.GetAllIncluding(p => p.StoredFileModel).ToListAsync();
+            return _mapper.Map<List<Domain.Portfolio>>(portfolio);
+        }
     }
 }

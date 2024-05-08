@@ -7,6 +7,7 @@ import type { FormProps } from "antd";
 import { Button, Flex, Form, Input, Select, Typography } from "antd";
 import Link from "next/link";
 import useStyles from "./style/style";
+import Image from "next/image";
 
 const { Paragraph } = Typography;
 
@@ -25,7 +26,6 @@ type FieldType = {
   role: Role;
 }
 
-
 const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
   console.log('Failed:', errorInfo);
 }
@@ -33,7 +33,7 @@ const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
 export default function Register() {
   const { cx, styles } = useStyles();
   const { register } = useAuthActions();
-  
+
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
     if (values.confirm !== values.password) {
       return alert("Confirm must match the password.");
@@ -51,9 +51,9 @@ export default function Register() {
     <Flex className={cx(styles["h-full"])}>
       <LeftSide />
       <div className={cx("half-box", "right")}>
-        <Flex vertical className={cx(styles["right-inner-flex"])}  align="center" justify="center">
-          <img height={50} src="/unDraw/undraw_join_re_w1lh.svg" alt="No tasks" />
-          
+        <Flex vertical className={cx(styles["right-inner-flex"])} align="center" justify="center">
+          <Image height={50} src="/unDraw/undraw_join_re_w1lh.svg" alt="No tasks" />
+
           <Paragraph className={cx(styles.para)}>Please enter your details to Register.</Paragraph>
 
           <Form
@@ -67,13 +67,13 @@ export default function Register() {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-          <Form.Item<FieldType>
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: 'Please input your name!' }]}
-          >
-            <Input size="large"/>
-          </Form.Item>
+            <Form.Item<FieldType>
+              label="Name"
+              name="name"
+              rules={[{ required: true, message: 'Please input your name!' }]}
+            >
+              <Input size="large" />
+            </Form.Item>
             <Form.Item<FieldType>
               label="Surname"
               name="surname"
@@ -110,9 +110,9 @@ export default function Register() {
             <Form.Item<FieldType>
               label="Role"
               name="role"
-              rules={[{ required: true, message: "Please pick one of the possible roles provided!" }]} 
+              rules={[{ required: true, message: "Please pick one of the possible roles provided!" }]}
             >
-              <Select 
+              <Select
                 size="large"
                 placeholder="Select role"
                 placement="topRight"
@@ -129,7 +129,7 @@ export default function Register() {
               />
             </Form.Item>
 
-            <Form.Item>          
+            <Form.Item>
               <Flex align="center" justify="space-between" vertical>
                 <Button className={cx(styles.button)} htmlType="submit" size="large">
                   Register

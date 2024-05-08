@@ -14,4 +14,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Boxfusion.HowTo.Core\Boxfusion.HowTo.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\CommunicationAppService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
+  </ItemGroup>
 </Project>

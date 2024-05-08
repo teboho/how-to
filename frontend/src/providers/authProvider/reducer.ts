@@ -17,6 +17,10 @@ const authReducer = handleActions<IAuthStateContext, any>(
         [AuthActionEnums.GetUserSuccess]: (state, action) => ({ ...state, ...action.payload }),
         [AuthActionEnums.GetUserError]: (state, action) => ({ ...state, ...action.payload }),
 
+        [AuthActionEnums.GetAllUsersRequest]: (state, action) => ({ ...state, ...action.payload }),
+        [AuthActionEnums.GetAllUsersSuccess]: (state, action) => ({ ...state, ...action.payload }),
+        [AuthActionEnums.GetAllUsersError]: (state, action) => ({ ...state, ...action.payload }),
+
         [AuthActionEnums.Logout]: () => ({ ...AuthStateContextInitial }),
         [AuthActionEnums.SaveTokens]: (state, action) => ({ 
             ...state, 

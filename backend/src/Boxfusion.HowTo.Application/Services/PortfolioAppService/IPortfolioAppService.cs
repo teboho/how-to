@@ -13,5 +13,7 @@ namespace Boxfusion.HowTo.Services.PortfolioAppService
     {
         // we should be able to handle file uploads for multiple file types and files in one request
         Task<List<PortfolioDto>> UploadFilesAsync(IFormFileCollection Files);
+        Task<List<Domain.Portfolio>> GetMyPortfolio();
+
     }
 }

@@ -1,5 +1,4 @@
 "use client";
-
 import { getAxiosInstace } from "@/utils";
 import { message } from "antd";
 import React, { useEffect, useMemo, useReducer } from "react";
@@ -13,6 +12,18 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
     const { loginObj } = useAuthState();
     const [state, dispatch] = useReducer(categoryReducer, CategoriesStateContext_Default);
 
+    useEffect(() => {
+        if (!loginObj && localStorage.getItem("accessToken") === null) {
+            clearState();
+        }
+    }, [loginObj]);
+
+    useEffect(() => {
+        if (loginObj?.accessToken && !state.categories) {
+            getCategories();
+        }
+    }, []);
+
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
         if (accessToken) {
@@ -23,7 +34,7 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
     }, [loginObj]);
 
     useEffect(() => {
-        if (loginObj?.accessToken) {
+        if (loginObj?.accessToken && !state.categories) {
             getCategories();
         }
     }, [loginObj?.accessToken]);
@@ -79,7 +90,6 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
         const endpoint = "api/services/app/Category/GetAll";
         instance.get(endpoint)
             .then(response => {
-                console.log(response);
                 if (response.status > 199 && response.status < 300) {
                     dispatch(categoryActions.getCategoriesSuccessAction(response.data.result.items))
                 } else {
@@ -143,7 +153,6 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
         const endpoint = "api/services/app/TaskCategory/GetAll";
         instance.get(endpoint)
             .then(response => {
-                console.log(response);
                 if (response.status > 199 && response.status < 300) {
                     dispatch(categoryActions.getTaskCategoriesSuccessAction(response.data.result.items))
                 } else {
@@ -181,7 +190,6 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
         const endpoint = "api/services/app/ExecutorCategory/GetAll";
         instance.get(endpoint)
             .then(response => {
-                console.log(response);
                 if (response.status > 199 && response.status < 300) {
                     dispatch(categoryActions.getExecutorCategoriesSuccessAction(response.data.result.items))
                 } else {
@@ -212,6 +220,25 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
         const newExecutorCategories = state.executorCategories ? [...state.executorCategories, executorCategory] : [executorCategory];
         dispatch(categoryActions.getExecutorCategoriesSuccessAction(newExecutorCategories));
     }
+    const getLocalCategory = (id?: string) => {
+        if (!id) return;
+        const tasks = state.categories;
+        return tasks?.find(t => t.id === id);
+    }
+    const getLocalTaskCategories = (id?: string) => {
+        if (!id) return;
+        const bridges = state.taskCategories;
+        return bridges?.filter(task => task.taskId === id);
+    }
+    const getLocalExecutorCategories = (id?: string) => {
+        if (!id) return;
+        const bridges = state.executorCategories;
+        return bridges?.filter(task => task.executorId === id);
+    }
+
+    const clearState = () => {
+        dispatch(categoryActions.clearCategoryStateAction());
+    }
 
     return (
         <CategoriesStateContext.Provider value={{ ...state }}>
@@ -226,7 +253,10 @@ const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
                 postExecutorCategory,
                 getExecutorCategories,
                 postMyCategories,
-                deleteExecutorCategory
+                deleteExecutorCategory,
+                getLocalCategory,
+                getLocalTaskCategories,
+                getLocalExecutorCategories,
             }}>
                 {contextHolder}
                 {children}

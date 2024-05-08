@@ -53,3 +53,13 @@ html, body {
     height: 100%;
     background: #E5E3D2;
 }
+.ant-menu-item {
+    font-size: 25px;
+    padding: 35px !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.199);
+    border-radius: 0% !important;
+    letter-spacing: 1px;
+}
+.ant-menu-item-selected {
+  background-color: #3d3c37 !important; 
+}

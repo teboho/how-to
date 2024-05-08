@@ -1,8 +1,9 @@
-"use client";
+'use client';
 import { usePortfolioState } from "@/providers/portfolioProvider";
 import { IPortfolioWithStoredFile } from "@/providers/portfolioProvider/context";
 import { Col, Row } from "antd";
 import useStyles from "./style";
+import Image from "next/image";
 
 const imageUrlPre = process.env.NEXT_PUBLIC_API_IMAGE_URL_PRE;
 
@@ -18,7 +19,7 @@ const Portfolios = ({
         <Row gutter={18}>
             {portfolioSuccess && portfoliosWithStoredFiles?.map((portfolio: IPortfolioWithStoredFile, index: number) => (
                 portfolio.storedFileModel.fileType.startsWith("image") && (
-                    <Col key={index} span={6}>
+                    <Col key={index} span={10}>
                         <img className={styles['demo-pic']} alt="demo-pic" src={`${imageUrlPre}${portfolio.storedFileId}`} />
                     </Col>
                 )

@@ -94,6 +94,10 @@ const portfolioReducer = handleActions(
             ...state,
             ...action.payload
         }),
+
+        [PortfolioActionEnums.ClearPortfolioState]: (state, action) => ({
+            ...PortfolioStateContext_Default
+        })
     },
     PortfolioStateContext_Default
 );

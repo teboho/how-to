@@ -1,5 +1,4 @@
 "use client";
-
 import { getAxiosInstace } from "@/utils";
 import { message } from "antd";
 import React, { useEffect, useMemo, useReducer } from "react";
@@ -15,13 +14,19 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(taskReducer, TaskStateContext_Default);
 
     useEffect(() => {
-        if (loginObj) {
+        if (!loginObj) {
             getTasks();
         }
     }, []);
 
     useEffect(() => {
-        if (loginObj) {
+        if (!loginObj) {
+            clearTaskState();
+        }
+    }, [loginObj]);
+
+    useEffect(() => {
+        if (!loginObj) {
             getTasks();
         }
     }, [loginObj]);
@@ -91,13 +96,16 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
                 if (response.status > 199 && response.status < 300) {
                     dispatch(taskActions.putTaskSuccessAction(response.data.result));
                     updateStateTask(response.data.result);
+                    messageApi.success("Task updated successfully");
                 } else {
                     dispatch(taskActions.putTaskErrorAction())
+                    messageApi.error("Task update failed");
                 }
             })
-            .catch(err =>
+            .catch(err => {
                 dispatch(taskActions.putTaskErrorAction())
-            );
+                messageApi.error("Task update failed");
+            });
     }
     const deleteTask = (task: ITask) => {
         dispatch(taskActions.deleteTaskRequestAction());
@@ -202,6 +210,9 @@ const TaskProvider = ({ children }: { children: React.ReactNode }) => {
             return tasks.find(t => t.id === id);
         }
         return undefined;
+    }
+    const clearTaskState = () => {
+        dispatch(taskActions.clearTaskStateAction());
     }
 
     return (

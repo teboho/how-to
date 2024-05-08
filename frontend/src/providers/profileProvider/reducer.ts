@@ -52,6 +52,10 @@ const profileReducer = handleActions(
         },
         [ProfileActionEnums.GetProfilesError]: (state, action) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, profiles: undefined };
+        },
+
+        [ProfileActionEnums.ClearProfileState]: (state) => {
+            return { ...ProfileStateContext_Default };
         }
     },
     ProfileStateContext_Default

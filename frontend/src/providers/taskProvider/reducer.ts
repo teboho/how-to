@@ -52,6 +52,10 @@ const taskReducer = handleActions(
         },
         [TaskActionEnums.GetTasksError]: (state, action) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, tasks: undefined };
+        },
+
+        [TaskActionEnums.ClearTaskState]: (state) => {
+            return { ...TaskStateContext_Default };
         }
     },
     TaskStateContext_Default

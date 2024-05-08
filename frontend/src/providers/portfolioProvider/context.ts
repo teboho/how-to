@@ -36,9 +36,9 @@ export interface PortfolioStateContext {
 }
 
 export const PortfolioStateContext_Default: PortfolioStateContext = {
-    portfolios: [],
+    portfolios: undefined,
     portfolio: undefined,
-    portfoliosWithStoredFiles: [],
+    portfoliosWithStoredFiles: undefined,
     portfolioWithStoredFile: undefined,
     isError: false,
     isPending: false,
@@ -49,6 +49,7 @@ export interface PortfolioActionContext {
     getPortfolio: (id: string) => void;
     getPortfolios: () => void;
     getMyPortfolio: () => void;
+    getAllPortfolios: () => void;
     putPortfolio: (file: IPortfolio) => void;
     deletePortfolio: (id: string) => void;
     postPortfolio: (file: IPortfolio) => void;
@@ -59,6 +60,7 @@ export const PortfolioActionContext_Default: PortfolioActionContext = {
     getPortfolio: (id: string) => {},
     getPortfolios: () => {},
     getMyPortfolio: () => {},
+    getAllPortfolios: () => {},
     putPortfolio: (file: IPortfolio) => {},
     deletePortfolio: (id: string) => {},
     postPortfolio: (file: IPortfolio) => {},

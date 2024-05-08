@@ -16,6 +16,7 @@ import {
 } from './actions';
 import { IPortfolio, PortfolioActionContext, PortfolioStateContext, PortfolioStateContext_Default } from './context';
 import portfolioReducer from './reducer';
+import { clearProfileStateAction } from '../profileProvider/actions';
 
 const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.ReactNode => {
     const [state, dispatch] = useReducer(portfolioReducer, PortfolioStateContext_Default);
@@ -30,10 +31,16 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
 
     useEffect(() => {
         if (accessToken) {
-            console.log("found the accesss token", accessToken);
             instance = getAxiosInstace(accessToken);
         }
     }, []);
+
+
+    useEffect(() => {
+        if (!loginObj) {
+            clearPortfolioState();
+        }
+    }, [loginObj]);
 
     const getPortfolio = (id: string) => {
         const endpoint = 'api/services/app/Portfolio/Get';
@@ -69,6 +76,22 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
     };
     const getMyPortfolio = () => {
         const endpoint = 'api/services/app/Portfolio/GetMyPortfolio';
+        dispatch(getPortfoliosWithStoredFilesRequestAction());
+        instance.get(endpoint)
+            .then(res => {
+                const data = res.data;
+                if (data.success) {
+                    dispatch(getPortfoliosWithStoredFilesSuccessAction(data.result));
+                } else {
+                    dispatch(getPortfoliosWithStoredFilesErrorAction());
+                }
+            })
+            .catch(err =>
+                dispatch(getPortfoliosWithStoredFilesErrorAction())
+            );
+    };
+    const getAllPortfolios = () => {
+        const endpoint = 'api/services/app/Portfolio/GetAllPortfolios';
         dispatch(getPortfoliosWithStoredFilesRequestAction());
         instance.get(endpoint)
             .then(res => {
@@ -163,6 +186,9 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
                 dispatch(putPortfolioErrorAction())
             );
     }
+    const clearPortfolioState = () => {
+        dispatch(clearProfileStateAction());
+    }
 
     return (
         <PortfolioStateContext.Provider value={state}>
@@ -174,6 +200,7 @@ const PortfolioProvider = ({ children }: { children: React.ReactNode }): React.R
                 deletePortfolio,
                 postPortfolio,
                 upload,
+                getAllPortfolios
             }}>
                 {children}
             </PortfolioActionContext.Provider>

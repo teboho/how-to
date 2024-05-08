@@ -1,64 +1,97 @@
 "use client";
-import { useAuthState } from "@/providers/authProvider";
+import { useAuthActions, useAuthState } from "@/providers/authProvider";
+import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
 import { usePortfolioActions, usePortfolioState } from "@/providers/portfolioProvider";
 import { useProfileActions, useProfileState } from "@/providers/profileProvider";
-import { Avatar, Button, Card, Divider, Flex, Input, Layout, Typography, Select } from "antd";
-import { EditOutlined, EllipsisOutlined, SettingOutlined, SearchOutlined } from '@ant-design/icons';
-import React, { useEffect } from "react";
-import useStyles from "./style.ts";
+import { EditOutlined, EllipsisOutlined, MessageOutlined, SearchOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Divider, Flex, Input, Layout, Rate, Select, Tag, Typography } from "antd";
 import { Field, Form, Formik } from "formik";
-import { useCategoriesState, useCategoryActions } from "@/providers/categoryProvider";
+import { useEffect, useState } from "react";
+import useStyles from "./style";
+import Link from "next/link";
+import Image from "next/image";
 
 const { Meta } = Card;
 const { Sider, Content } = Layout;
 const { Title } = Typography;
-const { Search } = Input;
+
+const img_base = process.env.NEXT_PUBLIC_API_IMAGE_URL_PRE;
 
 const Page = () => {
-    const { loginObj } = useAuthState();
-    const { getPortfolios } = usePortfolioActions();
-    const { portfoliosWithStoredFiles } = usePortfolioState();
-    const { } = useProfileActions();
-    const { } = useProfileState();
-    const { getCategories, getExecutorCategories } = useCategoryActions();
+    const { users } = useAuthState();
+    const { getAllUsers } = useAuthActions();
+    const { getPortfolios, getAllPortfolios } = usePortfolioActions();
+    const { portfolios } = usePortfolioState();
+    const { getProfiles, getLocalProfile } = useProfileActions();
+    const { profiles } = useProfileState();
+    const { getCategories, getExecutorCategories, getLocalExecutorCategories } = useCategoryActions();
     const { categories, executorCategories } = useCategoriesState();
     const { cx, styles } = useStyles();
+    const [_users, setUsers] = useState([]);
 
     useEffect(() => {
         if (!categories) {
             getCategories();
         }
-        if (executorCategories) {
+        if (!executorCategories) {
             getExecutorCategories();
+        }
+        if (!portfolios) {
+            getPortfolios();
+            getAllPortfolios();
+        }
+        if (!users) {
+            getAllUsers();
+        }
+        if (!profiles) {
+            getProfiles();
         }
     }, []);
 
-    let cards = [];
-    for (let i = 0; i < 50; i++) {
-        cards.push(
+    const readCategory = (id: string) => {
+        return categories?.find(c => c.id === id);
+    }
+
+    const temp = users?.filter(u => u.roleNames?.includes("EXECUTOR")).map((u, i) => {
+        const p = getLocalProfile(u.id);
+        const profileLink = p ? (p?.username ? `/home/profile?username=${p?.username}` : `/home/profile?profileId=${p.id}`) : "";
+        return (
             <Card
-                key={`card__${i}`}
+                key={`usercard__${i}`}
                 style={{ width: 300 }}
                 cover={
                     <img
                         alt="example"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        src="/unDraw/covers/undraw_add_tasks_re_s5yj.svg"
                     />
                 }
                 actions={[
-                    <SettingOutlined key="setting" />,
-                    <EditOutlined key="edit" />,
-                    <EllipsisOutlined key="ellipsis" />,
+                    // <MessageOutlined key="chat" />,
+                    p ? (<Link href={profileLink}>
+                        <EyeOutlined key="view_executor_profile" title="View profile" />
+                    </Link>) : <EyeInvisibleOutlined key="view_executor_profile" title="This user does not yet have a profile" />,
+                    // <EllipsisOutlined key="ellipsis" />,
                 ]}
             >
                 <Meta
-                    avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
-                    title="Card title"
-                    description="This is the description"
+                    avatar={<Avatar alt="ddd" src={`${img_base}${p?.storedFileId || "a9dd968a-daa8-4564-86ce-08dc6da6959e"}`} />}
+                    title={u.fullName}
+                    description={
+                        <>
+                            Avg. Rating
+                            <Rate defaultValue={3} style={{ color: "green" }} />
+                            {getLocalExecutorCategories(p?.id || "")?.map((ec, i) => (
+                                <Tag key={"tag_${i}"}>
+                                    {readCategory(ec.categoryId)?.title}
+                                </Tag>
+                            ))}
+
+                        </>
+                    }
                 />
             </Card>
-        );
-    }
+        )
+    });
 
     return (
         <div className="height-full">
@@ -74,6 +107,14 @@ const Page = () => {
                         onSubmit={(values, actions) => {
                             console.log(values);
                             actions.setSubmitting(false);
+
+                            const search = values.search;
+                            const results = users?.filter(u => u.name.toLowerCase().includes(search.toLowerCase())
+                                || u.emailAddress.toLowerCase().includes(search.toLowerCase())
+                                || u.surname.toLowerCase().includes(search.toLowerCase())
+                                || u.userName.toLowerCase().includes(search.toLowerCase()));
+
+                            // setUsers(results || []);
                         }}
                     >
                         {({ handleSubmit }) => (
@@ -83,7 +124,7 @@ const Page = () => {
                                     type="text"
                                     as={Input}
                                     suffix={
-                                        <Button type="primary" onClick={e => handleSubmit()}>
+                                        <Button type="primary" onClick={() => handleSubmit()}>
                                             <SearchOutlined />
                                         </Button>
                                     }
@@ -98,13 +139,17 @@ const Page = () => {
                         onSubmit={(values, actions) => {
                             console.log(values);
                             actions.setSubmitting(false);
+
+                            const _categories = values._categories;
+                            // const _executorCategories = executorCategories?.filter(ec => _categories.includes(values.));
                         }}
                     >
                         {({ handleSubmit }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Field 
+                                <Field
                                     name="_categories"
-                                    render={({ field }: { field: any}) => (
+                                >
+                                    {() => (
                                         <Select
                                             mode="multiple"
                                             style={{ width: '100%' }}
@@ -121,7 +166,7 @@ const Page = () => {
                                             })}
                                         />
                                     )}
-                                />
+                                </Field>
                             </Form>
                         )}
                     </Formik>
@@ -129,7 +174,9 @@ const Page = () => {
                 </Sider>
                 <Content className={cx(styles.content)}>
                     <Flex gap={20} wrap="wrap" align="center" justify="center">
-                        {cards}
+                        {
+                            temp
+                        }
                     </Flex>
                 </Content>
             </Layout>

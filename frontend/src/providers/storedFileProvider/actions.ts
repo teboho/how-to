@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-import { IStoredFile } from './context';
+import { IStoredFile, StoredFileStateContext_InitState } from './context';
 
 export const StoredFileActionEnums = {
     GetStoredFileRequest: 'GET_STORED_FILE_REQUEST',
@@ -28,7 +28,9 @@ export const StoredFileActionEnums = {
 
     GetBridgeByUserRequest: 'GET_BRIDGE_BY_USER_REQUEST',
     GetBridgeByUserSuccess: 'GET_BRIDGE_BY_USER_SUCCESS',
-    GetBridgeByUserError: 'GET_BRIDGE_BY_USER_ERROR'
+    GetBridgeByUserError: 'GET_BRIDGE_BY_USER_ERROR',
+
+    ClearStoredFileState: 'CLEAR_STORED_FILE_STATE'
 };
 
 export const getStoredFileRequestAction = createAction(
@@ -100,4 +102,9 @@ export const deleteStoredFileSuccessAction = createAction(
 export const deleteStoredFileErrorAction = createAction(
     StoredFileActionEnums.DeleteStoredFileError,
     () => ({ isSuccess: false, isPending: false, isError: true, storedFile: undefined })
+);
+
+export const clearStoredFileStateAction = createAction(
+    StoredFileActionEnums.ClearStoredFileState,
+    () => (StoredFileStateContext_InitState)
 );

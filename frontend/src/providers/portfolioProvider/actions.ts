@@ -29,6 +29,8 @@ export const PortfolioActionEnums = {
     PostPortfoliosRequest: 'POST_PORTFOLIOS_REQUEST',
     PostPortfoliosSuccess: 'POST_PORTFOLIOS_SUCCESS',
     PostPortfoliosError: 'POST_PORTFOLIOS_ERROR',
+
+    ClearPortfolioState: 'CLEAR_PORTFOLIO_STATE'
 };
 
 export const getPortfolioRequestAction = createAction(

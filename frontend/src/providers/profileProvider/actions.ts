@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { IProfile, IProfileStateContext } from "./context";
+import { IProfile, IProfileStateContext, ProfileStateContext_Default } from "./context";
 
 export const ProfileActionEnums = {
     GetProfileRequest: "GET_PROFILE_REQUEST",
@@ -20,7 +20,9 @@ export const ProfileActionEnums = {
 
     GetProfilesRequest: "GET_PROFILES_REQUEST",
     GetProfilesSuccess: "GET_PROFILES_SUCCESS",
-    GetProfilesError: "GET_PROFILES_ERROR"
+    GetProfilesError: "GET_PROFILES_ERROR",
+
+    ClearProfileState: "CLEAR_PROFILE_STATE"
 }
 
 export const getProfileRequestAction = createAction<IProfileStateContext>(
@@ -86,4 +88,9 @@ export const getProfilesSuccessAction = createAction<IProfileStateContext, IProf
 export const getProfilesErrorAction = createAction<IProfileStateContext>(
     ProfileActionEnums.GetProfilesError,
     () => ({ isPending: false, isSuccess: false, isError: true, profile: undefined })
+);
+
+export const clearProfileStateAction = createAction<IProfileStateContext>(
+    ProfileActionEnums.ClearProfileState,
+    () => ({ ...ProfileStateContext_Default })
 );

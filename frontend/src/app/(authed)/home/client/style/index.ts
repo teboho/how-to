@@ -3,11 +3,11 @@ import { createStyles } from 'antd-style';
 const useStyles = createStyles(({css, token}) => {
     return {
         box: css`
-            border: 1px solid #B64326;
             border-radius: 20px;
             height: fit-content;
             padding: 10px;
             margin: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         `,
         flex: css`
             height: 100%;

@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { ITask, ITaskStateContext } from "./context";
+import { ITask, ITaskStateContext, TaskStateContext_Default } from "./context";
 
 export const TaskActionEnums = {
     GetTaskRequest: "GET_TASK_REQUEST",
@@ -20,7 +20,9 @@ export const TaskActionEnums = {
 
     GetTasksRequest: "GET_TASKS_REQUEST",
     GetTasksSuccess: "GET_TASKS_SUCCESS",
-    GetTasksError: "GET_TASKS_ERROR"
+    GetTasksError: "GET_TASKS_ERROR",
+
+    ClearTaskState: "CLEAR_TASK_STATE"
 }
 
 export const getTaskRequestAction = createAction<ITaskStateContext>(
@@ -96,4 +98,9 @@ export const getTasksSuccessAction = createAction<ITaskStateContext, ITask[]>(
 export const getTasksErrorAction = createAction<ITaskStateContext>(
     TaskActionEnums.GetTasksError,
     () => ({ isPending: false, isSuccess: false, isError: true, task: undefined })
+);
+
+export const clearTaskStateAction = createAction<ITaskStateContext>(
+    TaskActionEnums.ClearTaskState,
+    () => (TaskStateContext_Default)
 );

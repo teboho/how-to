@@ -52,6 +52,10 @@ const offerReducer = handleActions(
         },
         [OfferActionEnums.GetOffersError]: (state, action) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, offers: undefined };
+        },
+
+        [OfferActionEnums.ClearOfferState]: (state) => {
+            return { ...OfferStateContext_Default };
         }
     },
     OfferStateContext_Default

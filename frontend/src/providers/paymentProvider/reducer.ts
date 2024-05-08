@@ -42,6 +42,10 @@ const paymentReducer = handleActions(
         },
         [PaymentActionEnums.GetPaymentsError]: (state, action) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, payments: undefined };
+        },
+
+        [PaymentActionEnums.ClearPaymentState]: (state) => {
+            return { ...PaymentStateContext_Default };
         }
     },
     PaymentStateContext_Default

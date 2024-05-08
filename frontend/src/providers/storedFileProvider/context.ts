@@ -40,6 +40,7 @@ export interface StoredFileActionContext_Actions {
     postStoredFile: (file: IStoredFile) => void;
     upload: (formData: FormData) => Promise<void>;
     uploadProfilePicture: (formData: FormData) => Promise<void>;
+    getLocal: (id: string) => IStoredFile | undefined;
 }
 
 export const StoredFileActionContext_DefaultActions: StoredFileActionContext_Actions = {
@@ -50,7 +51,8 @@ export const StoredFileActionContext_DefaultActions: StoredFileActionContext_Act
     deleteStoredFile: (id: string) => {},
     postStoredFile: (file: IStoredFile) => {},
     upload: async (formData) => {},
-    uploadProfilePicture: async (formData) => {}
+    uploadProfilePicture: async (formData) => {},
+    getLocal: (id: string) => undefined
 }
 
 export const StoredFileStateContext = createContext<StoredFileStateContext_State>(StoredFileStateContext_InitState);

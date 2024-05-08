@@ -18,11 +18,16 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
         private readonly string PROFILE_BASE_FILE_PATH = "App_Data/Profiles/Images";
 
         private readonly string BASE_FILE_PATH = "App_Data/Images";
+       
         private readonly string PORTFOLIO_IMAGES_BASE_FILE_PATH = "App_Data/Portfolio/Images";
         private readonly string PORTFOLIO_VIDEOS_BASE_FILE_PATH = "App_Data/Portfolio/Videos";
         private readonly string PORTFOLIO_AUDIO_BASE_FILE_PATH = "App_Data/Portfolio/Audio";
         private readonly string PORTFOLIO_DOCUMENTS_BASE_FILE_PATH = "App_Data/Portfolio/Documents";
-
+        
+        private readonly string TASK_IMAGES_BASE_FILE_PATH = "App_Data/Tasks/Images";
+        private readonly string TASK_VIDEOS_BASE_FILE_PATH = "App_Data/Tasks/Videos";
+        private readonly string TASK_DOCUMENTS_BASE_FILE_PATH = "App_Data/Tasks/Documents";
+       
         private readonly IRepository<Domain.StoredFile, Guid> _storedFileRepository;
         private readonly IRepository<Domain.Profile, Guid> _profileRepository;
         private readonly IMapper _mapper;
@@ -68,19 +73,6 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
         [Consumes("multipart/form-data")]
         public async Task<Domain.StoredFile> CreateProfileStoredFile([FromForm] StoredFileDto input)
         {
-            var existingFile = await _storedFileRepository.FirstOrDefaultAsync(x => x.FileName == input.File.FileName);
-
-            if (existingFile != null)
-            {
-                if (existingFile.BasePath.IsNullOrEmpty())
-                {
-                    existingFile.BasePath = PROFILE_BASE_FILE_PATH;
-                    await _storedFileRepository.UpdateAsync(existingFile);
-                    CurrentUnitOfWork.SaveChanges();
-                }
-                return existingFile;
-            }
-
             var mappedInput = _mapper.Map<Domain.StoredFile>(input);
             mappedInput.FileType = input.File.ContentType;
             mappedInput.FileName = $"{Guid.NewGuid()}-{input.File.FileName}";
@@ -301,7 +293,8 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
                     {".jpg", "image/jpeg"},
                     {".jpeg", "image/jpeg"},
                     {".gif", "image/gif"},
-                    {".csv", "text/csv"}
+                    {".csv", "text/csv"},
+                    {".md", "text/plain" }
            };
         }
     }

@@ -58,6 +58,10 @@ export interface ICategoryActionsContext {
     postMyCategories: (newExeCats: {executorCategories: IExecutorCategory[]}) => void;
     /** Delete the executor category bridge record. */
     deleteExecutorCategory: (id: string) => void;
+    /** Read a specific category from the state */
+    getLocalCategory: (id?: string) => ICategory | undefined;
+    getLocalTaskCategories: (id?: string) => ITaskCategory[] | undefined;
+    getLocalExecutorCategories: (id?: string) => IExecutorCategory[] | undefined;
 }
 export const CategoryActionsContext_Default: ICategoryActionsContext = {
     getCategory: () => {},
@@ -70,7 +74,10 @@ export const CategoryActionsContext_Default: ICategoryActionsContext = {
     getMyCategories: () => {},
     getExecutorCategories: () => {},
     postMyCategories: () => {},
-    deleteExecutorCategory: () => {}
+    deleteExecutorCategory: () => {},
+    getLocalCategory: () => undefined,
+    getLocalTaskCategories: () => undefined,
+    getLocalExecutorCategories: () => undefined,
 }
 
 const CategoriesStateContext = createContext<ICategoriesStateContext>(CategoriesStateContext_Default);

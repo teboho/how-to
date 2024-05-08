@@ -1,8 +1,7 @@
 "use client";
-
 import { getAxiosInstace } from "@/utils";
 import { message } from "antd";
-import React, { useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer } from "react";
 import { useAuthState } from "../authProvider";
 import * as profileActions from "./actions";
 import { IProfile, ProfileActionsContext, ProfileStateContext, ProfileStateContext_Default } from "./context";
@@ -13,107 +12,148 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = useReducer(profileReducer, ProfileStateContext_Default);
     const [messageApi, contextHolder] = message.useMessage();
 
+    useEffect(() => {
+        if (!loginObj) {
+            clearProfileState();
+        }
+    }, [loginObj]);
+
+    useEffect(() => {
+        if (loginObj && !state.profiles) {
+            getProfiles();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (loginObj && !state.profiles) {
+            getProfiles();
+        }
+    }, [loginObj]);
+
     const instance = useMemo(() => {
         const accessToken = loginObj?.accessToken;
         if (accessToken) {
-            return getAxiosInstace(accessToken)
+            return getAxiosInstace(accessToken);
         } else {
             return getAxiosInstace("");
-        }        
+        }
     }, [loginObj]);
 
     const getProfile = () => {
         dispatch(profileActions.getProfileRequestAction());
         const endpoint = "api/services/app/Profile/Get";
         instance.get(endpoint)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.getProfileSuccessAction(response.data.result))
-                    } else {
-                        dispatch(profileActions.getProfileErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(profileActions.getProfileSuccessAction(response.data.result))
+                } else {
                     dispatch(profileActions.getProfileErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(profileActions.getProfileErrorAction())
+            );
+    }
+    const getProfileByUsername = (username: string) => {
+        dispatch(profileActions.getProfileRequestAction());
+        const endpoint = `api/services/app/Profile/GetProfileByUsername?username=${username}`;
+        instance.get(endpoint)
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(profileActions.getProfileSuccessAction(response.data.result))
+                } else {
+                    dispatch(profileActions.getProfileErrorAction())
+                }
+            })
+            .catch(err =>
+                dispatch(profileActions.getProfileErrorAction())
+            );
     }
     const postProfile = (profile: IProfile) => {
         dispatch(profileActions.postProfileRequestAction());
         const endpoint = "api/services/app/Profile/Create"
         instance.post(endpoint, profile)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.postProfileSuccessAction(response.data.result));
-                        messageApi.success("Profile created successfully");
-                    } else {
-                        dispatch(profileActions.postProfileErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(profileActions.postProfileSuccessAction(response.data.result));
+                    messageApi.success("Profile created successfully");
+                } else {
                     dispatch(profileActions.postProfileErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(profileActions.postProfileErrorAction())
+            );
     }
     const putProfile = (profile: IProfile) => {
         dispatch(profileActions.putProfileRequestAction());
         const endpoint = "api/services/app/Profile/Update";
         instance.put(endpoint, profile)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.putProfileSuccessAction(response.data.result));
-                        messageApi.success("Profile updated successfully");
-                    } else {
-                        dispatch(profileActions.putProfileErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(profileActions.putProfileSuccessAction(response.data.result));
+                    messageApi.success("Profile updated successfully");
+                } else {
                     dispatch(profileActions.putProfileErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(profileActions.putProfileErrorAction())
+            );
     }
     const deleteProfile = (profile: IProfile) => {
         dispatch(profileActions.deleteProfileRequestAction());
         const endpoint = "api/services/app/Profile/Delete";
         instance.delete(endpoint, { data: profile })
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.deleteProfileSuccessAction())
-                    } else {
-                        dispatch(profileActions.deleteProfileErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(profileActions.deleteProfileSuccessAction())
+                } else {
                     dispatch(profileActions.deleteProfileErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(profileActions.deleteProfileErrorAction())
+            );
     }
     const getProfiles = () => {
         dispatch(profileActions.getProfilesRequestAction());
         const endpoint = "api/services/app/Profile/GetAll";
         instance.get(endpoint)
-                .then(response => {
-                    console.log(response);
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.getProfilesSuccessAction(response.data.result.items))
-                    } else {
-                        dispatch(profileActions.getProfilesErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(profileActions.getProfilesSuccessAction(response.data.result.items))
+                } else {
                     dispatch(profileActions.getProfilesErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(profileActions.getProfilesErrorAction())
+            );
     }
     const getMyProfile = () => {
         dispatch(profileActions.getProfileRequestAction());
         const endpoint = `api/services/app/Profile/GetMyProfile?userId=${loginObj?.userId}`;
         instance.get(endpoint)
-                .then(response => {
-                    if (response.status > 199 && response.status < 300) {
-                        dispatch(profileActions.getProfileSuccessAction(response.data.result))
-                    } else {
-                        dispatch(profileActions.getProfileErrorAction())
-                    }
-                })
-                .catch(err => 
+            .then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    dispatch(profileActions.getProfileSuccessAction(response.data.result))
+                } else {
                     dispatch(profileActions.getProfileErrorAction())
-                );
+                }
+            })
+            .catch(err =>
+                dispatch(profileActions.getProfileErrorAction())
+            );
+    }
+
+    const getLocalProfile = (userId: number) => {
+        const profiles = state.profiles;
+        return profiles?.find(t => t.creatorUserId === userId);
+    }
+
+    const clearProfileState = () => {
+        dispatch(profileActions.clearProfileStateAction());
     }
 
     return (
@@ -125,6 +165,8 @@ const ProfileProvider = ({ children }: { children: React.ReactNode }) => {
                 putProfile,
                 deleteProfile,
                 getProfiles,
+                getLocalProfile,
+                getProfileByUsername
             }}>
                 {children}
             </ProfileActionsContext.Provider>

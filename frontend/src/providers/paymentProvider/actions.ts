@@ -16,7 +16,9 @@ export const PaymentActionEnums = {
 
     GetPaymentsRequest: "GET_PAYMENTS_REQUEST",
     GetPaymentsSuccess: "GET_PAYMENTS_SUCCESS",
-    GetPaymentsError: "GET_PAYMENTS_ERROR"
+    GetPaymentsError: "GET_PAYMENTS_ERROR",
+
+    ClearPaymentState: "CLEAR_PAYMENT_STATE"
 }
 
 export const getPaymentRequestAction = createAction<IPaymentStateContext>(
@@ -77,4 +79,9 @@ export const getPaymentsSuccessAction = createAction<IPaymentStateContext, IPaym
 export const getPaymentsErrorAction = createAction<IPaymentStateContext>(
     PaymentActionEnums.GetPaymentsError,
     () => ({ isPending: false, isSuccess: false, isError: true, payment: undefined })
+);
+
+export const clearPaymentStateAction = createAction<IPaymentStateContext>(
+    PaymentActionEnums.ClearPaymentState,
+    () => ({ isPending: false, isSuccess: false, isError: false, payment: undefined })
 );

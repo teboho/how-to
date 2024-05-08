@@ -7,6 +7,7 @@ import type { FormProps } from "antd";
 import { Button, Flex, Form, Input, Typography } from "antd";
 import Link from "next/link";
 import useStyles from "./style";
+import Image from "next/image";
 
 const { Paragraph } = Typography;
 
@@ -20,14 +21,14 @@ type FieldType = {
 export default function Login() {
   const { cx, styles } = useStyles();
   const { login } = useAuthActions();
-  
+
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
     console.log('Success:', values);
     const loginRequest: ILoginRequest = values;
     loginRequest.rememberClient = true;
     login(loginRequest);
   }
-  
+
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
     console.log('Failed:', errorInfo);
   }
@@ -36,7 +37,7 @@ export default function Login() {
     <Flex className={cx(styles["h-full"])}>
       <LeftSide />
       <div className={cx("half-box", "right")}>
-        <Flex vertical className={cx(styles["right-inner-flex"])}  align="center" justify="center">
+        <Flex vertical className={cx(styles["right-inner-flex"])} align="center" justify="center">
           <img height={250} src="/unDraw/undraw_join_re_w1lh.svg" alt="No tasks" />
 
           <Paragraph className={cx(styles.para)}>Please enter your details to login.</Paragraph>
@@ -56,7 +57,7 @@ export default function Login() {
               name="userNameOrEmailAddress"
               rules={[{ required: true, message: 'Please input your username/email!' }]}
             >
-              <Input size="large"/>
+              <Input size="large" />
             </Form.Item>
 
             <Form.Item<FieldType>
@@ -65,14 +66,14 @@ export default function Login() {
               rules={[{ required: true, message: "Please input your password!" }]}
               className={cx(styles['form-item'])}
             >
-              <Input.Password size="large"/>
+              <Input.Password size="large" />
             </Form.Item>
 
-            <Form.Item>          
+            <Form.Item>
               <Flex align="center" justify="space-between" vertical>
                 <Button className={cx(styles.button)} htmlType="submit" size="large">
                   Login
-                </Button>      
+                </Button>
                 <Paragraph>
                   Don't yet have an account?{" "}
                   <Link href={"/register"}>
@@ -80,7 +81,7 @@ export default function Login() {
                   </Link>
                 </Paragraph>
               </Flex>
-            </Form.Item>  
+            </Form.Item>
           </Form>
         </Flex>
       </div>

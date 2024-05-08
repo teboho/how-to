@@ -1,5 +1,4 @@
 "use client";
-
 import { useAuthActions, useAuthState } from "@/providers/authProvider";
 import { AbpTokenProperies, decodeToken } from "@/utils";
 import {
@@ -18,8 +17,10 @@ import {
 import { Button, Flex, Layout, Menu, MenuProps, Typography } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useStyles from "./style/style";
+import AccountDrawer, { IAccountDrawerProps } from "@/components/accountDrawer";
+import Image from "next/image";
 
 const { Sider, Header, Content } = Layout;
 const { Title } = Typography;
@@ -30,88 +31,84 @@ const HomeLayout = ({
     children: React.ReactNode
 }) => {
     const [collapsed, setCollapsed] = useState(false);
+    const [open, setOpen] = useState(false);
     const [menu, setMenu] = useState<MenuProps["items"]>([]);
-    const { loginObj } = useAuthState();
+    const { loginObj, decodedToken, userObj } = useAuthState();
     const { logout: auth_logout } = useAuthActions();
+    const { } = useAuthActions
     const { styles, cx, theme } = useStyles();
     const pathname = usePathname();
     const { push } = useRouter();
 
+    // useEffect()
+
+    const fullname = useMemo(() => userObj ? `${userObj.name} ${userObj.surname}` : "John Doe", [userObj]);
+
     const clientMenu = (currentPath: string): MenuProps["items"] => [
-        {
-            key: 'client_expenditure',
-            icon: <CreditCardOutlined />,
-            label: <Link href={`${currentPath}/expenditure`}>Expenditure</Link>,
-            onClick: () => { }
-        },
+        // {
+        //     key: 'client_expenditure',
+        //     icon: <CreditCardOutlined />,
+        //     label: <Link href={`/home/client/expenditure`}>Expenditure</Link>,
+        //     onClick: () => { }
+        // },
         {
             key: 'client_new_task',
             icon: <PlusCircleOutlined />,
-            label: <Link href={`${currentPath}/new-task`}>New Task</Link>,
-            onClick: () => { }
-        },
-        {
-            key: 'tasks',
-            icon: <CarryOutOutlined />,
-            label: <Link href={`tasks`}>Tasks</Link>,
+            className: cx(styles["white-link"]),
+            label: <Link href={`/home/client/new-task`}>New Task</Link>,
             onClick: () => { }
         },
         {
             key: 'executors',
             icon: <SolutionOutlined />,
-            label: <Link href={`executors`}>Executors</Link>,
+            className: cx(styles["white-link"]),
+            label: <Link href={`/home/executors`}>Executors</Link>,
             onClick: () => { }
         }
     ];
     const executorMenu = (currentPath: string): MenuProps["items"] => [
         {
-            key: 'exec_revenue',
-            icon: <MoneyCollectOutlined />,
-            label: <Link href={`${currentPath}/revenue`}>Revenue</Link>,
-            onClick: () => { }
-        },
-        {
             key: 'tasks',
             icon: <CarryOutOutlined />,
-            label: <Link href={`tasks`}>Tasks</Link>,
+            className: cx(styles["white-link"]),
+            label: <Link href={`/home/tasks`}>Tasks</Link>,
             onClick: () => { }
         },
         {
             key: 'executors',
             icon: <SolutionOutlined />,
-            label: <Link href={`executors`}>Executors</Link>,
+            className: cx(styles["white-link"]),
+            label: <Link href={`/home/executors`}>Executors</Link>,
             onClick: () => { }
         }
     ];
     const supportMenu = (currentPath: string): MenuProps["items"] => [
         {
-            key: 'support_revenue',
-            icon: <MoneyCollectOutlined />,
-            label: <Link href={`${currentPath}/revenue`}>Revenue</Link>,
-            onClick: () => { }
-        },
-        {
             key: 'tasks',
             icon: <CarryOutOutlined />,
-            label: <Link href={`tasks`}>Tasks</Link>,
+            className: cx(styles["white-link"]),
+            label: <Link href={`/home/tasks`}>Tasks</Link>,
             onClick: () => { }
         },
         {
             key: 'support_disputes',
             icon: <ExclamationCircleOutlined />,
-            label: <Link href={`${currentPath}/disputes`}>Disputes</Link>,
+            className: cx(styles["white-link"]),
+            label: <Link href={`/home/support/disputes`}>Disputes</Link>,
             onClick: () => { }
         },
         {
             key: 'support_users',
             icon: <UsergroupAddOutlined />,
-            label: <Link href={`${currentPath}/users`}>Manager Users</Link>,
+            className: cx(styles["white-link"]),
+            label: <Link href={`/home/support/new-user`}>Manager Users</Link>,
             onClick: () => { }
         },
         {
             key: 'executors',
             icon: <SolutionOutlined />,
-            label: <Link href={`executors`}>Executors</Link>,
+            className: cx(styles["white-link"]),
+            label: <Link href={`/home/executors`}>Executors</Link>,
             onClick: () => { }
         }
     ];
@@ -129,6 +126,7 @@ const HomeLayout = ({
                     setMenu(executorMenu(pathname));
                     break;
                 case "support":
+                case "admin":
                     setMenu(supportMenu(pathname));
                     break;
                 default:
@@ -142,37 +140,48 @@ const HomeLayout = ({
         }
     }, [loginObj]);
 
+    const AccountDrawerProps: IAccountDrawerProps = {
+        emailAddress: `${decodedToken && decodedToken[AbpTokenProperies.emailaddress]}`,
+        fullname: `${decodedToken && decodedToken[AbpTokenProperies.name]}`,
+        isDrawerOpen: open,
+        onDrawerClose: () => {
+            setOpen(false);
+        },
+        profilePicId: undefined,
+        role,
+        showDrawer: () => {
+            setOpen(true);
+        }
+    }
+
     return (
         <Layout className={cx(styles.layout)}>
-            <Sider className={cx(styles.sider)} theme="light" collapsible collapsed={collapsed} onCollapse={() => setCollapsed(!collapsed)}>
-                <div className="logo-vertical">
-                    <Link href={"/"}><img src="/logo.svg" alt="logo" width={"100%"} /></Link>
+            <Sider className={cx(styles.sider)} style={{
+                background: "#B64326"
+            }} width={320} theme="light" collapsible collapsed={collapsed} onCollapse={() => setCollapsed(!collapsed)}>
+                <div className={cx(styles.logo)}>
+                    <Link href={"/"}><Image src="/logo-icon-only-light.svg" alt="logo" width={80} height={80} /></Link>
                 </div>
                 <Menu
                     theme="light"
                     mode="inline"
                     onClick={() => { }}
-                    items={menu}
-                    className={cx(styles.menu)}
-                />
-                <Menu
-                    theme="light"
-                    mode="inline"
-                    onClick={() => { }}
-                    items={[
-                        {
-                            key: 'profile',
-                            icon: <UsergroupAddOutlined />,
-                            label: 'Profile',
-                            onClick: () => push('profile')
-                        },
+                    items={[...(menu ? menu : []), ...[
+                        // {
+                        //     key: 'profile',
+                        //     icon: <UserOutlined />,
+                        //     label: <Link href={"/home/profile/edit"}>Edit Profile</Link>,
+                        //     className: cx(styles["white-link"]),
+                        //     onClick: () => { }
+                        // },
                         {
                             key: 'logout',
                             icon: <LogoutOutlined />,
                             label: 'Logout',
+                            className: cx(styles["white-link"]),
                             onClick: () => auth_logout()
                         }
-                    ]}
+                    ]]}
                     className={cx(styles.menu)}
                 />
             </Sider>
@@ -181,13 +190,29 @@ const HomeLayout = ({
                     <Flex justify="space-between" align="center" className={cx(styles.offsetUp)}>
                         <Title level={1} style={{
                             marginTop: 10,
-                        }}>{role} Dashboard</Title>
-                        <Button
-                            type="primary"
-                            shape="circle"
-                            icon={<UserOutlined />}
-                            onClick={() => setCollapsed(!collapsed)}
-                        />
+                            letterSpacing: 2
+                        }}>HowTo</Title>
+
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: 20
+                        }}>
+                            <h3>{fullname}</h3>
+                            <Button
+                                title="user account"
+                                type="primary"
+                                shape="circle"
+                                icon={<UserOutlined />}
+                                onClick={() => {
+                                    setCollapsed(!collapsed);
+                                    setOpen(true);
+                                }}
+                            />
+                        </div>
+                        <AccountDrawer {...AccountDrawerProps} />
                     </Flex>
                 </Header>
                 <Content className={cx(styles.content)}>

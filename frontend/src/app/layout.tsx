@@ -1,21 +1,22 @@
-
 import AuthProvider from "@/providers/authProvider";
 import CategoryProvider from "@/providers/categoryProvider";
+import ChatProvider from "@/providers/chatProvider";
 import OfferProvider from "@/providers/offerProvider";
 import PaymentProvider from "@/providers/paymentProvider";
+import PortfolioProvider from "@/providers/portfolioProvider";
 import ProfileProvider from "@/providers/profileProvider";
+import ReviewProvider from "@/providers/reviewProvider";
 import StoredFileProvider from "@/providers/storedFileProvider";
+import SupportingFileProvider from "@/providers/supportingFileProvider";
 import TaskProvider from "@/providers/taskProvider";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import "./globals.css";
-import PortfolioProvider from "@/providers/portfolioProvider";
-
 
 export const metadata: Metadata = {
   title: "HOWTO",
-  description: "How to do anything in the world",
+  description: "How to do anything in the world.",
 };
 
 const ThemeTokenOverride = {
@@ -54,11 +55,17 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                     <PortfolioProvider>
                       <TaskProvider>
                         <OfferProvider>
-                          <PaymentProvider>
-                            <CategoryProvider>
-                              {children}
-                            </CategoryProvider>
-                          </PaymentProvider>
+                          <ReviewProvider>
+                            <PaymentProvider>
+                              <CategoryProvider>
+                                <ChatProvider>
+                                  <SupportingFileProvider>
+                                    {children}
+                                  </SupportingFileProvider>
+                                </ChatProvider>
+                              </CategoryProvider>
+                            </PaymentProvider>
+                          </ReviewProvider>
                         </OfferProvider>
                       </TaskProvider>
                     </PortfolioProvider>

@@ -1,5 +1,5 @@
 import { createAction } from "redux-actions";
-import { ICategoriesStateContext, ICategory, IExecutorCategory, ITaskCategory } from "./context";
+import { CategoriesStateContext_Default, ICategoriesStateContext, ICategory, IExecutorCategory, ITaskCategory } from "./context";
 
 export const CategoryActionEnums = {
     GetCategoryRequest: "GET_CATEGORY_REQUEST",
@@ -45,6 +45,8 @@ export const CategoryActionEnums = {
     DeleteExecutorCategoryRequest: "DELETE_EXECUTOR_CATEGORY_REQUEST",  
     DeleteExecutorCategorySuccess: "DELETE_EXECUTOR_CATEGORY_SUCCESS",
     DeleteExecutorCategoryError: "DELETE_EXECUTOR_CATEGORY_ERROR",
+
+    ClearCategoryState: "CLEAR_CATEGORY_STATE"
 }
 
 export const getCategoryRequestAction = createAction<ICategoriesStateContext>(
@@ -192,4 +194,9 @@ export const deleteExecutorCategorySuccessAction = createAction<ICategoriesState
 export const deleteExecutorCategoryErrorAction = createAction<ICategoriesStateContext>(
     CategoryActionEnums.DeleteExecutorCategoryError,
     () => ({ isPending: false, isSuccess: false, isError: true })
+);
+
+export const clearCategoryStateAction = createAction<ICategoriesStateContext>(
+    CategoryActionEnums.ClearCategoryState,
+    () => ({ ...CategoriesStateContext_Default })
 );

@@ -1,7 +1,9 @@
 "use client";
 
+import { match } from 'assert';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { globals } from 'typescript-guid'
 
 export enum AbpTokenProperies {
     claims = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/",
@@ -66,6 +68,14 @@ export const getRole = (loginObj: any): string => {
     } 
     
     return "client";
+}
+
+// check if value is GUID
+export const isGuid = (value: string): boolean => {
+    if (value && value.length === 36) {
+        return true;
+    }
+    return false;
 }
 
 export const imageURL_pre = process.env.NEXT_PUBLIC_API_IMAGE_URL_PRE;
