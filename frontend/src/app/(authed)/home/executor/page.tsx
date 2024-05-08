@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import Loading from "./loading";
 import useStyles from "./style";
+import withAuth from "@/hocs/withAuth";
 
 const { Title, Paragraph } = Typography;
 
@@ -24,7 +25,7 @@ const Page = (): React.ReactNode => {
         }
     }, []);
 
-    
+
     const columns = [
         {
             title: 'Title',
@@ -40,7 +41,7 @@ const Page = (): React.ReactNode => {
                 return text.length > 100 ? text.slice(0, 100) + "..." : text;
             }
         },
-        { 
+        {
             title: 'Amount (ZAR per hour)',
             dataIndex: 'amount',
             key: 'key',
@@ -88,7 +89,7 @@ const Page = (): React.ReactNode => {
             )
         }
     ];
-    
+
     const rows = tasks?.map((task: ITask) => {
         return {
             key: `task_${task.id}`,
@@ -101,26 +102,26 @@ const Page = (): React.ReactNode => {
             status: task.status,
         }
     });
-    
+
     return (
         <section>
             <section className={cx(styles.box)}>
                 <Title level={3}>Money genereated so far</Title>
                 <Paragraph className={cx(styles["total-money"])}>R7 564.07</Paragraph>
             </section>
-            <section className={cx(styles.box)}>                
+            <section className={cx(styles.box)}>
                 <Segmented
                     className={cx(styles.segmented)}
                     defaultValue="Tasks"
                     style={{ marginBottom: 8 }}
-                    onChange={(value) => {value}}
+                    onChange={(value) => { value }}
                     options={['Tasks', 'Transactions']}
                 />
                 {rows && <Table columns={columns} dataSource={rows} />}
-                {isPending ? <Loading /> : null }
+                {isPending ? <Loading /> : null}
             </section>
         </section>
     );
 }
 
-export default Page;
+export default withAuth(Page);

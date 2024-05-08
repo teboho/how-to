@@ -9,6 +9,7 @@ import Link from 'next/link';
 import React, { useEffect } from 'react';
 import Loading from './loading';
 import useStyles from './style';
+import withAuth from '@/hocs/withAuth';
 
 const { Title, Paragraph } = Typography;
 
@@ -171,4 +172,4 @@ const Page = (): React.ReactNode => {
     );
 }
 
-export default Page;
+export default withAuth(Page);

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import useStyles from "./style";
 import Link from "next/link";
 import Image from "next/image";
+import withAuth from "@/hocs/withAuth";
 
 const { Meta } = Card;
 const { Sider, Content } = Layout;
@@ -184,4 +185,4 @@ const Page = () => {
     );
 }
 
-export default Page;
+export default withAuth(Page);

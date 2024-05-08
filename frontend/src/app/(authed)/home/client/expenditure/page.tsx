@@ -6,6 +6,7 @@ import { ITask } from "@/providers/taskProvider/context";
 import type { SelectProps } from 'antd';
 import { Button, Form, FormProps, Input, InputNumber, Select, Tag, Typography } from "antd";
 import useStyles from "./style";
+import withAuth from "@/hocs/withAuth";
 
 type TagRender = SelectProps['tagRender'];
 
@@ -42,4 +43,5 @@ const Page = (): React.ReactNode => {
         </div>
     );
 }
-export default Page;
+
+export default withAuth(Page);

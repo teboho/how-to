@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import useStyles from './style';
 import Image from 'next/image';
+import withAuth from '@/hocs/withAuth';
 
 const { Sider, Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -107,4 +108,4 @@ const Page = () => {
     )
 }
 
-export default Page;
+export default withAuth(Page);

@@ -4,6 +4,7 @@ import useStyles from "./style";
 import { useAuthActions, useAuthState } from "@/providers/authProvider";
 import { ChangeEventHandler, useEffect, useMemo, useState } from "react";
 import { IRegisterRequest, IUser } from "@/providers/authProvider/types";
+import withAuth from "@/hocs/withAuth";
 
 const { Sider, Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -160,4 +161,4 @@ const Page = () => {
     );
 }
 
-export default Page;
+export default withAuth(Page);

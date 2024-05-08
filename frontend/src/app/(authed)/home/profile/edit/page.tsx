@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import useStyles from "./style";
 import { Formik } from "formik";
 import { IExecutorCategory } from "@/providers/categoryProvider/context";
+import withAuth from "@/hocs/withAuth";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -209,4 +210,4 @@ const Page = (): React.ReactNode => {
     );
 };
 
-export default Page;
+export default withAuth(Page);

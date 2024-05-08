@@ -7,6 +7,7 @@ import type { SelectProps } from 'antd';
 import { Button, Form, FormProps, Input, InputNumber, Select, Tag, Typography } from "antd";
 import useStyles from "./style";
 import { useEffect, useState } from "react";
+import withAuth from "@/hocs/withAuth";
 
 type TagRender = SelectProps['tagRender'];
 
@@ -139,4 +140,4 @@ const Page = (): React.ReactNode => {
     );
 }
 
-export default Page;
+export default withAuth(Page);
