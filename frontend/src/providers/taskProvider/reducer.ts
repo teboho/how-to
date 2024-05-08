@@ -28,7 +28,17 @@ const taskReducer = handleActions(
             return { ...state, isPending: true, isSuccess: false, isError: false };
         },
         [TaskActionEnums.PutTaskSuccess]: (state, action) => {
-            return { ...state, ...action.payload };
+            // let { tasks } = state;
+            // let { task } = action.payload;
+            // if (!tasks) { 
+            //     tasks = [];
+            // }
+            // if (task) tasks = [...tasks, task];
+            return {
+                ...state,
+                ...action.payload,
+                // tasks
+            };
         },
         [TaskActionEnums.PutTaskError]: (state) => {
             return { ...state, isPending: false, isSuccess: false, isError: true, task: undefined };

@@ -99,7 +99,12 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
         //    return await base.GetAsync(profileDto);
         //}
 
-        // get profile by username
+        /// <summary>
+        /// get profile by username
+        /// </summary>
+        /// <param name="username">username</param>
+        /// <returns>portfolio</returns>
+        /// <exception cref="ArgumentException">arg ex</exception>
         public async Task<ProfileDto> GetProfileByUsername(string username)
         {
             var profile = await _repository.FirstOrDefaultAsync(x => x.Username == username);
