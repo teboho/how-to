@@ -4,7 +4,7 @@ using System;
 
 namespace Boxfusion.HowTo.Services.ProfileAppService.Dtos
 {
-    public class FillProfileDto : FullAuditedEntityDto<Guid>
+    public class ProfileDto : FullAuditedEntityDto<Guid>
     {
         public string IdentityNo { get; set; }
         public string Username { get; set; }

@@ -131,7 +131,7 @@ There should be an open window for a client to make a dispute about the task exe
 ## User Flows
 
 ![User Flows](assets/user-flows.svg)
-
+<!-- 
 ## Technology Stack (Tentative, Aspirational)
 
 1. Frontend: Next.js
@@ -144,9 +144,9 @@ There should be an open window for a client to make a dispute about the task exe
 8. Search: Azure Cognitive Search ?? 
 9. Email: Azure Communication Services
 10. Authentication: Azure Active Directory ??
-11. Version Control: GitHub
+11. Version Control: GitHub 
 
 ## Ambitious UI Goals
 
 1. Interactive product demo
-    1. Similar to Sonarqube's 
+    1. Similar to Sonarqube's -->

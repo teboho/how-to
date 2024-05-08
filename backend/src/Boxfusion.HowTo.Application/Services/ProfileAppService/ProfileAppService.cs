@@ -85,9 +85,10 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
         }
 
 
-        //public async Task<List<ProfileDto>> GetFullProfiles(long userId)
+        //public async Task<List<FullProfileDto>> GetFullProfiles(long userId)
         //{
         //    var profile = await _repository.FirstOrDefaultAsync(x => x.CreatorUserId == userId);
+        //    List<FullProfileDto> fullProfileDtos = new List<FullProfileDto>();
         //    if (profile == null)
         //    {
         //        profile = new Domain.Profile();
