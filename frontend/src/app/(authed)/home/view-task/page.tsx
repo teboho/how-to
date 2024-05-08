@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { usePaystackPayment } from "react-paystack";
 import type { HookConfig } from "react-paystack/dist/types";
 import useStyles from "./style";
+import withAuth from "@/hocs/withAuth";
 
 const { Title } = Typography;
 const { Sider } = Layout;
@@ -130,4 +131,4 @@ const Page = () => {
     }
 }
 
-export default Page;
+export default withAuth(Page);

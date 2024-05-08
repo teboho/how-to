@@ -1,3 +1,5 @@
+import withAuth from "@/hocs/withAuth";
+
 const Page = () => {
     return (
         <div>
@@ -9,4 +11,4 @@ const Page = () => {
     )
 }
 
-export default Page;
+export default withAuth(Page);
