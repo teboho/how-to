@@ -1,7 +1,10 @@
 'use client';
+import { useAuthState } from "@/providers/authProvider";
 import { IOffer, OfferStatus } from "@/providers/offerProvider/context";
 import { useReviewActions } from "@/providers/reviewProvider";
 import { IReview } from "@/providers/reviewProvider/context";
+import { useStoredFileActions, useStoredFileState } from "@/providers/storedFileProvider";
+import { useSupportingFileActions, useSupportingFileState } from "@/providers/supportingFileProvider";
 import { useTaskActions } from "@/providers/taskProvider";
 import { ITask } from "@/providers/taskProvider/context";
 import { FrownOutlined, MehOutlined, SmileOutlined, UploadOutlined } from '@ant-design/icons';
@@ -9,9 +12,6 @@ import { Form as AntdForm, Button, Divider, FormProps, GetProp, Input, InputNumb
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import useStyles from "./style";
-import { useSupportingFileActions, useSupportingFileState } from "@/providers/supportingFileProvider";
-import { useStoredFileActions, useStoredFileState } from "@/providers/storedFileProvider";
-import { useAuthState } from "@/providers/authProvider";
 
 const { Title } = Typography;
 const { Sider } = Layout;
@@ -122,7 +122,7 @@ const ClientViewTask = ({
                 >
                     <Form>
                         {record.status === 0 && (task?.status || 0) < 2 &&
-                            <Button type="primary" htmlType="submit">Accept</Button>
+                            <Button type="primary" htmlType="submit" disabled={task && task?.status >= 1}>Accept</Button>
                         }
                         {record.status === 1 && task && task.status < 2 &&
                             <Button type="primary" htmlType="submit">Confirm Completion</Button>
@@ -180,23 +180,22 @@ const ClientViewTask = ({
                             id: task?.id || "",
                         }}
                         onSubmit={onFinish}
-                        disabled={task && task?.status > 1}
                     >
                         <Form>
                             <AntdForm.Item label="Title">
-                                <Field name="title" type="text" as={Input} />
+                                <Field name="title" type="text" as={Input} disabled={task && task?.status >= 1} />
                             </AntdForm.Item>
                             <AntdForm.Item label="Description">
-                                <Field name="description" type="text" as={Input.TextArea} />
+                                <Field name="description" type="text" as={Input.TextArea} disabled={task && task?.status >= 1} />
                             </AntdForm.Item>
                             <AntdForm.Item label="Amount">
-                                <Field name="amount" type="number" as={InputNumber} />
+                                <Field name="amount" type="number" as={InputNumber} disabled={task && task?.status >= 1} />
                             </AntdForm.Item>
                             <AntdForm.Item label="Time Frame">
-                                <Field name="timeFrame" type="number" as={InputNumber} />
+                                <Field name="timeFrame" type="number" as={InputNumber} disabled={task && task?.status >= 1} />
                             </AntdForm.Item>
                             <AntdForm.Item>
-                                <Button type="primary" htmlType="submit">Update</Button>
+                                <Button type="primary" htmlType="submit" disabled={task && task?.status >= 1}>Update</Button>
                             </AntdForm.Item>
                         </Form>
                     </Formik>
@@ -242,8 +241,7 @@ const ClientViewTask = ({
                                 postReview(review)
                             }}
                         >
-                            <Form
-                            >
+                            <Form>
                                 <AntdForm.Item label="Rating: ">
                                     <Field name="rating" type="number" as={() => (
                                         <Rate id="rating" tooltips={desc} style={{ color: "green" }} character={({ index = 0 }) => customIcons[index + 1]} />

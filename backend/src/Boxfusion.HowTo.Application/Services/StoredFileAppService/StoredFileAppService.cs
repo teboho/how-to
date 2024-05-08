@@ -293,7 +293,8 @@ namespace Boxfusion.HowTo.Services.StoredFileAppService
                     {".jpg", "image/jpeg"},
                     {".jpeg", "image/jpeg"},
                     {".gif", "image/gif"},
-                    {".csv", "text/csv"}
+                    {".csv", "text/csv"},
+                    {".md", "text/plain" }
            };
         }
     }
