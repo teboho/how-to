@@ -84,6 +84,21 @@ namespace Boxfusion.HowTo.Services.ProfileAppService
             return await base.GetAsync(profileDto);
         }
 
+
+        //public async Task<List<ProfileDto>> GetFullProfiles(long userId)
+        //{
+        //    var profile = await _repository.FirstOrDefaultAsync(x => x.CreatorUserId == userId);
+        //    if (profile == null)
+        //    {
+        //        profile = new Domain.Profile();
+        //        profile.CreatorUserId = userId;
+        //        profile = await _repository.InsertAsync(profile);
+        //        await CurrentUnitOfWork.SaveChangesAsync();
+        //    }
+        //    var profileDto = ObjectMapper.Map<ProfileDto>(profile);
+        //    return await base.GetAsync(profileDto);
+        //}
+
         // get profile by username
         public async Task<ProfileDto> GetProfileByUsername(string username)
         {

@@ -9,6 +9,7 @@ namespace Boxfusion.HowTo.Services.SubmissionAppService.Dtos
     {
         public Guid TaskId { get; set; }
         public Guid StoredFileId { get; set; }
+        public string Content { get; set; }
 
     }
 }

@@ -12,5 +12,6 @@ namespace Boxfusion.HowTo.Domain
         public Guid StoredFileId { get; set; }
         [ForeignKey("StoredFileId")]
         public StoredFile StoredFile { get; set; }
+        public string Content { get; set; }
     }
 }

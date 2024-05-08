@@ -73,5 +73,13 @@ namespace Boxfusion.HowTo.Services.TaskAppService
             var executorCategories = await _repository.GetAllListAsync(ec => ec.ExecutorId == profile.Id);
             return await Task.FromResult(ObjectMapper.Map<List<ExecutorCategoryDto>>(executorCategories));
         }
+
+        // get all categories for a specific executor
+        [HttpGet]
+        public async Task<List<ExecutorCategoryDto>> GetExecutorCategories(Guid executorId)
+        {
+            var executorCategories = await _repository.GetAllListAsync(ec => ec.ExecutorId == executorId);
+            return await Task.FromResult(ObjectMapper.Map<List<ExecutorCategoryDto>>(executorCategories));
+        }
     }
 }
